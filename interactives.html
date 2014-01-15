@@ -785,22 +785,22 @@ $.ajax({
      }
  &lt;/script&gt;
 </code></pre></li>
-<li><p>(Optional) The app can be notified when the user flips second-screen mode on or off. When the user changes to/from second-screen mode, the app will call mflySecondScreenAvailable(bool), where bool is true or false. Apps can react to this call to render a button to invoke the Second Screen Options dialog.</p></li>
+<li><p>(Optional) The app can be notified when the user flips second-screen mode on or off. When the user changes to/from second-screen mode, the app will call mflySecondScreenAvailable(bool), where bool is true or false. Apps can react to this call to render a button to invoke the Second Screen Options dialog.</p>
+
+<p> Example:</p>
+
+<pre><code> function mflySecondScreenAvailable(isAvailable) {
+     if (isAvailable) {
+         // Second screen is now on/available.
+         $("#secondScreenOptionsBtn").show();
+     } else {
+         // Second screen is no longer available.
+         $("#secondScreenOptionsBtn").hide();
+     }
+ }
+</code></pre></li>
 </ol>
 
-
-<p>Example:</p>
-
-<pre><code>function mflySecondScreenAvailable(isAvailable) {
-    if (isAvailable) {
-        // Second screen is now on/available.
-        $("#secondScreenOptionsBtn").show();
-    } else {
-        // Second screen is no longer available.
-        $("#secondScreenOptionsBtn").hide();
-    }
-}
-</code></pre>
 
 <h3>UIWebKit Resolution</h3>
 
@@ -872,5 +872,17 @@ $.ajax({
 <li><a href="http://www.mediafly.com/angularjs-and-interactives-create-awesome-workouts">AngularJS and Interactives Create Awesome Workouts</a></li>
 </ul>
 
+
+<hr />
+
+<h2>Other stuff</h2>
+
+<h3>Changelog</h3>
+
+<p>Please see the <a href="https://bitbucket.org/mediafly/mediafly-interactives-documentation/commits/all">repository</a> of this document for a changelog.</p>
+
+<h3>Feedback</h3>
+
+<p>See an area of confusion? Please <a href="mailto:support@mediafly.com?Subject=Interactives%20Documentation%20Feedback">contact us</a>.</p>
 </body>
 </html>
