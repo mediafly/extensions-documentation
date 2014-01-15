@@ -1,0 +1,876 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>What are Interactives?</title>
+
+</head>
+<body>
+<h1>Overview</h1>
+
+<p>Customers often wish to create rich, engaging content that include advanced UI effects, form entry, dynamic content, and more features that extend well beyond the limitations of PowerPoint or PDFs. With Mediafly Interactives and the Mediafly Platform, customers can create, release and control these packages.  This document serves as documentation for how a customer can create an Interactive and what best practices exist in their creation and maintenance.</p>
+
+<hr />
+
+<h2>What are Interactives?</h2>
+
+<p>Interactives are all the components that make up a static website:</p>
+
+<ul>
+<li>HTML files</li>
+<li>JavaScript</li>
+<li>CSS</li>
+<li>Images</li>
+</ul>
+
+
+<p>All of these files are zipped up in a specific way and uploaded to Mediafly Airship.</p>
+
+<p>When the user opens the Interactive, the app loads and renders the Interactive much like it would a traditional web page.
+<img src="http://devdocs.mediafly.com/interactives/images/Interactives%20Overview.png" alt="image" /></p>
+
+<p>To ensure that the apps work consistently and correctly, the Interactive builder needs to follow a few rules:</p>
+
+<ul>
+<li>The starting page must be named index.html .  This is the common starting point from which any package can launch.  Sub-pages are acceptable, as long as they are navigable from index.html.</li>
+<li><p>Apps that reference third-party libraries (e.g. jQuery, jQuery Mobile, Reveal.js, Angular.JS) should relatively reference those files from the pages.  To be able to function while offline (for iOS and Android) no files should be absolutely referenced to a site on the web.  For example, an index.html file that contains the following is acceptable, because the files are relatively referenced:</p>
+
+<pre><code>  &lt;script src="js/jquery.min.js"&gt;&lt;/script&gt;
+  &lt;link rel="stylesheet" href="css/main.css"&gt;
+</code></pre>
+
+<p>  and an index.html file containing the following is not acceptable for offline     use, because the files are absolutely referenced.</p>
+
+<pre><code>  &lt;script src="http://code.jquery.com/jquery-1.8.2.min.js"&gt;&lt;/script&gt;
+  &lt;link rel="stylesheet" href="http://mediafly.com/css/main.css"&gt;
+</code></pre></li>
+</ul>
+
+
+<hr />
+
+<h2>Communication between the App and Interactive</h2>
+
+<p>Interactives are full-screen, engaging documents. They allow for deep customization of the entire look and feel of the application. Because the apps make use of the entire screen, Mediafly’s apps need to be told how to render control bars and when to close.  The typical approach to this is:</p>
+
+<ol>
+<li><p>The Interactive will provide a Menu or X button in the app.
+ <img src="http://devdocs.mediafly.com/interactives/images/Interactives%20showing%20Menu%20button.png" alt="Interactive showing Menu button" /></p></li>
+<li><p>When the user taps/clicks on the Menu button, the app toggles the app’s control bars.  The control bars are a part of the app.
+ <img src="http://devdocs.mediafly.com/interactives/images/Interactives%20showing%20control%20bar.png" alt="Interactive showing control bars" /></p></li>
+<li><p>When the user taps/clicks on the X button, the app closes the item.</p></li>
+</ol>
+
+
+<p>Interactives can link to other items within the hierarchy.  For example, if a user has access to one Interactive and three other items (video, audio, documents, presentations, even other Interactives), the Interactive can link directly to those items.  This is useful for</p>
+
+<ul>
+<li>Providing a seamless transition between Interactives and other rich media such as video</li>
+<li><p>Delegating Interactive creation to multiple people. In this case, one creator may work on the wrapper while another works on a sub-page or presentation.</p>
+
+<p>  <img src="http://devdocs.mediafly.com/interactives/images/Interactives%20link%20to%20video.png" alt="Interactives can link to other items" /></p></li>
+</ul>
+
+
+<p>Interactives can invoke Search and Collections as well.</p>
+
+<hr />
+
+<h1>Building Interactives</h1>
+
+<h2>Developing on the web</h2>
+
+<p>Developing Interactives can be painful when you need to start integrating the mfly API, as each change requires you push to Airship and test on device. Mediafly built and maintains mflyTestRunner.js, a JavaScript file that emulates portions of what the device applications do. Specifically:</p>
+
+<ul>
+<li>It simulates the calls that the apps make to initialize the Interactive</li>
+<li>It can feed test hierarchy in via mflyInit, much like the app would</li>
+<li>It can be configured with different options, all laid out within the first dozen lines of the file</li>
+</ul>
+
+
+<p>You can find mflyTestRunner.js within the <a href="https://bitbucket.org/mediafly/mediafly-interactives-tools-and-examples">Mediafly Interactives Tools and Examples</a> public repository.</p>
+
+<p>To use:</p>
+
+<ul>
+<li><p>Include mflyTestRunner.js script, AFTER mflyCommands.js (if you are also using that):</p>
+
+<pre><code>  &lt;script src="js/mflyTestRunner.js"&gt;&lt;/script&gt;
+</code></pre></li>
+<li><p>Change the file to test various features. We suggest you adjust, at least, mflyDataInit and mflyInit to pass in your startup information and hierarchy.</p></li>
+<li><p>Run a basic web server from within the root folder of your Interactive. If you have Python, SimpleHTTPServer is a good option:</p>
+
+<pre><code>  python -m SimpleHTTPServer
+</code></pre></li>
+<li><p>Remove the <code>&lt;script&gt;</code> link to the file in production. Note: if you use the <a href="https://bitbucket.org/mediafly/mediafly-interactivespublisher">Interactives Publisher</a>, this will be taken care of automatically for you.</p></li>
+</ul>
+
+
+<h2>Packaging and Deploying</h2>
+
+<p>There are three methods to package and deploy Interactives. From easiest+least efficient to "hardest"/most efficient:</p>
+
+<p><a name="packaging_interactives_1"></a></p>
+
+<h3>1. Windows Explorer/Finder</h3>
+
+<ol type="a">
+<li><p>Zip the contents of the containing folder, not the folder itself. For example:</p>
+
+<p> <img src="http://devdocs.mediafly.com/interactives/images/packaging/1.%20Do%20not%20zip%20from%20here.png" alt="Do not zip from here" />
+ Do not zip from here...</p>
+
+<p> <img src="http://devdocs.mediafly.com/interactives/images/packaging/2.%20Zip%20from%20here.png" alt="Zip from here" />
+ ... Zip from here</p></li>
+<li><p>Upload the zip file you created into the Airship content management system:</p>
+
+<p> <img src="http://devdocs.mediafly.com/interactives/images/packaging/3.%20Drag%20into%20Airship.png" alt="image" /></p></li>
+<li><p>(Or, if you are replacing an existing existing item, upload it into the Media panel)</p>
+
+<p> <img src="http://devdocs.mediafly.com/interactives/images/packaging/3b.%20Replace%20item%20from%20Media%20panel.png" alt="Replace media from the Media panel" /></p></li>
+<li><p>Set your Interactive's item permissions</p>
+
+<p> <img src="http://devdocs.mediafly.com/interactives/images/packaging/4.%20Set%20permissions.png" alt="image" /></p></li>
+<li><p>Load it up on the device (iOS, Android, Windows 8, etc.) and test</p></li>
+</ol>
+
+
+<p><a name="packaging_interactives_2"></a></p>
+
+<h3>2. Shell command</h3>
+
+<p>This method is a slight improvement to <a href="#packaging_interactives_1">#1</a> above, and is good if you are using a Mac or Linux
+system and are familiar with using Terminal / Shell.</p>
+
+<ol type="a">
+<li>Open a Terminal window/Shell into the root of your Interactive</li>
+<li><p>Run the following command:</p>
+
+<pre><code> rm file.zip; zip -9 -r file.zip . -x *.png *.gif *.jpg; zip -0 -r file.zip . -i *.png *.gif *.jpg
+</code></pre></li>
+<li><p>Follow steps B through E from <a href="#packaging_interactives_1">#1</a> above.</p></li>
+</ol>
+
+
+<p><a name="packaging_interactives_3"></a></p>
+
+<h3>3. Mediafly Interactives Publisher</h3>
+
+<p>If you plan to perform significant development on an Interactive, and are running on a shell that
+supports Python, this is the path for you.</p>
+
+<p>Use the <a href="https://bitbucket.org/mediafly/mediafly-interactivespublisher">Mediafly Interactives Publisher</a>, a command-line, python-based script that will very quickly:</p>
+
+<ul>
+<li>Allow you to preconfigure needed variables to quickly publish revisions to your Interactive via a JSON document and environment variables</li>
+<li>Optimally package the Interactive for you</li>
+<li>Push the package up into the Airship content management system <strong>very quickly</strong></li>
+</ul>
+
+
+<p>To learn more, read the <a href="https://bitbucket.org/mediafly/mediafly-interactivespublisher/src/1ca748f205eff3a8e8794acdcd64e9ddc1f7d338/publish.py?at=default">publish.py comments</a>.</p>
+
+<h2>Testing on device</h2>
+
+<h3>iOS</h3>
+
+<p>This process enables remote debugging with Safari Web Inspector. It requires Safari 6.0+ and a Mac running OS X.</p>
+
+<p>First, you need to enable Web Inspector.</p>
+
+<ul>
+<li>On iOS, head to Settings > Safari > Advanced</li>
+<li>Toggle "Web Inspector" to ON</li>
+<li>Ensure you are running the latest version of Safari on your Mac</li>
+</ul>
+
+
+<p>Now, you can use Safari's Web Inspector to remotely debug.</p>
+
+<ul>
+<li>Connect your iOS device to your Mac</li>
+<li>Upload the Interactive to Airship</li>
+<li>Launch <a href="https://itunes.apple.com/us/app/whitebox/id399107683?mt=8">Whitebox</a> (or your own custom app if you have one), login, and navigate to the folder from which you can find your Interactive.</li>
+<li>If your Interactive has been downloaded, long-press on it and choose "Delete from Downloader"</li>
+<li>Now, do the following quickly:
+
+<ul>
+<li>Tap on the Interactive</li>
+<li>In Safari, tap on <em>Develop menu > [name of device] > Whitebox > data - index.html</em> .
+You need to complete this step <em>before</em> the Interactive has finished downloading and
+opening, else you will miss initial console messages, network traffic, or other goodies
+that might be output by the Interactive.</li>
+<li>If you don't see your device in the Develop menu, please ensure you only open that menu
+<em>after</em> you have started the load of the Interactive.</li>
+<li>If you miss this window and the Interactive fully opens before you were able to open the
+Web Inspector, your best option is to kill and restart Whitebox.</li>
+</ul>
+</li>
+</ul>
+
+
+<p>Now that you have connected Web Inspector to your iOS device, you can use all the great features within (debugger, call stack, console, network, etc.).</p>
+
+<h3>Android</h3>
+
+<p>Please see <a href="https://developers.google.com/chrome-developer-tools/docs/remote-debugging">Remote Debugging Chrome on Android</a>. Note that this only applies to Android 4.4+.</p>
+
+<hr />
+
+<h1>API and Howtos</h1>
+
+<h2>Controlling the app</h2>
+
+<p>Controlling the app is done by opening a window to a special URL through JavaScript. The container app will handle this as an instruction to handle.  The list of available URLs, and their appropriate actions, are listed below.</p>
+
+<p><strong><em>PLEASE NOTE</em></strong>: every Interactive must allow the user to invoke either mfly://control/showControlBars or mfly://control/done in some way. Else, there is no way to exit the Interactive, as they run full-screen.</p>
+
+<h3>Basic controls</h3>
+
+<h4>Close the item</h4>
+
+<pre><code>Closes the item and returns the user to where they were before.
+URL: mfly://control/done
+Availability: iOS, Android, Windows 8
+</code></pre>
+
+<h4>Show control bars</h4>
+
+<pre><code>Shows the control bars.
+URL: mfly://control/showControlBars
+Availability: iOS, Android
+</code></pre>
+
+<h4>Hide control bars</h4>
+
+<pre><code>Hides the control bars.
+URL: mfly://control/hideControlBars
+Availability: iOS, Android
+</code></pre>
+
+<h4>Browse</h4>
+
+<pre><code>Multiple Interactives can layer on top of each other, to represent different layers of hierarchy. The developer may wish to allow the user to navigate the hierarchy using the core Mediafly app with the default grid/list view, e.g. if a “More” or “Browse” button is presented.  This URL closes all Interactives in the stack and takes the user to that hierarchy in the core app if called.
+URL: mfly://control/browse
+Availability: iOS
+</code></pre>
+
+<h4>Next</h4>
+
+<pre><code>Opens the next Item in the Folder or Collection
+URL: mfly://control/next
+Availability: iOS
+</code></pre>
+
+<h4>Previous</h4>
+
+<pre><code>Opens the previous Item in the Folder or Collection
+URL: mfly://control/previous
+Availability: iOS
+</code></pre>
+
+<h4>Get contents of a folder</h4>
+
+<pre><code>Return a JSON-representation of the folder, in a similar method that mflyInit would return.
+URL: mfly://data/folder/[id]
+Example:
+    GET mfly://data/folder/slug1
+    Result:
+    [ 
+      { 
+        "id": "slug2", 
+        "url": "mfly://item/slug2", 
+        "type": "video", 
+        "name": "Name", 
+        "description": "Description", 
+        "date": "2010-11-12T06:15:15:00-06:00", 
+        "received": "2012-12-19T16:45:14:00-06:00", 
+        "thumbnailUrl": "mfly://image/123", 
+        "launched": "true", 
+        “keywords”: [“keyword4”] 
+      }, 
+      { 
+        "id": "slug3", 
+        “items”: [“slug4”], 
+        "url": "mfly://folder/slug3", 
+        "type": "folder", 
+        "name": "Name", 
+        "description": "Description", 
+        "date": "2010-11-12T06:15:15:00-06:00", 
+        "received": "2012-12-19T16:45:14:00-06:00", 
+        "thumbnailUrl": "mfly://image/123", 
+        "launched": "false" 
+      } 
+    ] 
+
+Availability: iOS, Android, Windows 8
+</code></pre>
+
+<h3>App features</h3>
+
+<h4>Show Search dialog</h4>
+
+<pre><code>Shows the search dialog at x-coord, y-coord coordinates with the specified width and height.
+URL: mfly://control/showSearch?x=[x-coord]&amp;y=[y-coord]&amp;w=[width]&amp;h=[height]
+Availability: iOS
+</code></pre>
+
+<h4>Show Settings</h4>
+
+<pre><code>Shows the settings dialog at x-coord, y-coord coordinates with the specified width and height.
+URL: mfly://control/showSettings?x=[x-coord]&amp;y=[y-coord]&amp;w=[width]&amp;h=[height]
+Availability: iOS
+</code></pre>
+
+<h4>Show Downloader</h4>
+
+<pre><code>Shows the Downloader dialog at x-coord, y-coord coordinates with specified width and height.
+URL: mfly://control/showDownloader?x=[x-coord]&amp;y=[y-coord]&amp;w=[width]&amp;h=[height]
+Availability: iOS
+</code></pre>
+
+<h4>Show Collections</h4>
+
+<pre><code>Shows the Collections dialog at x-coord, y-coord coordinates with specified width and height.
+URL: mfly://control/showCollections?x=[x-coord]&amp;y=[y-coord]&amp;w=[width]&amp;h=[height]
+Availability: iOS
+</code></pre>
+
+<h4>Show "Add to Collections"</h4>
+
+<pre><code>Shows the Add To Collections dialog at x-coord, y-coord coordinates with specified width and height for the specified item.
+URL: mfly://control/showAddToCollection?id=[itemId]&amp;x=[x-coord]&amp;y=[y-coord]&amp;w=[width]&amp;h=[height]
+Availability: iOS
+</code></pre>
+
+<h4>Show Second Screen Options dialog</h4>
+
+<pre><code>Shows the Second Screen Options dialog.
+URL: mfly://control/secondScreenOptions
+Availability: iOS
+</code></pre>
+
+<h4>Email</h4>
+
+<pre><code>If the item can be emailed, invoke email from within the app.
+URL: mfly://control/email/[id]
+Availability: iOS
+</code></pre>
+
+<h3>Links</h3>
+
+<p>To link to another item that is available to the user, simply create a typical <code>&lt;a href&gt;</code> link with the source pointing to an mfly URL below.</p>
+
+<h4>Link to item</h4>
+
+<pre><code>Opens the specified item, where [id] is the ID of the item.  The ID for an item can be found in Airship. Expand the item, and the ID is displayed at the bottom.
+URL: mfly://item/[id]
+Availability: iOS, Android, Windows 8
+</code></pre>
+
+<h4>Link to folder</h4>
+
+<pre><code>Opens the specified folder, where [id] is the ID of the folder.  The ID for a folder can be found in Airship. Expand the item, and the ID is displayed at the bottom.
+URL: mfly://folder/[id]
+Availability: iOS, Android, Windows 8
+</code></pre>
+
+<hr />
+
+<h2>Being controlled by the app</h2>
+
+<p>The app sends many kinds of events into the Interactive, in case the Interactive is interested in reacting to those events. These are done by calling specific JavaScript functions. If the appropriately named function is defined, they will be called by the app at the appropriate time, and the Interactive can take action. If the function does not exist, nothing will happen.</p>
+
+<h3>mflyDataInit</h3>
+
+<p>This function has two uses:</p>
+
+<ol>
+<li>To receive configuration information from the app, and</li>
+<li>To send back configuration to the app.</li>
+</ol>
+
+
+<p>Interactives can implement mflyDataInit and receive within the params parameter a JSON Object of initial configuration.  E.g. on iOS, params may be a JSON Object such as this:</p>
+
+<pre><code>    {
+        "mflyInitVersionMaximum": "2",
+        "user": "jshah@mediafly.com",
+        "displayName": "Jason Shah",
+        "item": "Custom Dynamic Interactive 1.2",
+        “id”: “29342938241238product234234”,
+        "osType": "iOS",
+        "osVersion": "6.1.2",
+        "appVersion": "6.1.4.405",
+        "deviceId": "4639ufu115f0630a13a8744e8b5cc6309b46"
+    }
+</code></pre>
+
+<p>Supported parameters:</p>
+
+<ul>
+<li>mflyInitVersionMaximum: indicates how many possible values mflyInitVersion can have in the return value (see below).</li>
+<li>user: user_context (essentially, system-known username)</li>
+<li>displayName: display name. Can be email, first+last, or something similar</li>
+<li>item: title of this Interactive</li>
+<li>id: the slug (unique id) of this Interactive within Airship</li>
+<li>osType: which OS (iOS, Android, Windows 8)</li>
+<li>osVersion: which version of the OS</li>
+<li>appVersion: which version of the app</li>
+<li>deviceId: the unique device ID for this device</li>
+</ul>
+
+
+<p>Optionally, Interactives can then return a JSON Object with specifics on how the app should behave.  E.g. on iOS, return value may be a JSON Object such as this:</p>
+
+<pre><code>    {
+      “mflyInitVersion”: “2”,
+      “mflyWideScreenSupport”: true,
+      “mflyItems”: [“slug1”, “slug2”, … “slugN”]
+    }
+</code></pre>
+
+<p>Supported parameters:</p>
+
+<ul>
+<li>mflyInitVersion: indicates which version of mflyInit should be called by the app:
+
+<ul>
+<li>Version 2: default version reflected in this documentation</li>
+<li>Version 3: On iOS, sharing status is represented by canShare, canAccessAssetOffline, and canDownloadAsset
+mflyInitVersion is only available on iOS.</li>
+</ul>
+</li>
+<li>mflyWideScreenSupport: if true, this makes the app aware that the Interactive can handle widescreen second screens (HDMI, Apple TV).  This is specifically for the case where the Interactive has been designed to be a presentation-worthy UI for second screens. Only available on iOS.</li>
+</ul>
+
+
+<p>Example:</p>
+
+<pre><code>function mflyDataInit(obj) {
+    // Do initialization
+    return '{ "mflyInitVersion" : "2" }';
+}
+</code></pre>
+
+<p>Availability: iOS, Android</p>
+
+<h3>mflyInit</h3>
+
+<p>The app calls this function when the app launches an Interactive.  The parameter is a dictionary of JSON objects that represent a flattened version of the full hierarchy of folders and items available to the user. The key of each entry is the item/folder slug. Each entry for folders contains a JSON Array called “items”, which contains an array of slugs that are children of this folder.</p>
+
+<p>For example, if a user has the following hierarchy:</p>
+
+<pre><code>  folder [id=slug1] 
+    item [id=slug2] 
+    folder [id=slug3] 
+      item [id=slug4] 
+</code></pre>
+
+<p>then the object may look like this:</p>
+
+<pre><code>{ 
+  “version”: 2,
+  “slug1” : {
+    "id": "slug1", 
+    “items”: [“slug2”, “slug3”],
+    "url": "mfly://folder/slug1", 
+    "type": "folder", 
+    "name": "Name", 
+    "description": "Description", 
+    "date": "2010-11-12T06:15:15:00-06:00", 
+    "received": "2012-12-19T16:45:14:00-06:00", 
+    "thumbnailUrl": "mfly://image/123", 
+    "launched": "false",
+    “keywords”: [“keyword1”, “keyword2”, “keyword3”],
+    “new”: 1
+  },
+  “slug2” : {
+    "id": "slug2", 
+    "url": "mfly://item/slug2", 
+    "type": "video", 
+    "name": "Name", 
+    "description": "Description", 
+    "date": "2010-11-12T06:15:15:00-06:00", 
+    "received": "2012-12-19T16:45:14:00-06:00", 
+    "thumbnailUrl": "mfly://image/123", 
+    "launched": "true",
+    “keywords”: [“keyword4”],
+    “downloadModel”: “DownloadableShareable”
+  },
+  “slug3” : {
+    "id": "slug3", 
+    “items”: [“slug4”],
+    "url": "mfly://folder/slug3", 
+    "type": "folder", 
+    "name": "Name", 
+    "description": "Description", 
+    "date": "2010-11-12T06:15:15:00-06:00", 
+    "received": "2012-12-19T16:45:14:00-06:00", 
+    "thumbnailUrl": "mfly://image/123", 
+    "launched": "false"
+  },
+  “slug4” : {
+    "id": "slug4", 
+    "url": "mfly://item/slug4", 
+    "type": "interactive", 
+    "name": "Name", 
+    "description": "Description", 
+    "date": "2010-11-12T06:15:15:00-06:00", 
+    "received": "2012-12-19T16:45:14:00-06:00", 
+    "thumbnailUrl": "mfly://image/123", 
+    "launched": "true",
+    “new”: 1,
+    “downloadModel”: “DownloadableProtected”
+  }
+}
+</code></pre>
+
+<p>This function and mflyResume exist in harmony.  mflyInit is called on launch of the Interactive. mflyResume is called on both launch and resume of the Interactive.</p>
+
+<p>Expect mflyInit to be called many times for large hierarchies, as often as every 2-3 seconds. Consider processing the results of the mflyInit object in parallel. Imagine in the worst case an mflyInit object with 10,000 items, called every 2-3 seconds. If processing that object occurred synchronously, the Interactive would grind to a halt or crash with out of memory errors.</p>
+
+<p>Parameter definitions:</p>
+
+<ul>
+<li>version: mflyInit uses this version to indicate what the structure of mflyInit looks like. See mflyDataInit for possible versions and what they mean.</li>
+<li>items: a list of slugs of the children of this item (if the item is a folder and has any children). This is used to construct the hierarchy</li>
+<li>type: can be one of “Audio”, “Video”, “image”, “pdf”, “zip”, “ibooks”, “html”, “youtube”, “keynote”, “png”, “jpeg”, “jpg”, “gif”, “tif”, “tiff”</li>
+<li>received: the UTC datetime for when the app received this version of the item.</li>
+<li>launched: whether the user has launched this item in the past.</li>
+<li>new: for folders, number of items within that folder that are defined as “new” based on client’s business rules. For items, if 1, that item is considered “new”. [iOS 425+]</li>
+<li>keywords: any keywords the user set, as a JSON array.</li>
+<li>downloadModel: indicates whether the app will allow you to email this item. If downloadModel=DownloadableShareable, this item can be emailed. All other values indicate that the item cannot be emailed. This is visible if mflyDataInit.mflyInitVersion is set to 2.</li>
+<li>canShare: indicates whether the app will allow you to email this item. This is available if mflyDataInit.mflyInitVersion >= 3.</li>
+<li>canAccessAssetOffline: indicates whether the item is allowed to be downloaded and stored encrypted, per business rules. Applies to video, documents, audio and images. This is available if mflyDataInit.mflyInitVersion >= 3.</li>
+<li>canDownloadAsset: indicates whether the app is allowed to download the item and open it in an external application, unencrypted. Applies to e.g. iBooks, KeyNote, Excel. This is available if mflyDataInit.mflyInitVersion >= 3.</li>
+</ul>
+
+
+<p>All dates are specified in ISO 8601 format.</p>
+
+<p>Example:</p>
+
+<pre><code>function mflyInit(obj) {
+    // Handle mflyInit object
+}
+</code></pre>
+
+<p>Availability: iOS, Android</p>
+
+<h3>mflySync</h3>
+
+<p>As the app synchronizes all folders within a user’s hierarchy, updated information (metadata, URLs, etc.) becomes available. If an Interactive is open while the new information appears, the app calls mflySync with this subset of updated information.  The parameter is an array of JSON objects that represent changed items.</p>
+
+<p>Expect mflySync to be called many times.  Each time may contain a subset of changed information for the app.</p>
+
+<p>The best use of mflySync is to listen for changes to “launched” status. For example, if the Interactive wishes to render “New!” banners on new items, and have those banners clear when the user launches the item, the Interactive would need to listen to mflySync and remove the “New!” banner when launched=true for a given item.</p>
+
+<p>Example:</p>
+
+<pre><code>function mflySync(obj) {
+    // Handle mflySync
+}
+</code></pre>
+
+<p>Availability: iOS</p>
+
+<h3>mflyResume</h3>
+
+<p>The app calls this function when the app opens and shows the Interactive.  If you need to start animation or take other action when the Interactive shows, this is the place to do it.</p>
+
+<p>Example:</p>
+
+<pre><code>function mflyResume() {
+    // Handle mflyResume
+}
+</code></pre>
+
+<p>Availability: iOS</p>
+
+<h3>mflyPause</h3>
+
+<p>The app calls this function when the user hides the Interactive. If you need to stop animation, submit a form, or take other action when the Interactive hides, this is the place to do it.</p>
+
+<p>Example:</p>
+
+<pre><code>function mflyPause() {
+    // Handle mflyPause
+}
+</code></pre>
+
+<p>Availability: iOS</p>
+
+<hr />
+
+<h2>Saving and retrieving key/value data</h2>
+
+<p>Interactives can save data to and retrieve data from the app with AJAX. This is useful for persisting data within or between Interactives. After saving, you can be sure that your data will be saved if the user restarts the app or device (and, soon, uninstalls/reinstalls the app). You can use any key you wish, which provides a lot of flexibility, but please consider providing a namespace within your keys. Otherwise, two Interactives may find ways to clobber each others’ keys.</p>
+
+<p>Key/value data is isolated by user, by app. So, two users cannot share keys, and two apps cannot share keys. Furthermore, currently all key/value data is stored on the device. So, uninstalling the app will remove all saved keys (though, there are plans to synchronize key/value data to servers).</p>
+
+<h3>Save data</h3>
+
+<p>To save data to the app container, make an AJAX GET to <code>mfly://data/info/[key]?method=PUT&amp;value=[value]</code>, where [key] is the key you wish to use, and [value] is the value for that key.</p>
+
+<p>HTTP response codes:</p>
+
+<ul>
+<li>Response of 200 OK indicates a successful save to an existing key</li>
+<li>Response of 201 Created indicates a successful save to a new key</li>
+<li>Response of 400 Bad Request is returned if the value has not been previously saved</li>
+</ul>
+
+
+<p>(Note: attempts were made to use HTTP PUT verbs, but iOS seems to strip out the body of the PUT, so we migrated to use GET instead).</p>
+
+<h4>Example</h4>
+
+<p>This example saves key/value data, using jQuery.</p>
+
+<pre><code>var key = $('#key').val();
+var value = { name: ‘abc’, value: ‘def’ };
+
+$.ajax({
+    type: "GET",
+    url: "mfly://data/info/" + key,
+    contentType: "text/plain; charset=utf-8",
+    data: "value=" + encodeURIComponent(JSON.stringify(value)) + "&amp;method=PUT",
+    dataType: "text",
+    success: function(result, status, xhr) {
+        // Success! Do something.
+    },
+    error: function(xhr) {
+        // Error! Do something.
+    }
+});
+</code></pre>
+
+<p>Availability: iOS</p>
+
+<h3>Retrieve data</h3>
+
+<p>To get data from the app container, make an AJAX GET to <code>mfly://data/info/[key]</code>, where [key] is the key you wish to use.</p>
+
+<p>HTTP response codes:</p>
+
+<ul>
+<li>Response of 200 OK indicates a successful get of an existing key. The body of the response will contain the value of the key</li>
+<li>Response of 404 Not Found indicates that the key does not exist</li>
+</ul>
+
+
+<h4>Example</h4>
+
+<p>This example retrieves value data for a given key, using jQuery.</p>
+
+<pre><code>var key = $('#key).val();
+$.ajax({
+    type: "GET",
+    url: "mfly://data/info/" + key,
+    success: function(result, status, xhr) {
+        // Success!
+        value = JSON.parse(result);
+    },
+    error: function(xhr) {
+        // Error! Examine the response code to understand the cause of the error.
+    }
+});
+</code></pre>
+
+<p>Availability: iOS</p>
+
+<hr />
+
+<h2>Embedding an image or another Interactive</h2>
+
+<p>Interactives have the ability to embed items that exist in the app into it.  This is primarily used to embed images and other Interactives.  Documents, audio and video embeds will “stream” the media if they aren’t downloaded. HTML and YouTube links that are embedded may result in errors if the user is offline. The best user experience will be provided to the user only if embedding is limited to images and Interactives.</p>
+
+<ul>
+<li>To embed an Interactive, create an <code>&lt;iframe&gt;</code> and set the src to <code>mfly://data/embed/[id]</code> where [id] is the ID of the Interactive you wish to embed</li>
+<li>To embed an image, create an <code>&lt;img&gt;</code> and set the src to <code>mfly://data/embed/[id]</code> where [id] is the ID of the image you wish to embed</li>
+</ul>
+
+
+<p>HTTP response codes:</p>
+
+<ul>
+<li>If the item has already been downloaded, the app will return HTTP status code 301 (Redirect), with location set to the appropriate location.  The client browser should automatically redirect to the new location, and the item will be rendered by the Interactive.</li>
+<li><p>If the item has not already been downloaded, the app will return HTTP status code 202 Accepted, with the Retry-After field set to the number of seconds the Interactive should wait before trying again.</p>
+
+<p>Please note that asking too many times may put the Downloader (in iOS) into a race condition, as each request will trigger the Downloader to poll and possibly start downloading again.  So, please be considerate and ask at most every few seconds.</p></li>
+</ul>
+
+
+<p>As you can see, embedding requires care. You cannot assume that the embedded item is available yet, because it may be behind some longer items in the Downloader. Instead, you have to try to fetch the content and monitor response codes.</p>
+
+<h4>Example</h4>
+
+<p>This example embeds, and retries based on response codes.</p>
+
+<pre><code>    &lt;head&gt;
+    &lt;script&gt;
+        $(document).ready(function () {
+            tryEmbed($('iframe'), 'b1a1febacd6c4606963af7ed9cde2d24product53834', 1);
+            tryEmbed($('img'), 'b1a1febacd6c4606963af7ed9cde2d24product53888', 1);
+        });
+
+        function tryEmbed($e, id, delayTimeMs) {
+            console.log('delayUntilEmbedIsReady called with delayTimeMs=' + delayTimeMs);
+            setTimeout(function() {
+                $.ajax({
+                    url: "mfly://data/embed/" + id,
+                    success: function(data, textStatus, request) {
+                        if(request.status === 202) {
+                            console.log("Request.status: 202. Need to retry")
+                            var delayFor = request.getResponseHeader("Retry-After");
+                            tryEmbed($e, id, delayFor * 1000);
+                        } else {
+                            console.log("Request.status: " + request.status + ". Starting embed.");
+                            $e.attr('src', 'mfly://data/embed/' + id);
+                        }
+                    },
+                    error: function(data, status, request) {
+                        console.log("ERROR requesting embed");
+                    }
+                });
+            }, delayTimeMs);
+        }
+    &lt;/script&gt;
+    &lt;/head&gt;
+
+    &lt;body&gt;
+        &lt;iframe style="width:200px; height:200px;"&gt;&lt;/iframe&gt;
+        &lt;img /&gt;
+    &lt;/body&gt;
+</code></pre>
+
+<p>Availability: iOS</p>
+
+<hr />
+
+<h2>Support widescreen on iOS</h2>
+
+<h3>Control</h3>
+
+<p>When a user plugs into an HDMI dongle or connects via AirPlay, they can change the app to run in Second Screen mode.  When in this mode, the app can paint a canvas that uses the entire screen resolution (whereas, Mirroring mode restricts the TV/projector to a 4x3 output and adds black bars on the left and right).</p>
+
+<p>TODO: Add screenshots of what this looks like</p>
+
+<p>To support this mode in an Interactive, the Interactive must do a few things.</p>
+
+<ol>
+<li><p>On the app call to mflyDataInit, the object returned must have mflyWideScreenSupport set:</p>
+
+<pre><code> {
+   “mflyWideScreenSupport”: true
+   ...
+ }
+</code></pre>
+
+<p> Other parameters may exist in this JSON object, of course, but mflyWideScreenSupport is the key to initiate proper app support for widescreen.</p></li>
+<li><p>If the app has sent mflyWideScreenSupport=true in mflyDataInit, the Interactive should expect to receive a call from the app to mflyWideScreen(useWideScreen), where useWidescreen is either true or false. For example:</p>
+
+<pre><code> &lt;script&gt;
+     function mflyWideScreen(useWideScreen) {
+         if (useWideScreen) {
+             // Refresh the UI to show in 16x9 mode, 
+             // probably by adjusting CSS. On the iPad, black bars will
+             // appear above and below the content.
+         } else {
+             // Refresh the UI to show in 4x3 mode on iPad only
+         }
+     }
+ &lt;/script&gt;
+</code></pre></li>
+<li><p>(Optional) The app can be notified when the user flips second-screen mode on or off. When the user changes to/from second-screen mode, the app will call mflySecondScreenAvailable(bool), where bool is true or false. Apps can react to this call to render a button to invoke the Second Screen Options dialog.</p></li>
+</ol>
+
+
+<p>Example:</p>
+
+<pre><code>function mflySecondScreenAvailable(isAvailable) {
+    if (isAvailable) {
+        // Second screen is now on/available.
+        $("#secondScreenOptionsBtn").show();
+    } else {
+        // Second screen is no longer available.
+        $("#secondScreenOptionsBtn").hide();
+    }
+}
+</code></pre>
+
+<h3>UIWebKit Resolution</h3>
+
+<p>When the iPad is displaying an Interactive only on its canvas, the WebKit container is 1024 x 568.  When the iPad is projecting to Second Screen, the WebKit container shrinks to 960 x 540. This allows for the browser to efficiently scale up when connected to 720p and 1080p TVs.</p>
+
+<p>To account for this, we suggest tagging the <body> element with a class that denotes either "ipad" or "widescreen", and adjusting your layout and images based on this.  For example,</p>
+
+<ol>
+<li><p>You may tag specific images or image types based on whether they are in second screen or not:</p>
+
+<pre><code> &lt;style&gt;
+ .ipad .carousel_image       { width: 1024px; height: 378px; 
+     background:url('image.png'); background-size: 1024px 378px; }
+ .widescreen .carousel_image { width: 960px; height: 354px; 
+     background:url(''image.png'); background-size: 960px 354px; }
+ &lt;/style&gt;
+</code></pre></li>
+<li><p>The body tag is initially decorated to be iPad-focused:</p>
+
+<pre><code> &lt;body class="ipad"&gt;
+ ...
+ &lt;/body&gt;
+</code></pre></li>
+<li><p>When the user switches between Second Screen and Disabled, the <body> tag changes its class:</p>
+
+<pre><code> &lt;script&gt;
+ function mflyWideScreen(isWidescreen) {
+     if (isWidescreen) {
+         $("body").removeClass("ipad").addClass("widescreen");
+     } else {
+         $("body").removeClass("widescreen").addClass("ipad");
+     }
+ }
+ &lt;/script&gt;
+</code></pre></li>
+</ol>
+
+
+<p>Availability: iOS</p>
+
+<hr />
+
+<h2>Other useful information</h2>
+
+<h3>Stopping rubber band effects</h3>
+
+<p>Since Interactives are embedded web pages, on some (particularly iOS) devices they tend to have a “rubber band” effect.  E.g. if touch-and-hold a part of the Interactive, then drag it, the entire screen will follow your finger.  This does not feel appropriate for an Interactive, as users want the look and feel to be more native.</p>
+
+<p>To address this, attempt to listen for “touchmove” events and stop them from propagating up to the device’s WebView:</p>
+
+<pre><code>&lt;script type="text/javascript"&gt;
+    document.addEventListener('touchmove', function(event) {
+        event.preventDefault();
+    }, false);
+&lt;/script&gt;
+</code></pre>
+
+<hr />
+
+<h2>Examples</h2>
+
+<p>Mediafly creates and maintains a detailed list of examples. These examples illustrate many of the features of Interactives and can serve as QA for client app developers.</p>
+
+<p>Please see the <a href="https://bitbucket.org/mediafly/mediafly-interactives-tools-and-examples">Mediafly Interactives Tools and Examples</a> BitBucket repository for more information.</p>
+
+<p>Additionally, Mediafly publishes blog posts illustrating interesting ways to use Interactives:</p>
+
+<ul>
+<li><a href="http://www.mediafly.com/angularjs-and-interactives-create-awesome-workouts">AngularJS and Interactives Create Awesome Workouts</a></li>
+</ul>
+
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mediafly Interactives</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/styles.css" rel="stylesheet">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script>
+        $(function(){
+            $("#includedContent").load("interactives.html", function() {
+                $("img").addClass("img-responsive");
+                var $toc = $("#nav_toc");
+                $(":header").each(function(i, h) {
+                    // Only do this for h1 and h2
+                    var $h = $(h);
+                    var tagname = h.tagName.toLowerCase();
+                    if (tagname === 'h1' || tagname === 'h2' || tagname === 'h3') {
+                        // Add an <a name> to right before the tag
+                        var html = $h.html();
+                        var name_ref = html.replace(/\W/g, '_').toLowerCase();
+                        $h.before('<a name="' + name_ref + '"></a>');
+
+                        // Now add a link to that <a name> in the TOC
+                        var li = "<li class='toc_" + tagname + "'>";
+                        var append = $(li + "<a href='#" + name_ref + "'>" + $(h).html().trim() + "</a></li>");
+                        $(append).appendTo($toc);
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+
+<body style="padding-top: 70px;">
+<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Mediafly Interactives</a>
+        </div>
+        <div class="collapse navbar-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="http://www.mediafly.com"><img src="http://devdocs.mediafly.com.s3.amazonaws.com/interactives/images/mediafly_logo.png"></a></li>
+            </ul>
+        </div><!--/.nav-collapse -->
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="well">
+                <div class="nav-header">Contents</div>
+                <div id="nav_toc" class="nav nav-stacked">
+                </div>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <div id="includedContent"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-2327816-16', 'mediafly.com');
+    ga('send', 'pageview');
+</script>
+
+</body>
+</html>
