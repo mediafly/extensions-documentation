@@ -231,9 +231,46 @@ Controlling the app is done by opening a window to a special URL through JavaScr
 	Opens the previous Item in the Folder or Collection
 	URL: mfly://control/previous
 	Availability: iOS
-	
+
+#### Get information about a folder or item
+	Return a JSON representation of a folder or item.
+	URL: mfly://data/item/[id]
+	Example:
+		GET mfly://data/item/slug1
+		Result:
+        { 
+            "id": "slug1", 
+            "url": "mfly://item/slug1", 
+            "type": "video", 
+            "name": "Name", 
+            "description": "Description", 
+            "date": "2010-11-12T06:15:15:00-06:00", 
+            "received": "2012-12-19T16:45:14:00-06:00", 
+            "thumbnailUrl": "mfly://image/123", 
+            "launched": "true", 
+            “keywords”: [“keyword4”] 
+        }, 
+	Example:
+		GET mfly://data/folder/slug2
+		Result:
+        {
+            "id": "slug2", 
+            “items”: [“slug3”, “slug4”],
+            "url": "mfly://item/slug2", 
+            "type": "folder", 
+            "name": "Name", 
+            "description": "Description", 
+            "date": "2010-11-12T06:15:15:00-06:00", 
+            "received": "2012-12-19T16:45:14:00-06:00", 
+            "thumbnailUrl": "mfly://image/123", 
+            "launched": "false",
+            “keywords”: [“keyword1”, “keyword2”, “keyword3”],
+            “new”: 1
+        }
+    Availability: iOS. Android, Windows 8 coming soon.
+        
 #### Get contents of a folder
-	Return a JSON-representation of the folder, in a similar method that mflyInit would return.
+	Return a JSON representation of the contents of a folder.
 	URL: mfly://data/folder/[id]
 	Example:
 		GET mfly://data/folder/slug1
@@ -305,9 +342,16 @@ Controlling the app is done by opening a window to a special URL through JavaScr
 	URL: mfly://control/secondScreenOptions
 	Availability: iOS
 
+
 #### Email
 	If the item can be emailed, invoke email from within the app.
 	URL: mfly://control/email/[id]
+	Availability: iOS
+
+
+#### Refresh the contents of the app
+	Trigger the app to refresh its content. If items have changed, this should trigger mflySync calls appropriately.
+	URL: mfly://control/refresh
 	Availability: iOS
 
 
