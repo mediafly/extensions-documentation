@@ -349,13 +349,6 @@ Availability: iOS, Android, Windows 8
 
 <h3>App features</h3>
 
-<h4>Show Search dialog</h4>
-
-<pre><code>Shows the search dialog at x-coord, y-coord coordinates with the specified width and height.
-URL: mfly://control/showSearch?x=[x-coord]&amp;y=[y-coord]&amp;w=[width]&amp;h=[height]
-Availability: iOS
-</code></pre>
-
 <h4>Show Settings</h4>
 
 <pre><code>Shows the settings dialog at x-coord, y-coord coordinates with the specified width and height.
@@ -421,6 +414,30 @@ Availability: iOS, Android, Windows 8
 <pre><code>Opens the specified folder, where [id] is the ID of the folder.  The ID for a folder can be found in Airship. Expand the item, and the ID is displayed at the bottom.
 URL: mfly://folder/[id]
 Availability: iOS, Android, Windows 8
+</code></pre>
+
+<h3>Search</h3>
+
+<p>Mediafly's apps provide real-time, native search as a core part of the functionality. There are two ways to work with Search:</p>
+
+<ol>
+<li>Use the native app's core Search UI. In this case, you simply need to open the Search dialog and let the user use that dialog. See "Show Search dialog" below.</li>
+<li>Implement your own UI. In this case, you use mfly:// calls to get search results given terms, and then render the UI as you wish. See "Search by keyword" below.</li>
+</ol>
+
+
+<h4>Show Search dialog</h4>
+
+<pre><code>Shows the search dialog at x-coord, y-coord coordinates with the specified width and height.
+URL: mfly://control/showSearch?x=[x-coord]&amp;y=[y-coord]&amp;w=[width]&amp;h=[height]
+Availability: iOS
+</code></pre>
+
+<h4>Search by keyword</h4>
+
+<pre><code>Conduct a search for the given keyword. Return value is a JSON-array of folders and items, similar in format to a call to mfly://folder/[id].
+URL: mfly://data/search?term=[alpha]
+Availability: iOS
 </code></pre>
 
 <hr />
