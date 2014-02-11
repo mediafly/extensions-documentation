@@ -406,7 +406,8 @@ Interactives can implement mflyDataInit and receive within the params parameter 
 			"osType": "iOS",
 			"osVersion": "6.1.2",
 			"appVersion": "6.1.4.405",
-			"deviceId": "4639ufu115f0630a13a8744e8b5cc6309b46"
+			"deviceId": "4639ufu115f0630a13a8744e8b5cc6309b46",
+			"lastUpdated": "2014-02-03T07:04:07-06:00"
 		}
 
 Supported parameters:
@@ -444,7 +445,7 @@ Example:
 	    return '{ "mflyInitVersion" : "2" }';
 	}
 
-Availability: iOS, Android
+Availability: iOS, Android, Windows 8
 
 
 
@@ -822,13 +823,24 @@ To address this, attempt to listen for “touchmove” events and stop them from
 
 -----
 
-## Examples
+## Examples and Blog posts
+
+### Examples
 
 Mediafly creates and maintains a detailed list of examples. These examples illustrate many of the features of Interactives and can serve as QA for client app developers.
 
 Please see the [Mediafly Interactives Tools and Examples](https://bitbucket.org/mediafly/mediafly-interactives-tools-and-examples) BitBucket repository for more information.
 
-Additionally, Mediafly publishes blog posts illustrating interesting ways to use Interactives:
+To see the examples in action on your device:
+
+1. Download Whitebox for [iOS](https://itunes.apple.com/us/app/whitebox/id399107683?mt=8), [Android](https://play.google.com/store/apps/details?id=com.mediafly.android.video.onmediafly&hl=en) or [Windows 8](http://apps.microsoft.com/windows/en-us/app/39a96812-56fa-4583-82eb-4d787fda0d4c)
+2. When asked for Company Code or Company Login Name, enter "interactives"
+3. Each example will be contained within a folder that describes the example
+
+
+### Blog posts
+
+Mediafly publishes blog posts illustrating interesting ways to use Interactives. More to come over time.
 
 * [AngularJS and Interactives Create Awesome Workouts](http://www.mediafly.com/angularjs-and-interactives-create-awesome-workouts)
 
