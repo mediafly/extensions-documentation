@@ -231,51 +231,47 @@ Web Inspector, your best option is to kill and restart Whitebox.</li>
 
 <h4>Close the item</h4>
 
-<pre><code>Closes the item and returns the user to where they were before.
-URL: mfly://control/done
-Availability: iOS, Android, Windows 8
-</code></pre>
+<p><em>URL:</em> mfly://control/done <br>
+<em>Description:</em> Closes the item and returns the user to where they were before. <br>
+<em>Availability:</em> iOS, Android, Windows 8</p>
 
 <h4>Show control bars</h4>
 
-<pre><code>Shows the control bars.
-URL: mfly://control/showControlBars
-Availability: iOS, Android
-</code></pre>
+<p><em>URL:</em> mfly://control/showControlBars <br>
+<em>Description:</em> Shows the control bars. <br>
+<em>Availability:</em> iOS, Android</p>
 
 <h4>Hide control bars</h4>
 
-<pre><code>Hides the control bars.
-URL: mfly://control/hideControlBars
-Availability: iOS, Android
-</code></pre>
+<p><em>URL:</em> mfly://control/hideControlBars <br>
+<em>Description:</em> Hides the control bars. <br>
+<em>Availability:</em> iOS, Android</p>
 
 <h4>Browse</h4>
 
-<pre><code>Multiple Interactives can layer on top of each other, to represent different layers of hierarchy. The developer may wish to allow the user to navigate the hierarchy using the core Mediafly app with the default grid/list view, e.g. if a “More” or “Browse” button is presented.  This URL closes all Interactives in the stack and takes the user to that hierarchy in the core app if called.
-URL: mfly://control/browse
-Availability: iOS
-</code></pre>
+<p><em>URL:</em> mfly://control/browse <br>
+<em>Description:</em> Multiple Interactives can layer on top of each other, to represent different layers of hierarchy. The developer may wish to allow the user to navigate the hierarchy using the core Mediafly app with the default grid/list view, e.g. if a “More” or “Browse” button is presented.  This URL closes all Interactives in the stack and takes the user to that hierarchy in the core app if called. <br>
+<em>Availability:</em> iOS</p>
 
 <h4>Next</h4>
 
-<pre><code>Opens the next Item in the Folder or Collection
-URL: mfly://control/next
-Availability: iOS
-</code></pre>
+<p><em>URL:</em> mfly://control/next <br>
+<em>Description:</em> Opens the next Item in the Folder or Collection <br>
+<em>Availability:</em> iOS, Android</p>
 
 <h4>Previous</h4>
 
-<pre><code>Opens the previous Item in the Folder or Collection
-URL: mfly://control/previous
-Availability: iOS
-</code></pre>
+<p><em>URL:</em> mfly://control/previous <br>
+<em>Description:</em> Opens the previous Item in the Folder or Collection <br>
+<em>Availability:</em> iOS, Android</p>
 
 <h4>Get information about a folder or item</h4>
 
-<pre><code>Return a JSON representation of a folder or item.
-URL: mfly://data/item/[id]
-Example:
+<p><em>URL:</em> mfly://data/item/[id] <br>
+<em>Description:</em> Return a JSON representation of a folder or item. <br>
+<em>Examples:</em></p>
+
+<pre><code>Example 1:      
     GET mfly://data/item/slug1
     Result:
     { 
@@ -289,8 +285,10 @@ Example:
         "thumbnailUrl": "mfly://image/123", 
         "launched": "true", 
         “keywords”: [“keyword4”] 
-    }, 
-Example:
+    } 
+
+
+Example 2:
     GET mfly://data/folder/slug2
     Result:
     {
@@ -307,14 +305,16 @@ Example:
         “keywords”: [“keyword1”, “keyword2”, “keyword3”],
         “new”: 1
     }
-Availability: iOS. Android, Windows 8 coming soon.
 </code></pre>
+
+<p><em>Availability:</em> iOS. Android, Windows 8 coming soon.</p>
 
 <h4>Get contents of a folder</h4>
 
-<pre><code>Return a JSON representation of the contents of a folder.
-URL: mfly://data/folder/[id]
-Example:
+<p><em>URL:</em> mfly://data/folder/[id] <br>
+<em>Description:</em> Return a JSON representation of the contents of a folder.</p>
+
+<pre><code>Example:
     GET mfly://data/folder/slug1
     Result:
     [ 
@@ -343,60 +343,53 @@ Example:
         "launched": "false" 
       } 
     ] 
-
-Availability: iOS, Android, Windows 8
 </code></pre>
+
+<p><em>Availability:</em> iOS, Android, Windows 8</p>
 
 <h3>App features</h3>
 
 <h4>Show Settings</h4>
 
-<pre><code>Shows the settings dialog at x-coord, y-coord coordinates with the specified width and height.
-URL: mfly://control/showSettings?x=[x-coord]&amp;y=[y-coord]&amp;w=[width]&amp;h=[height]
-Availability: iOS
-</code></pre>
+<p><em>URL:</em> mfly://control/showSettings?x=[x-coord]&amp;y=[y-coord]&amp;w=[width]&amp;h=[height] <br>
+<em>Description:</em> Shows the settings dialog at x-coord, y-coord coordinates with the specified width and height. <br>
+<em>Availability:</em> iOS</p>
 
 <h4>Show Downloader</h4>
 
-<pre><code>Shows the Downloader dialog at x-coord, y-coord coordinates with specified width and height.
-URL: mfly://control/showDownloader?x=[x-coord]&amp;y=[y-coord]&amp;w=[width]&amp;h=[height]
-Availability: iOS
-</code></pre>
+<p><em>URL:</em> mfly://control/showDownloader?x=[x-coord]&amp;y=[y-coord]&amp;w=[width]&amp;h=[height] <br>
+<em>Description:</em> Shows the Downloader dialog at x-coord, y-coord coordinates with specified width and height. <br>
+<em>Availability:</em> iOS</p>
 
 <h4>Show Collections</h4>
 
-<pre><code>Shows the Collections dialog at x-coord, y-coord coordinates with specified width and height.
-URL: mfly://control/showCollections?x=[x-coord]&amp;y=[y-coord]&amp;w=[width]&amp;h=[height]
-Availability: iOS
-</code></pre>
+<p><em>URL:</em> mfly://control/showCollections?x=[x-coord]&amp;y=[y-coord]&amp;w=[width]&amp;h=[height] <br>
+<em>Description:</em> Shows the Collections dialog at x-coord, y-coord coordinates with specified width and height. <br>
+<em>Availability:</em> iOS</p>
 
 <h4>Show "Add to Collections"</h4>
 
-<pre><code>Shows the Add To Collections dialog at x-coord, y-coord coordinates with specified width and height for the specified item.
-URL: mfly://control/showAddToCollection?id=[itemId]&amp;x=[x-coord]&amp;y=[y-coord]&amp;w=[width]&amp;h=[height]
-Availability: iOS
-</code></pre>
+<p><em>URL:</em> mfly://control/showAddToCollection?id=[itemId]&amp;x=[x-coord]&amp;y=[y-coord]&amp;w=[width]&amp;h=[height] <br>
+<em>Description:</em> Shows the Add To Collections dialog at x-coord, y-coord coordinates with specified width and height for the specified item. <br>
+<em>Availability:</em> iOS</p>
 
 <h4>Show Second Screen Options dialog</h4>
 
-<pre><code>Shows the Second Screen Options dialog.
-URL: mfly://control/secondScreenOptions
-Availability: iOS
-</code></pre>
+<p><em>URL:</em> mfly://control/secondScreenOptions <br>
+<em>Description:</em> Shows the Second Screen Options dialog. <br>
+<em>Availability:</em> iOS</p>
 
 <h4>Email</h4>
 
-<pre><code>If the item can be emailed, invoke email from within the app.
-URL: mfly://control/email/[id]
-Availability: iOS
-</code></pre>
+<p><em>URL:</em> mfly://control/email/[id] <br>
+<em>Description:</em> If the item can be emailed, invoke email from within the app. <br>
+<em>Availability:</em> iOS</p>
 
 <h4>Refresh the contents of the app</h4>
 
-<pre><code>Trigger the app to refresh its content. If items have changed, this should trigger mflySync calls appropriately.
-URL: mfly://control/refresh
-Availability: iOS
-</code></pre>
+<p><em>URL:</em> mfly://control/refresh <br>
+<em>Description:</em> Trigger the app to refresh its content. If items have changed, this should trigger mflySync calls appropriately. <br>
+<em>Availability:</em> iOS</p>
 
 <h3>Links</h3>
 
@@ -404,17 +397,15 @@ Availability: iOS
 
 <h4>Link to item</h4>
 
-<pre><code>Opens the specified item, where [id] is the ID of the item.  The ID for an item can be found in Airship. Expand the item, and the ID is displayed at the bottom.
-URL: mfly://item/[id]
-Availability: iOS, Android, Windows 8
-</code></pre>
+<p><em>URL:</em> mfly://item/[id] <br>
+<em>Description:</em> Opens the specified item, where [id] is the ID of the item.  The ID for an item can be found in Airship. Expand the item, and the ID is displayed at the bottom. <br>
+<em>Availability:</em> iOS, Android, Windows 8</p>
 
 <h4>Link to folder</h4>
 
-<pre><code>Opens the specified folder, where [id] is the ID of the folder.  The ID for a folder can be found in Airship. Expand the item, and the ID is displayed at the bottom.
-URL: mfly://folder/[id]
-Availability: iOS, Android, Windows 8
-</code></pre>
+<p><em>URL:</em> mfly://folder/[id] <br>
+<em>Description:</em> Opens the specified folder, where [id] is the ID of the folder.  The ID for a folder can be found in Airship. Expand the item, and the ID is displayed at the bottom. <br>
+<em>Availability:</em> iOS, Android, Windows 8</p>
 
 <h3>Search</h3>
 
@@ -428,17 +419,15 @@ Availability: iOS, Android, Windows 8
 
 <h4>Show Search dialog</h4>
 
-<pre><code>Shows the search dialog at x-coord, y-coord coordinates with the specified width and height.
-URL: mfly://control/showSearch?x=[x-coord]&amp;y=[y-coord]&amp;w=[width]&amp;h=[height]
-Availability: iOS
-</code></pre>
+<p><em>Description:</em> Shows the search dialog at x-coord, y-coord coordinates with the specified width and height.
+<em>URL:</em> mfly://control/showSearch?x=[x-coord]&amp;y=[y-coord]&amp;w=[width]&amp;h=[height]
+<em>Availability:</em> iOS</p>
 
 <h4>Search by keyword</h4>
 
-<pre><code>Conduct a search for the given keyword. Return value is a JSON-array of folders and items, similar in format to a call to mfly://folder/[id].
-URL: mfly://data/search?term=[alpha]
-Availability: iOS
-</code></pre>
+<p><em>URL:</em> mfly://data/search?term=[alpha]
+<em>Description:</em> Conduct a search for the given keyword. Return value is a JSON-array of folders and items, similar in format to a call to mfly://folder/[id].
+<em>Availability:</em> iOS</p>
 
 <hr />
 
@@ -451,10 +440,12 @@ Availability: iOS
 <p>This function has two uses:</p>
 
 <ol>
-<li>To receive configuration information from the app, and</li>
-<li>To send back configuration to the app.</li>
+<li>Receive configuration information from the app, and</li>
+<li>Send configuration parameters to the app</li>
 </ol>
 
+
+<h4>Use 1: Receive configuration information from the app</h4>
 
 <p>Interactives can implement mflyDataInit and receive within the params parameter a JSON Object of initial configuration.  E.g. on iOS, params may be a JSON Object such as this:</p>
 
@@ -472,7 +463,7 @@ Availability: iOS
     }
 </code></pre>
 
-<p>Supported parameters:</p>
+<p><em>Supported parameters:</em></p>
 
 <ul>
 <li>mflyInitVersionMaximum: indicates how many possible values mflyInitVersion can have in the return value (see below).</li>
@@ -484,10 +475,13 @@ Availability: iOS
 <li>osVersion: which version of the OS</li>
 <li>appVersion: which version of the app</li>
 <li>deviceId: the unique device ID for this device</li>
+<li>lastUpdated: the lasted updated time. This is good for debugging purposes, to help you identify which version of the Interactive you are looking at on the device</li>
 </ul>
 
 
-<p>Optionally, Interactives can then return a JSON Object with specifics on how the app should behave.  E.g. on iOS, return value may be a JSON Object such as this:</p>
+<h4>Use 2: Send configuration parameters to the app</h4>
+
+<p>Optionally, Interactives can then return a JSON Object with specifics on how the app should behave.  E.g. on ""iOS, return value may be a JSON Object such as this:</p>
 
 <pre><code>    {
       “mflyInitVersion”: “2”,
@@ -496,22 +490,21 @@ Availability: iOS
     }
 </code></pre>
 
-<p>Supported parameters:</p>
+<p><em>Supported parameters:</em></p>
 
 <ul>
-<li>mflyInitVersion: indicates which version of mflyInit should be called by the app:
+<li>mflyInitVersion: indicates which version of mflyInit should be called by the app. Note that mflyInitVersion is only available on iOS. Android and Windows 8 support only 'version 3' of mflyInit.
 
 <ul>
-<li>Version 2: default version reflected in this documentation</li>
-<li>Version 3: On iOS, sharing status is represented by canShare, canAccessAssetOffline, and canDownloadAsset
-mflyInitVersion is only available on iOS.</li>
+<li>"2": default version reflected in this documentation</li>
+<li>"3": On iOS, sharing status is represented by canShare, canAccessAssetOffline, and canDownloadAsset.</li>
 </ul>
 </li>
 <li>mflyWideScreenSupport: if true, this makes the app aware that the Interactive can handle widescreen second screens (HDMI, Apple TV).  This is specifically for the case where the Interactive has been designed to be a presentation-worthy UI for second screens. Only available on iOS.</li>
 </ul>
 
 
-<p>Example:</p>
+<p><em>Example:</em></p>
 
 <pre><code>function mflyDataInit(obj) {
     // Do initialization
@@ -519,7 +512,7 @@ mflyInitVersion is only available on iOS.</li>
 }
 </code></pre>
 
-<p>Availability: iOS, Android, Windows 8</p>
+<p><em>Availability:</em> iOS, Android, Windows 8. Not all parameters will be available on Android or Windows 8.</p>
 
 <h3>mflyInit</h3>
 
@@ -615,14 +608,14 @@ mflyInitVersion is only available on iOS.</li>
 
 <p>All dates are specified in ISO 8601 format.</p>
 
-<p>Example:</p>
+<p><em>Example:</em></p>
 
 <pre><code>function mflyInit(obj) {
     // Handle mflyInit object
 }
 </code></pre>
 
-<p>Availability: iOS, Android</p>
+<p><em>Availability:</em> iOS, Android</p>
 
 <h3>mflySync</h3>
 
@@ -632,40 +625,40 @@ mflyInitVersion is only available on iOS.</li>
 
 <p>The best use of mflySync is to listen for changes to “launched” status. For example, if the Interactive wishes to render “New!” banners on new items, and have those banners clear when the user launches the item, the Interactive would need to listen to mflySync and remove the “New!” banner when launched=true for a given item.</p>
 
-<p>Example:</p>
+<p><em>Example:</em></p>
 
 <pre><code>function mflySync(obj) {
     // Handle mflySync
 }
 </code></pre>
 
-<p>Availability: iOS</p>
+<p><em>Availability:</em> iOS</p>
 
 <h3>mflyResume</h3>
 
 <p>The app calls this function when the app opens and shows the Interactive.  If you need to start animation or take other action when the Interactive shows, this is the place to do it.</p>
 
-<p>Example:</p>
+<p><em>Example:</em></p>
 
 <pre><code>function mflyResume() {
     // Handle mflyResume
 }
 </code></pre>
 
-<p>Availability: iOS</p>
+<p><em>Availability:</em> iOS</p>
 
 <h3>mflyPause</h3>
 
 <p>The app calls this function when the user hides the Interactive. If you need to stop animation, submit a form, or take other action when the Interactive hides, this is the place to do it.</p>
 
-<p>Example:</p>
+<p><em>Example:</em></p>
 
 <pre><code>function mflyPause() {
     // Handle mflyPause
 }
 </code></pre>
 
-<p>Availability: iOS</p>
+<p><em>Availability:</em> iOS</p>
 
 <hr />
 
@@ -690,9 +683,8 @@ mflyInitVersion is only available on iOS.</li>
 
 <p>(Note: attempts were made to use HTTP PUT verbs, but iOS seems to strip out the body of the PUT, so we migrated to use GET instead).</p>
 
-<h4>Example</h4>
-
-<p>This example saves key/value data, using jQuery.</p>
+<p><em>Example:</em>
+This example saves key/value data, using jQuery.</p>
 
 <pre><code>var key = $('#key').val();
 var value = { name: ‘abc’, value: ‘def’ };
@@ -712,7 +704,7 @@ $.ajax({
 });
 </code></pre>
 
-<p>Availability: iOS</p>
+<p><em>Availability:</em> iOS, Android, Windows 8</p>
 
 <h3>Retrieve data</h3>
 
@@ -726,9 +718,8 @@ $.ajax({
 </ul>
 
 
-<h4>Example</h4>
-
-<p>This example retrieves value data for a given key, using jQuery.</p>
+<p><em>Example:</em>
+This example retrieves value data for a given key, using jQuery.</p>
 
 <pre><code>var key = $('#key).val();
 $.ajax({
@@ -744,7 +735,7 @@ $.ajax({
 });
 </code></pre>
 
-<p>Availability: iOS</p>
+<p><em>Availability:</em> iOS</p>
 
 <hr />
 
@@ -770,9 +761,8 @@ $.ajax({
 
 <p>As you can see, embedding requires care. You cannot assume that the embedded item is available yet, because it may be behind some longer items in the Downloader. Instead, you have to try to fetch the content and monitor response codes.</p>
 
-<h4>Example</h4>
-
-<p>This example embeds, and retries based on response codes.</p>
+<p><em>Example:</em>
+This example embeds, and retries based on response codes.</p>
 
 <pre><code>    &lt;head&gt;
     &lt;script&gt;
@@ -811,7 +801,7 @@ $.ajax({
     &lt;/body&gt;
 </code></pre>
 
-<p>Availability: iOS</p>
+<p><em>Availability:</em> iOS</p>
 
 <hr />
 
@@ -835,42 +825,50 @@ $.ajax({
 </code></pre>
 
 <p> Other parameters may exist in this JSON object, of course, but mflyWideScreenSupport is the key to initiate proper app support for widescreen.</p></li>
-<li><p>If the app has sent mflyWideScreenSupport=true in mflyDataInit, the Interactive should expect to receive a call from the app to mflyWideScreen(useWideScreen), where useWidescreen is either true or false. For example:</p>
-
-<pre><code> &lt;script&gt;
-     function mflyWideScreen(useWideScreen) {
-         if (useWideScreen) {
-             // Refresh the UI to show in 16x9 mode, 
-             // probably by adjusting CSS. On the iPad, black bars will
-             // appear above and below the content.
-         } else {
-             // Refresh the UI to show in 4x3 mode on iPad only
-         }
-     }
- &lt;/script&gt;
-</code></pre></li>
-<li><p>(Optional) The app can be notified when the user flips second-screen mode on or off. When the user changes to/from second-screen mode, the app will call mflySecondScreenAvailable(bool), where bool is true or false. Apps can react to this call to render a button to invoke the Second Screen Options dialog.</p>
-
-<p> Example:</p>
-
-<pre><code> function mflySecondScreenAvailable(isAvailable) {
-     if (isAvailable) {
-         // Second screen is now on/available.
-         $("#secondScreenOptionsBtn").show();
-     } else {
-         // Second screen is no longer available.
-         $("#secondScreenOptionsBtn").hide();
-     }
- }
-</code></pre></li>
+<li><p>If the app has sent mflyWideScreenSupport=true in mflyDataInit, the Interactive should expect to receive a call from the app to mflyWideScreen(useWideScreen), where useWidescreen is either true or false.</p></li>
 </ol>
 
+
+<p><em>Example:</em></p>
+
+<pre><code>    &lt;script&gt;
+        function mflyWideScreen(useWideScreen) {
+            if (useWideScreen) {
+                // Refresh the UI to show in 16x9 mode, 
+                // probably by adjusting CSS. On the iPad, black bars will
+                // appear above and below the content.
+            } else {
+                // Refresh the UI to show in 4x3 mode on iPad only
+            }
+        }
+    &lt;/script&gt;
+</code></pre>
+
+<ol>
+<li>(Optional) The app can be notified when the user flips second-screen mode on or off. When the user changes to/from second-screen mode, the app will call mflySecondScreenAvailable(bool), where bool is true or false. Apps can react to this call to render a button to invoke the Second Screen Options dialog.</li>
+</ol>
+
+
+<p><em>Example:</em></p>
+
+<pre><code>    function mflySecondScreenAvailable(isAvailable) {
+        if (isAvailable) {
+            // Second screen is now on/available.
+            $("#secondScreenOptionsBtn").show();
+        } else {
+            // Second screen is no longer available.
+            $("#secondScreenOptionsBtn").hide();
+        }
+    }
+</code></pre>
 
 <h3>UIWebKit Resolution</h3>
 
 <p>When the iPad is displaying an Interactive only on its canvas, the WebKit container is 1024 x 568.  When the iPad is projecting to Second Screen, the WebKit container shrinks to 960 x 540. This allows for the browser to efficiently scale up when connected to 720p and 1080p TVs.</p>
 
-<p>To account for this, we suggest tagging the <body> element with a class that denotes either "ipad" or "widescreen", and adjusting your layout and images based on this.  For example,</p>
+<p>To account for this, we suggest tagging the <body> element with a class that denotes either "ipad" or "widescreen", and adjusting your layout and images based on this.</p>
+
+<p><em>Example:</em></p>
 
 <ol>
 <li><p>You may tag specific images or image types based on whether they are in second screen or not:</p>
@@ -903,7 +901,7 @@ $.ajax({
 </ol>
 
 
-<p>Availability: iOS</p>
+<p><em>Availability:</em> iOS</p>
 
 <hr />
 
@@ -921,6 +919,8 @@ $.ajax({
     }, false);
 &lt;/script&gt;
 </code></pre>
+
+<p>We have created a detailed example within Mediafly Interactives Tools and Examples that demonstrates this, <a href="https://bitbucket.org/mediafly/mediafly-interactives-tools-and-examples/src/98dc1548d87fadeb15613896eb8335b2c772003e/examples/Swipe/?at=default">here</a>.</p>
 
 <hr />
 
