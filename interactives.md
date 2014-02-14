@@ -377,13 +377,13 @@ Mediafly's apps provide real-time, native search as a core part of the functiona
 2. Implement your own UI. In this case, you use mfly:// calls to get search results given terms, and then render the UI as you wish. See "Search by keyword" below.
 
 #### Show Search dialog
-*Description:* Shows the search dialog at x-coord, y-coord coordinates with the specified width and height.
-*URL:* mfly://control/showSearch?x=[x-coord]&y=[y-coord]&w=[width]&h=[height]
+*Description:* Shows the search dialog at x-coord, y-coord coordinates with the specified width and height. <br>
+*URL:* mfly://control/showSearch?x=[x-coord]&y=[y-coord]&w=[width]&h=[height]<br>
 *Availability:* iOS
 
 #### Search by keyword
-*URL:* mfly://data/search?term=[alpha]
-*Description:* Conduct a search for the given keyword. Return value is a JSON-array of folders and items, similar in format to a call to mfly://folder/[id].
+*URL:* mfly://data/search?term=[alpha]<br>
+*Description:* Conduct a search for the given keyword. Return value is a JSON-array of folders and items, similar in format to a call to mfly://folder/[id].<br>
 *Availability:* iOS
 
 
@@ -417,7 +417,7 @@ Interactives can implement mflyDataInit and receive within the params parameter 
 			"lastUpdated": "2014-02-03T07:04:07-06:00"
 		}
 
-*Supported parameters:*
+*Supported parameters:*<br>
 
 * mflyInitVersionMaximum: indicates how many possible values mflyInitVersion can have in the return value (see below).
 * user: user_context (essentially, system-known username)
@@ -440,14 +440,14 @@ Optionally, Interactives can then return a JSON Object with specifics on how the
 		  “mflyItems”: [“slug1”, “slug2”, … “slugN”]
 		}
 
-*Supported parameters:*
+*Supported parameters:*<br>
 
 * mflyInitVersion: indicates which version of mflyInit should be called by the app. Note that mflyInitVersion is only available on iOS. Android and Windows 8 support only 'version 3' of mflyInit.
 	* "2": default version reflected in this documentation
 	* "3": On iOS, sharing status is represented by canShare, canAccessAssetOffline, and canDownloadAsset. 	
 * mflyWideScreenSupport: if true, this makes the app aware that the Interactive can handle widescreen second screens (HDMI, Apple TV).  This is specifically for the case where the Interactive has been designed to be a presentation-worthy UI for second screens. Only available on iOS.
 
-*Example:*
+*Example:*<br>
 
 	function mflyDataInit(obj) {
 		// Do initialization
@@ -562,7 +562,7 @@ Expect mflySync to be called many times.  Each time may contain a subset of chan
 
 The best use of mflySync is to listen for changes to “launched” status. For example, if the Interactive wishes to render “New!” banners on new items, and have those banners clear when the user launches the item, the Interactive would need to listen to mflySync and remove the “New!” banner when launched=true for a given item.
 
-*Example:*
+*Example:*<br>
 
 	function mflySync(obj) {
 		// Handle mflySync
@@ -574,7 +574,7 @@ The best use of mflySync is to listen for changes to “launched” status. For 
 ### mflyResume
 The app calls this function when the app opens and shows the Interactive.  If you need to start animation or take other action when the Interactive shows, this is the place to do it.
 
-*Example:*
+*Example:*<br>
 
 	function mflyResume() {
 		// Handle mflyResume
@@ -586,7 +586,7 @@ The app calls this function when the app opens and shows the Interactive.  If yo
 ### mflyPause
 The app calls this function when the user hides the Interactive. If you need to stop animation, submit a form, or take other action when the Interactive hides, this is the place to do it.
 
-*Example:*
+*Example:*<br>
 
 	function mflyPause() {
 		// Handle mflyPause
@@ -615,7 +615,7 @@ HTTP response codes:
 
 (Note: attempts were made to use HTTP PUT verbs, but iOS seems to strip out the body of the PUT, so we migrated to use GET instead).
 
-*Example:*
+*Example:*<br>
 This example saves key/value data, using jQuery.
 
 	var key = $('#key').val();
@@ -647,7 +647,7 @@ HTTP response codes:
 * Response of 200 OK indicates a successful get of an existing key. The body of the response will contain the value of the key
 * Response of 404 Not Found indicates that the key does not exist
 
-*Example:*
+*Example:*<br>
 This example retrieves value data for a given key, using jQuery.
 
 	var key = $('#key).val();
@@ -686,7 +686,7 @@ HTTP response codes:
   
 As you can see, embedding requires care. You cannot assume that the embedded item is available yet, because it may be behind some longer items in the Downloader. Instead, you have to try to fetch the content and monitor response codes.
 
-*Example:*
+*Example:*<br>
 This example embeds, and retries based on response codes.
 
         <head>
@@ -752,7 +752,7 @@ To support this mode in an Interactive, the Interactive must do a few things.
 2. If the app has sent mflyWideScreenSupport=true in mflyDataInit, the Interactive should expect to receive a call from the app to mflyWideScreen(useWideScreen), where useWidescreen is either true or false. 
 
 
-*Example:*
+*Example:*<br>
 
         <script>
             function mflyWideScreen(useWideScreen) {
@@ -769,7 +769,7 @@ To support this mode in an Interactive, the Interactive must do a few things.
 
 3. (Optional) The app can be notified when the user flips second-screen mode on or off. When the user changes to/from second-screen mode, the app will call mflySecondScreenAvailable(bool), where bool is true or false. Apps can react to this call to render a button to invoke the Second Screen Options dialog.
 
-*Example:*
+*Example:*<br>
 
 		function mflySecondScreenAvailable(isAvailable) {
 			if (isAvailable) {
@@ -788,7 +788,7 @@ When the iPad is displaying an Interactive only on its canvas, the WebKit contai
 
 To account for this, we suggest tagging the <body> element with a class that denotes either "ipad" or "widescreen", and adjusting your layout and images based on this.  
 
-*Example:*
+*Example:*<br>
 
 1. You may tag specific images or image types based on whether they are in second screen or not:
 
