@@ -176,42 +176,21 @@ supports Python, this is the path for you.</p>
 
 <h3>iOS</h3>
 
-<p>This process enables remote debugging with Safari Web Inspector. It requires Safari 6.0+ and a Mac running OS X.</p>
+<p>There are two approaches that allow developers to interact with their Interactive when running on a device:</p>
 
-<p>First, you need to enable Web Inspector.</p>
+<ol>
+<li><p><a href="jsconsole.com">jsconsole.com</a>. This is a clever mechanism which allows you to interact with JavaScript on your device remotely. You:</p>
 
-<ul>
-<li>On iOS, head to Settings > Safari > Advanced</li>
-<li>Toggle "Web Inspector" to ON</li>
-<li>Ensure you are running the latest version of Safari on your Mac</li>
-</ul>
-
-
-<p>Now, you can use Safari's Web Inspector to remotely debug.</p>
-
-<ul>
-<li>Connect your iOS device to your Mac</li>
-<li>Upload the Interactive to Airship</li>
-<li>Launch <a href="https://itunes.apple.com/us/app/whitebox/id399107683?mt=8">Whitebox</a> (or your own custom app if you have one), login, and navigate to the folder from which you can find your Interactive.</li>
-<li>If your Interactive has been downloaded, long-press on it and choose "Delete from Downloader"</li>
-<li>Now, do the following quickly:
-
-<ul>
-<li>Tap on the Interactive</li>
-<li>In Safari, tap on <em>Develop menu > [name of device] > Whitebox > data - index.html</em> .
-You need to complete this step <em>before</em> the Interactive has finished downloading and
-opening, else you will miss initial console messages, network traffic, or other goodies
-that might be output by the Interactive.</li>
-<li>If you don't see your device in the Develop menu, please ensure you only open that menu
-<em>after</em> you have started the load of the Interactive.</li>
-<li>If you miss this window and the Interactive fully opens before you were able to open the
-Web Inspector, your best option is to kill and restart Whitebox.</li>
-</ul>
+<ol type="a">
+<li>Start a remote debugging session with <code>:listen [id]</code>.</li>
+<li>Add the script that is generated into your Interactive</li>
+<li>Load the Interactive into Airship and open it on your device</li>
+<li>Interact with the Interactive via jsconsole.com.</li>
+</ol>
 </li>
-</ul>
+<li><p>For trusted partners, we are building the capability to use the iOS Simulator to launch Whitebox and remotely debug with Safari's Web Inspector. Contact us for more information.</p></li>
+</ol>
 
-
-<p>Now that you have connected Web Inspector to your iOS device, you can use all the great features within (debugger, call stack, console, network, etc.).</p>
 
 <h3>Android</h3>
 
