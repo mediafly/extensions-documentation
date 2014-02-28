@@ -341,19 +341,26 @@ Controlling the app is done by opening a window to a special URL through JavaScr
 *Availability:* iOS
 
 
-### Links
+### Links (Open and Goto)
 
-To link to another item that is available to the user, simply create a typical `<a href>` link with the source pointing to an mfly URL below.
+Two types of links exist within Interactives: Open and Goto. When an Interactive "opens" an item, the item appears on top of the navigational stack, and the user is only given a single option to escape the item, by tapping Done/Close.  When an Interactive "gotos" an item, the app opens that item and throws away the navigational stack behind it. The user is given the same navigational capabilities as if they opened the destination item directly.
 
-#### Link to item
+To create either link, simply create a typical `<a href>` link with the source pointing to an mfly URL as specified below.
+
+#### Open an item
 *URL:* mfly://item/[id] <br>
-*Description:* Opens the specified item, where [id] is the ID of the item.  The ID for an item can be found in Airship. Expand the item, and the ID is displayed at the bottom. <br>
+*Description:* Opens the specified item, where [id] is the ID of the item.  As described above, the historical navigational stack is maintained, and the user can return to it. The ID for an item can be found in Airship. Expand the item, and the ID is displayed at the bottom. <br>
 *Availability:* iOS, Android, Windows 8
 	
-#### Link to folder
+#### Open a folder
 *URL:* mfly://folder/[id] <br>
-*Description:* Opens the specified folder, where [id] is the ID of the folder.  The ID for a folder can be found in Airship. Expand the item, and the ID is displayed at the bottom. <br>
+*Description:* Opens the specified folder, where [id] is the ID of the folder.  As described above, the historical navigational stack is maintained, and the user can return to it. The ID for a folder can be found in Airship. Expand the item, and the ID is displayed at the bottom. <br>
 *Availability:* iOS, Android, Windows 8
+
+#### Goto an item or a folder
+*URL:* mfly://control/goto/[id] <br>
+*Description:* Gotos the specified item or folder, where [id] is the ID of the item or folder.  As described above, when the app goes to another item or folder, the navigational stack behind the destination is thrown away, and the user is given the same navigational capabilities as if they opened the destination item directly. The ID for a folder can be found in Airship. Expand the item, and the ID is displayed at the bottom. <br>
+*Availability:* iOS (Android and Windows 8 coming soon)
 
 
 ### Search
@@ -566,7 +573,7 @@ The app calls this function when the app opens and shows the Interactive.  If yo
 		// Handle mflyResume
 	}
 
-*Availability:* iOS
+*Availability:* iOS, Android
 
 
 ### mflyPause
@@ -578,7 +585,7 @@ The app calls this function when the user hides the Interactive. If you need to 
 		// Handle mflyPause
 	}
 
-*Availability:* iOS
+*Availability:* iOS, Android
 
 
 ----------
@@ -650,7 +657,7 @@ This example retrieves value data for a given key, using jQuery.
 	});
 
 
-*Availability:* iOS
+*Availability:* iOS, Android, Windows 8
 
 
 ----------
@@ -810,17 +817,11 @@ To account for this, we suggest tagging the <body> element with a class that den
 ## Other useful information
 
 ### Stopping rubber band effects
-Since Interactives are embedded web pages, on some (particularly iOS) devices they tend to have a “rubber band” effect.  E.g. if touch-and-hold a part of the Interactive, then drag it, the entire screen will follow your finger.  This does not feel appropriate for an Interactive, as users want the look and feel to be more native.
+Since Interactives are embedded web pages, on some (particularly iOS) devices they tend to have a “rubber band” effect.  E.g. if touch-and-hold a part of the Interactive, then drag it, the entire screen will follow your finger, then "snap back" after you let go.  This does not feel appropriate for an Interactive, as users want the look and feel to be more native.
 
-To address this, attempt to listen for “touchmove” events and stop them from propagating up to the device’s WebView:
+To address this, we recommend using [Hammer.js](http://eightmedia.github.io/hammer.js/), a mobile-focused touch gesture library.
 
-	<script type="text/javascript">
-		document.addEventListener('touchmove', function(event) {
-		    event.preventDefault();
-		}, false);
-	</script>
-
-We have created a detailed example within Mediafly Interactives Tools and Examples that demonstrates this, [here](https://bitbucket.org/mediafly/mediafly-interactives-tools-and-examples/src/98dc1548d87fadeb15613896eb8335b2c772003e/examples/Swipe/?at=default).
+We have created a detailed example within Mediafly Interactives Tools and Examples that demonstrates this, [here](https://bitbucket.org/mediafly/mediafly-interactives-tools-and-examples/src/98dc1548d87fadeb15613896eb8335b2c772003e/examples/Swipe/app/?at=default).
 
 -----
 
