@@ -810,6 +810,8 @@ To account for this, we suggest tagging the <body> element with a class that den
         }
         </script>
 
+*Note*: You will likely have to fix the container to 960x540 when in Widescreen. We have seen cases where, if the container is left to auto width/height, and the user invokes the keyboard on the iPad (say, a search field), a giant black space where that keyboard was appears on the second screen. We have seen this on iOS 7.0.x; it may have been corrected in iOS 7.1+ and may no longer be relevant.
+
 *Availability:* iOS
 
 -----
@@ -822,6 +824,11 @@ Since Interactives are embedded web pages, on some (particularly iOS) devices th
 To address this, we recommend using [Hammer.js](http://eightmedia.github.io/hammer.js/), a mobile-focused touch gesture library.
 
 We have created a detailed example within Mediafly Interactives Tools and Examples that demonstrates this, [here](https://bitbucket.org/mediafly/mediafly-interactives-tools-and-examples/src/98dc1548d87fadeb15613896eb8335b2c772003e/examples/Swipe/app/?at=default).
+
+### Smoother scrolling
+By default, iOS scrolling in the UIWebView is exactly controlled by your finger. You can drag the web view down and up, but you cannot "throw" the page in a direction. Furthermore, if you have a lot of large images on the page, scrolling can become choppy.
+
+To alleviate this, consider implementing ```-webkit-overflow-scrolling: touch``` on your DOM nodes that handle scrolling. When set to touch, UIWebView uses native-style scrolling on your node.
 
 -----
 
