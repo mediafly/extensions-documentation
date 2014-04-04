@@ -239,7 +239,7 @@ Controlling the app is done by opening a window to a special URL through JavaScr
         
         
     Example 2:
-		GET mfly://data/folder/slug2
+		GET mfly://data/item/slug2
 		Result:
         {
             "id": "slug2", 
@@ -260,15 +260,15 @@ Controlling the app is done by opening a window to a special URL through JavaScr
         
 #### Get contents of a folder
 *URL:* mfly://data/folder/[id] <br>
-*Description:* Return a JSON representation of the contents of a folder.
+*Description:* Return a JSON representation of the contents of a folder. To get the contents of the top-level folder, use id of \__root__.
 
 	Example:
-		GET mfly://data/folder/slug1
+		GET mfly://data/folder/slug2
 		Result:
 		[ 
           { 
-            "id": "slug2", 
-            "url": "mfly://item/slug2", 
+            "id": "slug3", 
+            "url": "mfly://item/slug3", 
             "type": "video", 
             "name": "Name", 
             "description": "Description", 
@@ -279,9 +279,9 @@ Controlling the app is done by opening a window to a special URL through JavaScr
             “keywords”: [“keyword4”] 
           }, 
           { 
-            "id": "slug3", 
-            “items”: [“slug4”], 
-            "url": "mfly://folder/slug3", 
+            "id": "slug4", 
+            “items”: [“slug5”], 
+            "url": "mfly://folder/slug4", 
             "type": "folder", 
             "name": "Name", 
             "description": "Description", 

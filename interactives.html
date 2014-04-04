@@ -282,7 +282,7 @@ supports Python, this is the path for you.</p>
 
 
 Example 2:
-    GET mfly://data/folder/slug2
+    GET mfly://data/item/slug2
     Result:
     {
         "id": "slug2", 
@@ -305,15 +305,15 @@ Example 2:
 <h4>Get contents of a folder</h4>
 
 <p><em>URL:</em> mfly://data/folder/[id] <br>
-<em>Description:</em> Return a JSON representation of the contents of a folder.</p>
+<em>Description:</em> Return a JSON representation of the contents of a folder. To get the contents of the top-level folder, use id of __root__.</p>
 
 <pre><code>Example:
-    GET mfly://data/folder/slug1
+    GET mfly://data/folder/slug2
     Result:
     [ 
       { 
-        "id": "slug2", 
-        "url": "mfly://item/slug2", 
+        "id": "slug3", 
+        "url": "mfly://item/slug3", 
         "type": "video", 
         "name": "Name", 
         "description": "Description", 
@@ -324,9 +324,9 @@ Example 2:
         “keywords”: [“keyword4”] 
       }, 
       { 
-        "id": "slug3", 
-        “items”: [“slug4”], 
-        "url": "mfly://folder/slug3", 
+        "id": "slug4", 
+        “items”: [“slug5”], 
+        "url": "mfly://folder/slug4", 
         "type": "folder", 
         "name": "Name", 
         "description": "Description", 
