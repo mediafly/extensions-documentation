@@ -29,7 +29,7 @@ To ensure that the apps work consistently and correctly, the Interactive builder
 		<script src="js/jquery.min.js"></script>
 		<link rel="stylesheet" href="css/main.css">
 
-    and an index.html file containing the following is not acceptable for offline     use, because the files are absolutely referenced.
+    and an index.html file containing the following is not acceptable for offline use, because the files are absolutely referenced.
     
 		<script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
 		<link rel="stylesheet" href="http://mediafly.com/css/main.css">
@@ -98,23 +98,21 @@ There are three methods to package and deploy Interactives. From easiest+least e
 
 A. Zip the contents of the containing folder, not the folder itself. For example:
 
-	![Do not zip from here](http://devdocs.mediafly.com/interactives/images/packaging/1. Do not zip from here.png)
-    Do not zip from here...
+![Do not zip from here](http://devdocs.mediafly.com/interactives/images/packaging/1. Do not zip from here.png) Do not zip from here...
 
-    ![Zip from here](http://devdocs.mediafly.com/interactives/images/packaging/2. Zip from here.png)
-    ... Zip from here
+![Zip from here](http://devdocs.mediafly.com/interactives/images/packaging/2. Zip from here.png) ... Zip from here
     
 B. Upload the zip file you created into the Airship content management system:
 
-	![image](http://devdocs.mediafly.com/interactives/images/packaging/3. Drag into Airship.png)
+![image](http://devdocs.mediafly.com/interactives/images/packaging/3. Drag into Airship.png)
 
 C. (Or, if you are replacing an existing existing item, upload it into the Media panel)
 
-	![Replace media from the Media panel](http://devdocs.mediafly.com/interactives/images/packaging/3b. Replace item from Media panel.png)
+![Replace media from the Media panel](http://devdocs.mediafly.com/interactives/images/packaging/3b. Replace item from Media panel.png)
 
 D. Set your Interactive's item permissions
 
-	![image](http://devdocs.mediafly.com/interactives/images/packaging/4. Set permissions.png)
+![image](http://devdocs.mediafly.com/interactives/images/packaging/4. Set permissions.png)
 
 E. Load it up on the device (iOS, Android, Windows 8, etc.) and test
 
@@ -311,15 +309,9 @@ Controlling the app is done by opening a window to a special URL through JavaScr
 *Availability:* iOS
 
 
-#### Show Collections
-*URL:* mfly://control/showCollections?x=[x-coord]&y=[y-coord]&w=[width]&h=[height] <br>
-*Description:* Shows the Collections dialog at x-coord, y-coord coordinates with specified width and height. <br>
-*Availability:* iOS
-
-
-#### Show "Add to Collections"
-*URL:* mfly://control/showAddToCollection?id=[itemId]&x=[x-coord]&y=[y-coord]&w=[width]&h=[height] <br>
-*Description:* Shows the Add To Collections dialog at x-coord, y-coord coordinates with specified width and height for the specified item. <br>
+#### Show User Management Dialog
+*URL:* mfly://control/showUserManagement&x=[x-coord]&y=[y-coord]&w=[width]&h=[height] <br>
+*Description:* Shows the User Management dialog, which allows the user to login or manage users. <br>
 *Availability:* iOS
 
 
@@ -377,6 +369,87 @@ Mediafly's apps provide real-time, native search as a core part of the functiona
 #### Search by keyword
 *URL:* mfly://data/search?term=[alpha]<br>
 *Description:* Conduct a search for the given keyword. Return value is a JSON-array of folders and items, similar in format to a call to mfly://folder/[id].<br>
+*Availability:* iOS
+
+
+### Collections
+Collections allow users to create a "personal playlist" of items. Oftentimes this is used as a wa to organize items for, say, an upcoming meeting with a customer. Collections are pointers to items, not copies of items; updating the original item in Airship will update the item in the Collection as well.
+
+
+#### Show "Collections"
+*URL:* mfly://control/showCollections?x=[x-coord]&y=[y-coord]&w=[width]&h=[height] <br>
+*Description:* Shows the Collections dialog at x-coord, y-coord coordinates with specified width and height. <br>
+*Availability:* iOS
+
+
+#### Show "Add to Collections"
+*URL:* mfly://control/showAddToCollection?id=[itemId]&x=[x-coord]&y=[y-coord]&w=[width]&h=[height] <br>
+*Description:* Shows the Add To Collections dialog at x-coord, y-coord coordinates with specified width and height for the specified item. <br>
+*Availability:* iOS
+
+
+#### Get the list of Collections
+*URL:* mfly://data/collections <br>
+*Description:* Return a JSON representation of the list of Collections
+
+	Example:
+		GET mfly://data/collections
+		Result:
+		[ 
+          { 
+            "id": "collection1", 
+            "name": "Collection 1", 
+            "items": [
+              id_1_if_item_1_in_collection,
+              id_2_if_item_2_in_collection,
+            ]
+          }, 
+          { 
+            "id": "collection2", 
+            "name": "Collection 2", 
+            "items": [
+              id_3_if_item_1_in_collection,
+              id_4_if_item_1_in_collection,
+            ]
+          }
+        ] 
+
+*Availability:* iOS
+
+
+#### Get the contents of a Collection
+*URL:* mfly://data/collection/[collection unique ID] <br>
+*Description:* Return a JSON representation of the contents of a collection, in a similar format to Get Folder.
+
+	Example:
+		GET mfly://data/collections/collection1
+		Result:
+		[ 
+          { 
+            "id": "slug1", 
+            "url": "mfly://item/slug1", 
+            "type": "video", 
+            "name": "Name", 
+            "description": "Description", 
+            "date": "2010-11-12T06:15:15:00-06:00", 
+            "received": "2012-12-19T16:45:14:00-06:00", 
+            "thumbnailUrl": "mfly://image/123", 
+            "launched": "true", 
+            “keywords”: [“keyword4”] 
+          }, 
+          { 
+            "id": "slug2", 
+            "url": "mfly://folder/slug3", 
+            "type": "pdf", 
+            "name": "Name", 
+            "description": "Description", 
+            "date": "2010-11-12T06:15:15:00-06:00", 
+            "received": "2012-12-19T16:45:14:00-06:00", 
+            "thumbnailUrl": "mfly://image/123", 
+            "launched": "false" 
+          } 
+        ] 
+        
 *Availability:* iOS
 
 
