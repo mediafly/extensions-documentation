@@ -348,12 +348,6 @@ Example 2:
 <em>Description:</em> Shows the settings dialog at x-coord, y-coord coordinates with the specified width and height. <br>
 <em>Availability:</em> iOS</p>
 
-<h4>Show Downloader</h4>
-
-<p><em>URL:</em> mfly://control/showDownloader?x=[x-coord]&amp;y=[y-coord]&amp;w=[width]&amp;h=[height] <br>
-<em>Description:</em> Shows the Downloader dialog at x-coord, y-coord coordinates with specified width and height. <br>
-<em>Availability:</em> iOS</p>
-
 <h4>Show User Management Dialog</h4>
 
 <p><em>URL:</em> mfly://control/showUserManagement&amp;x=[x-coord]&amp;y=[y-coord]&amp;w=[width]&amp;h=[height] <br>
@@ -503,6 +497,66 @@ Example 2:
         "launched": "false" 
       } 
     ] 
+</code></pre>
+
+<p><em>Availability:</em> iOS</p>
+
+<h3>Download status</h3>
+
+<p>Mediafly's apps have been optimized for very advanced synchronization and download use cases. We offer a set of Interactives calls to obtain information about downloads and control the app.</p>
+
+<h4>Show Downloader</h4>
+
+<p><em>URL:</em> mfly://control/showDownloader?x=[x-coord]&amp;y=[y-coord]&amp;w=[width]&amp;h=[height] <br>
+<em>Description:</em> Shows the Downloader dialog at x-coord, y-coord coordinates with specified width and height. <br>
+<em>Availability:</em> iOS</p>
+
+<h4>Get total download progress</h4>
+
+<p><em>URL:</em> mfly://data/download/status <br>
+<em>Description:</em> Get total download progress, as a range between 0 (no downloads started) and 1 (all downloads complete), and number of failed downloads. <br></p>
+
+<pre><code>Example:
+    GET mfly://data/download/status
+    Result:
+    {
+      "progress":0.12, 
+      "fails":1
+    }
+</code></pre>
+
+<h4>Get download progress for a single item</h4>
+
+<p><em>URL:</em> mfly://data/download/status/[id] <br>
+<em>Description:</em> Get download status for a single item. The attribute may be "progress" (download is progressing normally), "error" (download is in an error state), or "exceed" (download won't proceed because the cellular limit set for the app has been exceeded). <br></p>
+
+<pre><code>Example:
+    GET mfly://data/download/status/[id]
+    Result:
+    { "progress": 0.34 }
+
+Example:
+    GET mfly://data/download/status/[id]
+    Result:
+    { "error": 0.34 }
+
+Example:
+    GET mfly://data/download/status/[id]
+    Result:
+    { "exceed": 0.34 }
+</code></pre>
+
+<p><em>Availability:</em> iOS</p>
+
+<h4>mflyDownloadStatus</h4>
+
+<p>Interactives can listen for changes to total download status with mflyDownloadStatus. This function is called approximately once per second while a download is being conducted. The Interactive simply needs to implement this function and take some (short-running) action. The parameter is a JSON object that indicates progress percentage as a decimal from 0 to 1, and fail count as an integer.</p>
+
+<pre><code>Example:
+    function mflyDownloadStatus(obj) {
+        // obj = { 'progress': 0.12, 'fails': 1 }
+        // Handle download status object
+    }
 </code></pre>
 
 <p><em>Availability:</em> iOS</p>
