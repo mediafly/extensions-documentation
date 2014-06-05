@@ -326,6 +326,12 @@ Controlling the app is done by opening a window to a special URL through JavaScr
 *Description:* Trigger the app to refresh its content. If items have changed, this should trigger mflySync calls appropriately. <br>
 *Availability:* iOS
 
+#### Show Annotations
+*URL:* mfly://control/showAnnotations <br>
+*Description:* If annotations are enabled, show the annotations control bar. <br>
+*Availability:* iOS
+
+
 
 ### Links (Open and Goto)
 
@@ -547,12 +553,11 @@ Interactives can implement mflyDataInit and receive within the params parameter 
 
 
 #### Use 2: Send configuration parameters to the app
-Optionally, Interactives can then return a JSON Object with specifics on how the app should behave.  E.g. on ""iOS, return value may be a JSON Object such as this:
+Optionally, Interactives can then return a JSON Object with specifics on how the app should behave.  E.g. on iOS, return value may be a JSON Object such as this:
 
 		{
-		  “mflyInitVersion”: “2”,
-		  “mflyWideScreenSupport”: true,
-		  “mflyItems”: [“slug1”, “slug2”, … “slugN”]
+		  “mflyInitVersion”: “3”,
+		  “mflyWideScreenSupport”: true
 		}
 
 *Supported parameters:*<br>
@@ -566,7 +571,7 @@ Optionally, Interactives can then return a JSON Object with specifics on how the
 
 	function mflyDataInit(obj) {
 		// Do initialization
-	    return '{ "mflyInitVersion" : "2" }';
+	    return '{ "mflyInitVersion" : "3" }';
 	}
 
 *Availability:* iOS, Android, Windows 8. Not all parameters will be available on Android or Windows 8.
@@ -755,14 +760,51 @@ This example saves key/value data, using jQuery.
 *Availability:* iOS, Android, Windows 8
 
 ### Retrieve data
-To get data from the app container, make an AJAX GET to ```mfly://data/info/[key]```, where [key] is the key you wish to use.
 
-HTTP response codes:
+You can retrieve value information from keys in multiple ways. In all cases:
 
-* Response of 200 OK indicates a successful get of an existing key. The body of the response will contain the value of the key
+* Response of 200 OK indicates a successful get of an existing key. The body of the response will contain the values indicated below.
 * Response of 404 Not Found indicates that the key does not exist
 
-*Example:*<br>
+
+#### Single key ####
+
+To get data for a specific key from the app container, make an AJAX GET to ```mfly://data/info/[key]```, where [key] is the key you wish to use.
+
+On successful retrieval, body will contain the value of the key. 
+
+#### All keys ####
+
+To get data for all keys from the app container, make an AJAX GET to ```mfly://data/info``` .
+
+On successful retrieval, body will contain a JSON object enumerating all keys and values, such as:
+
+	{ "key1": "value1", "key2": "value2", ... } 
+	
+#### Key prefix ####
+
+To get data for all keys that begin with X, make an AJAX GET to ```mfly://data/info?prefix=X```
+
+On successful retrieval, body will contain a JSON object enumerating all keys and values where the keys begin with X. For example, if list of keys/values in app are: 
+
+* key=snow, value=white 
+* key=snowball, value=round 
+* key=fire, value=red 
+
+Then:
+GET ```mfly://data/info?prefix=snow```
+returns 
+
+	{ "snow": "white", "snowball": "round" } 
+
+GET ```mfly://data/info?prefix=abc```
+returns 
+
+	{} 
+
+
+
+#### Example ####
 This example retrieves value data for a given key, using jQuery.
 
 	var key = $('#key).val();
@@ -778,8 +820,7 @@ This example retrieves value data for a given key, using jQuery.
 		}
 	});
 
-
-*Availability:* iOS, Android, Windows 8
+*Availability:* iOS (single key only, currently; others coming soon), Android, Windows 8
 
 
 ----------
@@ -791,56 +832,26 @@ Interactives have the ability to embed items that exist in the app into it.  Thi
 
 * To embed an Interactive, create an ```<iframe>``` and set the src to ```mfly://data/embed/[id]``` where [id] is the ID of the Interactive you wish to embed
 * To embed an image, create an ```<img>``` and set the src to ```mfly://data/embed/[id]``` where [id] is the ID of the image you wish to embed
+* Embed can also be used to pull data items from the app into the Interactive.
 
-HTTP response codes:
+Here are the HTTP response codes by platform. Unfortunately, these are not all the same because of differing security limitations across platforms.
 
-* If the item has already been downloaded, the app will return HTTP status code 301 (Redirect), with location set to the appropriate location.  The client browser should automatically redirect to the new location, and the item will be rendered by the Interactive.
-* If the item has not already been downloaded, the app will return HTTP status code 202 Accepted, with the Retry-After field set to the number of seconds the Interactive should wait before trying again.
+State | iOS | Android
+------------ | ------------- | ------------
+Item downloaded and ready | HTTP response code 301 (Redirect). Browser should automatically redirect to correct URL. Body contains retrieved data.  | HTTP response code 200. Body contains retrieved data.
+Item not already downloaded | HTTP response code 202 (Accepted), with Retry-After header set to number of seconds the Interactive should wait before trying again. If not set, default to a reasonable value, like 5. | HTTP response code 200, with an empty body. Interactive should retry after a reasonable number of seconds, like 5.
+Item not found | HTTP response code 404 (Not found) | HTTP response code 404 (Not found)
 
-  Please note that asking too many times may put the Downloader (in iOS) into a race condition, as each request will trigger the Downloader to poll and possibly start downloading again.  So, please be considerate and ask at most every few seconds.
+
+Please note that asking too many times may put the Downloader into a race condition, as each request will trigger the Downloader to poll and possibly start downloading again.  So, please be considerate and retry no more than once every few seconds.
   
 As you can see, embedding requires care. You cannot assume that the embedded item is available yet, because it may be behind some longer items in the Downloader. Instead, you have to try to fetch the content and monitor response codes.
 
 *Example:*<br>
-This example embeds, and retries based on response codes.
+We recommend using mflyCommands.js for this purpose. See our [open-source Interactives](https://bitbucket.org/mediafly/mediafly-interactives-tools-and-examples/src/18033ec5a6c7ad4fb38d89b539eeb3c021b0716e/examples/Embed/Containing%20Interactive/?at=default) for a working example of Embed.
 
-        <head>
-        <script>
-            $(document).ready(function () {
-                tryEmbed($('iframe'), 'b1a1febacd6c4606963af7ed9cde2d24product53834', 1);
-                tryEmbed($('img'), 'b1a1febacd6c4606963af7ed9cde2d24product53888', 1);
-            });
 
-            function tryEmbed($e, id, delayTimeMs) {
-                console.log('delayUntilEmbedIsReady called with delayTimeMs=' + delayTimeMs);
-                setTimeout(function() {
-                    $.ajax({
-                        url: "mfly://data/embed/" + id,
-                        success: function(data, textStatus, request) {
-                            if(request.status === 202) {
-                                console.log("Request.status: 202. Need to retry")
-                                var delayFor = request.getResponseHeader("Retry-After");
-                                tryEmbed($e, id, delayFor * 1000);
-                            } else {
-                                console.log("Request.status: " + request.status + ". Starting embed.");
-                                $e.attr('src', 'mfly://data/embed/' + id);
-                            }
-                        },
-                        error: function(data, status, request) {
-                            console.log("ERROR requesting embed");
-                        }
-                    });
-                }, delayTimeMs);
-            }
-        </script>
-        </head>
-        
-        <body>
-            <iframe style="width:200px; height:200px;"></iframe>
-            <img />
-        </body>
-
-*Availability:* iOS
+*Availability:* iOS, Android
 
 
 -----
