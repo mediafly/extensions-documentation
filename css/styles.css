@@ -1,6 +1,7 @@
 h1:not(:first-of-type)  { margin-top: 1.3em; }
 .toc_h2                 { margin-left: 10px !important; }
 .toc_h3                 { margin-left: 20px !important; }
-#nav_toc > li > a           { padding: 0px 15px; }
+#nav_toc > li > a       { padding: 0px 15px; }
 pre code                { background-color: inherit; }
 hr                      { border-top: 1px solid #ccc; }
+td, th                  { border: 1px solid gray; padding: 2px; }

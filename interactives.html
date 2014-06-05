@@ -372,6 +372,12 @@ Example 2:
 <em>Description:</em> Trigger the app to refresh its content. If items have changed, this should trigger mflySync calls appropriately. <br>
 <em>Availability:</em> iOS</p>
 
+<h4>Show Annotations</h4>
+
+<p><em>URL:</em> mfly://control/showAnnotations <br>
+<em>Description:</em> If annotations are enabled, show the annotations control bar. <br>
+<em>Availability:</em> iOS</p>
+
 <h3>Links (Open and Goto)</h3>
 
 <p>Two types of links exist within Interactives: Open and Goto. When an Interactive "opens" an item, the item appears on top of the navigational stack, and the user is only given a single option to escape the item, by tapping Done/Close.  When an Interactive "gotos" an item, the app opens that item and throws away the navigational stack behind it. The user is given the same navigational capabilities as if they opened the destination item directly.</p>
@@ -613,12 +619,11 @@ Example:
 
 <h4>Use 2: Send configuration parameters to the app</h4>
 
-<p>Optionally, Interactives can then return a JSON Object with specifics on how the app should behave.  E.g. on ""iOS, return value may be a JSON Object such as this:</p>
+<p>Optionally, Interactives can then return a JSON Object with specifics on how the app should behave.  E.g. on iOS, return value may be a JSON Object such as this:</p>
 
 <pre><code>    {
-      “mflyInitVersion”: “2”,
-      “mflyWideScreenSupport”: true,
-      “mflyItems”: [“slug1”, “slug2”, … “slugN”]
+      “mflyInitVersion”: “3”,
+      “mflyWideScreenSupport”: true
     }
 </code></pre>
 
@@ -640,7 +645,7 @@ Example:
 
 <pre><code>function mflyDataInit(obj) {
     // Do initialization
-    return '{ "mflyInitVersion" : "2" }';
+    return '{ "mflyInitVersion" : "3" }';
 }
 </code></pre>
 
@@ -840,18 +845,58 @@ $.ajax({
 
 <h3>Retrieve data</h3>
 
-<p>To get data from the app container, make an AJAX GET to <code>mfly://data/info/[key]</code>, where [key] is the key you wish to use.</p>
-
-<p>HTTP response codes:</p>
+<p>You can retrieve value information from keys in multiple ways. In all cases:</p>
 
 <ul>
-<li>Response of 200 OK indicates a successful get of an existing key. The body of the response will contain the value of the key</li>
+<li>Response of 200 OK indicates a successful get of an existing key. The body of the response will contain the values indicated below.</li>
 <li>Response of 404 Not Found indicates that the key does not exist</li>
 </ul>
 
 
-<p><em>Example:</em><br>
-This example retrieves value data for a given key, using jQuery.</p>
+<h4>Single key</h4>
+
+<p>To get data for a specific key from the app container, make an AJAX GET to <code>mfly://data/info/[key]</code>, where [key] is the key you wish to use.</p>
+
+<p>On successful retrieval, body will contain the value of the key.</p>
+
+<h4>All keys</h4>
+
+<p>To get data for all keys from the app container, make an AJAX GET to <code>mfly://data/info</code> .</p>
+
+<p>On successful retrieval, body will contain a JSON object enumerating all keys and values, such as:</p>
+
+<pre><code>{ "key1": "value1", "key2": "value2", ... } 
+</code></pre>
+
+<h4>Key prefix</h4>
+
+<p>To get data for all keys that begin with X, make an AJAX GET to <code>mfly://data/info?prefix=X</code></p>
+
+<p>On successful retrieval, body will contain a JSON object enumerating all keys and values where the keys begin with X. For example, if list of keys/values in app are:</p>
+
+<ul>
+<li>key=snow, value=white</li>
+<li>key=snowball, value=round</li>
+<li>key=fire, value=red</li>
+</ul>
+
+
+<p>Then:
+GET <code>mfly://data/info?prefix=snow</code>
+returns</p>
+
+<pre><code>{ "snow": "white", "snowball": "round" } 
+</code></pre>
+
+<p>GET <code>mfly://data/info?prefix=abc</code>
+returns</p>
+
+<pre><code>{} 
+</code></pre>
+
+<h4>Example</h4>
+
+<p>This example retrieves value data for a given key, using jQuery.</p>
 
 <pre><code>var key = $('#key).val();
 $.ajax({
@@ -867,7 +912,7 @@ $.ajax({
 });
 </code></pre>
 
-<p><em>Availability:</em> iOS, Android, Windows 8</p>
+<p><em>Availability:</em> iOS (single key only, currently; others coming soon), Android, Windows 8</p>
 
 <hr />
 
@@ -878,62 +923,48 @@ $.ajax({
 <ul>
 <li>To embed an Interactive, create an <code>&lt;iframe&gt;</code> and set the src to <code>mfly://data/embed/[id]</code> where [id] is the ID of the Interactive you wish to embed</li>
 <li>To embed an image, create an <code>&lt;img&gt;</code> and set the src to <code>mfly://data/embed/[id]</code> where [id] is the ID of the image you wish to embed</li>
+<li>Embed can also be used to pull data items from the app into the Interactive.</li>
 </ul>
 
 
-<p>HTTP response codes:</p>
+<p>Here are the HTTP response codes by platform. Unfortunately, these are not all the same because of differing security limitations across platforms.</p>
 
-<ul>
-<li>If the item has already been downloaded, the app will return HTTP status code 301 (Redirect), with location set to the appropriate location.  The client browser should automatically redirect to the new location, and the item will be rendered by the Interactive.</li>
-<li><p>If the item has not already been downloaded, the app will return HTTP status code 202 Accepted, with the Retry-After field set to the number of seconds the Interactive should wait before trying again.</p>
+<table>
+<thead>
+<tr>
+<th>State </th>
+<th> iOS </th>
+<th> Android</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Item downloaded and ready </td>
+<td> HTTP response code 301 (Redirect). Browser should automatically redirect to correct URL. Body contains retrieved data.  </td>
+<td> HTTP response code 200. Body contains retrieved data.</td>
+</tr>
+<tr>
+<td>Item not already downloaded </td>
+<td> HTTP response code 202 (Accepted), with Retry-After header set to number of seconds the Interactive should wait before trying again. If not set, default to a reasonable value, like 5. </td>
+<td> HTTP response code 200, with an empty body. Interactive should retry after a reasonable number of seconds, like 5.</td>
+</tr>
+<tr>
+<td>Item not found </td>
+<td> HTTP response code 404 (Not found) </td>
+<td> HTTP response code 404 (Not found)</td>
+</tr>
+</tbody>
+</table>
 
-<p>Please note that asking too many times may put the Downloader (in iOS) into a race condition, as each request will trigger the Downloader to poll and possibly start downloading again.  So, please be considerate and ask at most every few seconds.</p></li>
-</ul>
 
+<p>Please note that asking too many times may put the Downloader into a race condition, as each request will trigger the Downloader to poll and possibly start downloading again.  So, please be considerate and retry no more than once every few seconds.</p>
 
 <p>As you can see, embedding requires care. You cannot assume that the embedded item is available yet, because it may be behind some longer items in the Downloader. Instead, you have to try to fetch the content and monitor response codes.</p>
 
 <p><em>Example:</em><br>
-This example embeds, and retries based on response codes.</p>
+We recommend using mflyCommands.js for this purpose. See our <a href="https://bitbucket.org/mediafly/mediafly-interactives-tools-and-examples/src/18033ec5a6c7ad4fb38d89b539eeb3c021b0716e/examples/Embed/Containing%20Interactive/?at=default">open-source Interactives</a> for a working example of Embed.</p>
 
-<pre><code>    &lt;head&gt;
-    &lt;script&gt;
-        $(document).ready(function () {
-            tryEmbed($('iframe'), 'b1a1febacd6c4606963af7ed9cde2d24product53834', 1);
-            tryEmbed($('img'), 'b1a1febacd6c4606963af7ed9cde2d24product53888', 1);
-        });
-
-        function tryEmbed($e, id, delayTimeMs) {
-            console.log('delayUntilEmbedIsReady called with delayTimeMs=' + delayTimeMs);
-            setTimeout(function() {
-                $.ajax({
-                    url: "mfly://data/embed/" + id,
-                    success: function(data, textStatus, request) {
-                        if(request.status === 202) {
-                            console.log("Request.status: 202. Need to retry")
-                            var delayFor = request.getResponseHeader("Retry-After");
-                            tryEmbed($e, id, delayFor * 1000);
-                        } else {
-                            console.log("Request.status: " + request.status + ". Starting embed.");
-                            $e.attr('src', 'mfly://data/embed/' + id);
-                        }
-                    },
-                    error: function(data, status, request) {
-                        console.log("ERROR requesting embed");
-                    }
-                });
-            }, delayTimeMs);
-        }
-    &lt;/script&gt;
-    &lt;/head&gt;
-
-    &lt;body&gt;
-        &lt;iframe style="width:200px; height:200px;"&gt;&lt;/iframe&gt;
-        &lt;img /&gt;
-    &lt;/body&gt;
-</code></pre>
-
-<p><em>Availability:</em> iOS</p>
+<p><em>Availability:</em> iOS, Android</p>
 
 <hr />
 
