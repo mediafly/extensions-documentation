@@ -517,6 +517,22 @@ Interactives can listen for changes to total download status with mflyDownloadSt
 
 
 
+### GPS
+
+#### Request latitude/longitude ####
+
+*URL:* mfly://data/gps<br>
+*Description:* Interactives can request latitude and longitude from the app. This is useful for apps that connect to external services to report lat/lon, or use the Haversine (Big Earth) formula to calculate rough distances.<br>
+
+	Example:
+		GET mfly://data/gps
+		Response:
+		{ 
+		  latitude: 41.851231, 
+		  longitude: -87.652345 
+		}
+*Availability:* iOS, Android, Windows 8 (soon)
+
 
 ----------
 

@@ -573,6 +573,24 @@ Example:
 
 <p><em>Availability:</em> iOS</p>
 
+<h3>GPS</h3>
+
+<h4>Request latitude/longitude</h4>
+
+<p><em>URL:</em> mfly://data/gps<br>
+<em>Description:</em> Interactives can request latitude and longitude from the app. This is useful for apps that connect to external services to report lat/lon, or use the Haversine (Big Earth) formula to calculate rough distances.<br></p>
+
+<pre><code>Example:
+    GET mfly://data/gps
+    Response:
+    { 
+      latitude: 41.851231, 
+      longitude: -87.652345 
+    }
+</code></pre>
+
+<p><em>Availability:</em> iOS, Android, Windows 8 (soon)</p>
+
 <hr />
 
 <h2>Being controlled by the app</h2>
