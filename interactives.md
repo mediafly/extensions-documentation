@@ -846,7 +846,7 @@ This example retrieves value data for a given key, using jQuery.
 		}
 	});
 
-*Availability:* iOS (single key only, currently; others coming soon), Android, Windows 8
+*Availability:* iOS, Android, Windows 8
 
 
 ----------
