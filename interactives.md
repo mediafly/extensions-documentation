@@ -453,7 +453,7 @@ Collections allow users to create a "personal playlist" of items. Oftentimes thi
 *Availability:* iOS
 
 
-### Download status
+### Downloader
 Mediafly's apps have been optimized for very advanced synchronization and download use cases. We offer a set of Interactives calls to obtain information about downloads and control the app.
 
 #### Show Downloader
@@ -493,6 +493,16 @@ Mediafly's apps have been optimized for very advanced synchronization and downlo
         { "exceed": 0.34 }
 
 *Availability:* iOS
+
+
+
+#### Add to Downloader
+*URL:* mfly://control/addToDownloader/[id]<br>
+*Description:* Instruct the app to add an item to the Downloader. Response code 200 = item was added to the Downloader. Response code 404 if id is not found.<br>
+*Availability:* iOS
+
+
+
 
 #### mflyDownloadStatus
 Interactives can listen for changes to total download status with mflyDownloadStatus. This function is called approximately once per second while a download is being conducted. The Interactive simply needs to implement this function and take some (short-running) action. The parameter is a JSON object that indicates progress percentage as a decimal from 0 to 1, and fail count as an integer.
