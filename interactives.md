@@ -515,6 +515,53 @@ Interactives can listen for changes to total download status with mflyDownloadSt
 
 *Availability:* iOS
 
+### Notifications
+
+When notifications are enabled for an app, users can subscribe or unsubscribe to/from emails on any folder. When new content appears in the folder, the system will email the user either instantly or at the end of the day in a digest of the availability of the new content. Interactives can control notifications with the following commands.
+
+#### Get notification status for a folder
+*URL:* mfly://data/getNotificationStatus/[id]<br>
+*Description:* Get the notification status for a folder. If the folder is valid, response code is 200 and body is a JSON object similar to this:<br>
+
+	Example:
+		{ 
+			"notification":"[status]" // [status] is email|none
+		}
+
+*Availability:* iOS
+
+#### Add a folder to notifications
+*URL:* mfly://data/addNotification/[id]<br>
+*Description:* Instruct the app to subscribe the folder for notifications. Response code 200 if successful, 304 if folder was already subscribed, and 500 if an error occurred.<br>
+*Availability:* iOS
+
+#### Remove a folder from notifications
+*URL:* mfly://data/removeNotification/[id]<br>
+*Description:* Instruct the app to unsubscribe the folder from notifications. Response code 200 if successful, 304 if folder was not already subscribed, and 500 if an error occurred.<br>
+*Availability:* iOS
+
+#### Display the notifications manager
+*URL:* mfly://control/showNotificationsManager<br>
+*Description:* Display the notifications manager<br>
+*Availability:* iOS
+
+#### Listen for when notifications are changed
+Interactives can listen for when notification status changes in the app by implementing mflyNotificationsChanged. The Interactive simply needs to implement this function and take some (short-running) action. The parameter is a JSON object that passes in the state of all notifications in the app.
+
+	Example:
+	    function mfyNotificationsChanged(notifications) {
+		}
+
+where notifications = JSON Object of all notifications, where key=id and value=JSON Object of new notification. E.g. notifications may be something like:
+
+
+	notifications = { 
+    	"id1": { "notification": "email" }, 
+	    "id2": { "notification": "none" } 
+	} 
+	  
+*Availability:* iOS
+
 
 
 ### GPS
