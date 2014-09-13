@@ -700,7 +700,7 @@ Example:
 <p>Optionally, Interactives can then return a JSON Object with specifics on how the app should behave.  E.g. on iOS, return value may be a JSON Object such as this:</p>
 
 <pre><code>    {
-      “mflyInitVersion”: “3”,
+      “mflyInitVersion”: “4”,
       “mflyWideScreenSupport”: true
     }
 </code></pre>
@@ -708,14 +708,15 @@ Example:
 <p><em>Supported parameters:</em><br></p>
 
 <ul>
-<li>mflyInitVersion: indicates which version of mflyInit should be called by the app. Note that mflyInitVersion is only available on iOS. Android and Windows 8 support only 'version 3' of mflyInit.
+<li><p>mflyInitVersion: indicates which version of mflyInit should be called by the app. Note that mflyInitVersion is only available on iOS. Android and Windows 8 support only version 3 and 4 of mflyInit. If ignored, defaults to "4".</p>
 
 <ul>
 <li>"2": default version reflected in this documentation</li>
-<li>"3": On iOS, sharing status is represented by canShare, canAccessAssetOffline, and canDownloadAsset.</li>
+<li>"3": On iOS, sharing status is represented by canShare, canAccessAssetOffline, and canDownloadAsset</li>
+<li>"4": No longer sends down mflyInit. mflyInit is deprecated and causes undo burden when content libraries are large, and we plan to deprecate it in the future.</li>
 </ul>
 </li>
-<li>mflyWideScreenSupport: if true, this makes the app aware that the Interactive can handle widescreen second screens (HDMI, Apple TV).  This is specifically for the case where the Interactive has been designed to be a presentation-worthy UI for second screens. Only available on iOS.</li>
+<li><p>mflyWideScreenSupport: if true, this makes the app aware that the Interactive can handle widescreen second screens (HDMI, Apple TV).  This is specifically for the case where the Interactive has been designed to be a presentation-worthy UI for second screens. Only available on iOS.</p></li>
 </ul>
 
 
@@ -723,13 +724,58 @@ Example:
 
 <pre><code>function mflyDataInit(obj) {
     // Do initialization
-    return '{ "mflyInitVersion" : "3" }';
+    return '{ "mflyInitVersion" : "4" }';
 }
 </code></pre>
 
 <p><em>Availability:</em> iOS, Android, Windows 8. Not all parameters will be available on Android or Windows 8.</p>
 
-<h3>mflyInit</h3>
+<h3>mflySync</h3>
+
+<p>As the app synchronizes all folders within a user’s hierarchy, updated information (metadata, URLs, etc.) becomes available. If an Interactive is open while the new information appears, the app calls mflySync with this subset of updated information.  The parameter is an array of JSON objects that represent changed items.</p>
+
+<p>Expect mflySync to be called many times.  Each time may contain a subset of changed information for the app.</p>
+
+<p>The best use of mflySync is to listen for changes to “launched” status. For example, if the Interactive wishes to render “New!” banners on new items, and have those banners clear when the user launches the item, the Interactive would need to listen to mflySync and remove the “New!” banner when launched=true for a given item.</p>
+
+<p><em>Example:</em><br></p>
+
+<pre><code>function mflySync(obj) {
+    // Handle mflySync
+}
+</code></pre>
+
+<p><em>Availability:</em> iOS</p>
+
+<h3>mflyResume</h3>
+
+<p>The app calls this function when the app opens and shows the Interactive.  If you need to start animation or take other action when the Interactive shows, this is the place to do it.</p>
+
+<p><em>Example:</em><br></p>
+
+<pre><code>function mflyResume() {
+    // Handle mflyResume
+}
+</code></pre>
+
+<p><em>Availability:</em> iOS, Android</p>
+
+<h3>mflyPause</h3>
+
+<p>The app calls this function when the user hides the Interactive. If you need to stop animation, submit a form, or take other action when the Interactive hides, this is the place to do it.</p>
+
+<p><em>Example:</em><br></p>
+
+<pre><code>function mflyPause() {
+    // Handle mflyPause
+}
+</code></pre>
+
+<p><em>Availability:</em> iOS, Android</p>
+
+<h3>mflyInit (DEPRECATED)</h3>
+
+<p><b>PLEASE NOTE</b>: mflyInit is deprecated. We have discovered that, as content libraries become incredibly large, mflyInit consumes an excessive amount of memory. As a result, we strongly suggest using mfly://data/folder and mfly://data/item to selectively construct the hierarchy that is needed at that time.</p>
 
 <p>The app calls this function when the app launches an Interactive.  The parameter is a dictionary of JSON objects that represent a flattened version of the full hierarchy of folders and items available to the user. The key of each entry is the item/folder slug. Each entry for folders contains a JSON Array called “items”, which contains an array of slugs that are children of this folder.</p>
 
@@ -830,50 +876,7 @@ Example:
 }
 </code></pre>
 
-<p><em>Availability:</em> iOS, Android</p>
-
-<h3>mflySync</h3>
-
-<p>As the app synchronizes all folders within a user’s hierarchy, updated information (metadata, URLs, etc.) becomes available. If an Interactive is open while the new information appears, the app calls mflySync with this subset of updated information.  The parameter is an array of JSON objects that represent changed items.</p>
-
-<p>Expect mflySync to be called many times.  Each time may contain a subset of changed information for the app.</p>
-
-<p>The best use of mflySync is to listen for changes to “launched” status. For example, if the Interactive wishes to render “New!” banners on new items, and have those banners clear when the user launches the item, the Interactive would need to listen to mflySync and remove the “New!” banner when launched=true for a given item.</p>
-
-<p><em>Example:</em><br></p>
-
-<pre><code>function mflySync(obj) {
-    // Handle mflySync
-}
-</code></pre>
-
-<p><em>Availability:</em> iOS</p>
-
-<h3>mflyResume</h3>
-
-<p>The app calls this function when the app opens and shows the Interactive.  If you need to start animation or take other action when the Interactive shows, this is the place to do it.</p>
-
-<p><em>Example:</em><br></p>
-
-<pre><code>function mflyResume() {
-    // Handle mflyResume
-}
-</code></pre>
-
-<p><em>Availability:</em> iOS, Android</p>
-
-<h3>mflyPause</h3>
-
-<p>The app calls this function when the user hides the Interactive. If you need to stop animation, submit a form, or take other action when the Interactive hides, this is the place to do it.</p>
-
-<p><em>Example:</em><br></p>
-
-<pre><code>function mflyPause() {
-    // Handle mflyPause
-}
-</code></pre>
-
-<p><em>Availability:</em> iOS, Android</p>
+<p><em>Availability:</em> iOS, Android, Windows 8</p>
 
 <hr />
 

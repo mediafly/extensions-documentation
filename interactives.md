@@ -629,29 +629,73 @@ Interactives can implement mflyDataInit and receive within the params parameter 
 Optionally, Interactives can then return a JSON Object with specifics on how the app should behave.  E.g. on iOS, return value may be a JSON Object such as this:
 
 		{
-		  “mflyInitVersion”: “3”,
+		  “mflyInitVersion”: “4”,
 		  “mflyWideScreenSupport”: true
 		}
 
 *Supported parameters:*<br>
 
-* mflyInitVersion: indicates which version of mflyInit should be called by the app. Note that mflyInitVersion is only available on iOS. Android and Windows 8 support only 'version 3' of mflyInit.
+* mflyInitVersion: indicates which version of mflyInit should be called by the app. Note that mflyInitVersion is only available on iOS. Android and Windows 8 support only version 3 and 4 of mflyInit. If ignored, defaults to "4".
 	* "2": default version reflected in this documentation
-	* "3": On iOS, sharing status is represented by canShare, canAccessAssetOffline, and canDownloadAsset. 	
+	* "3": On iOS, sharing status is represented by canShare, canAccessAssetOffline, and canDownloadAsset
+	* "4": No longer sends down mflyInit. mflyInit is deprecated and causes undo burden when content libraries are large, and we plan to deprecate it in the future.
+
 * mflyWideScreenSupport: if true, this makes the app aware that the Interactive can handle widescreen second screens (HDMI, Apple TV).  This is specifically for the case where the Interactive has been designed to be a presentation-worthy UI for second screens. Only available on iOS.
 
 *Example:*<br>
 
 	function mflyDataInit(obj) {
 		// Do initialization
-	    return '{ "mflyInitVersion" : "3" }';
+	    return '{ "mflyInitVersion" : "4" }';
 	}
 
 *Availability:* iOS, Android, Windows 8. Not all parameters will be available on Android or Windows 8.
 
 
+### mflySync
+As the app synchronizes all folders within a user’s hierarchy, updated information (metadata, URLs, etc.) becomes available. If an Interactive is open while the new information appears, the app calls mflySync with this subset of updated information.  The parameter is an array of JSON objects that represent changed items.
 
-### mflyInit
+Expect mflySync to be called many times.  Each time may contain a subset of changed information for the app.
+
+The best use of mflySync is to listen for changes to “launched” status. For example, if the Interactive wishes to render “New!” banners on new items, and have those banners clear when the user launches the item, the Interactive would need to listen to mflySync and remove the “New!” banner when launched=true for a given item.
+
+*Example:*<br>
+
+	function mflySync(obj) {
+		// Handle mflySync
+	}
+
+*Availability:* iOS
+
+
+### mflyResume
+The app calls this function when the app opens and shows the Interactive.  If you need to start animation or take other action when the Interactive shows, this is the place to do it.
+
+*Example:*<br>
+
+	function mflyResume() {
+		// Handle mflyResume
+	}
+
+*Availability:* iOS, Android
+
+
+### mflyPause
+The app calls this function when the user hides the Interactive. If you need to stop animation, submit a form, or take other action when the Interactive hides, this is the place to do it.
+
+*Example:*<br>
+
+	function mflyPause() {
+		// Handle mflyPause
+	}
+
+*Availability:* iOS, Android
+
+
+### mflyInit (DEPRECATED)
+
+<b>PLEASE NOTE</b>: mflyInit is deprecated. We have discovered that, as content libraries become incredibly large, mflyInit consumes an excessive amount of memory. As a result, we strongly suggest using mfly://data/folder and mfly://data/item to selectively construct the hierarchy that is needed at that time.
+
 The app calls this function when the app launches an Interactive.  The parameter is a dictionary of JSON objects that represent a flattened version of the full hierarchy of folders and items available to the user. The key of each entry is the item/folder slug. Each entry for folders contains a JSON Array called “items”, which contains an array of slugs that are children of this folder.
 
 For example, if a user has the following hierarchy:
@@ -746,46 +790,7 @@ All dates are specified in ISO 8601 format.
 		// Handle mflyInit object
 	}
 
-*Availability:* iOS, Android
-
-### mflySync
-As the app synchronizes all folders within a user’s hierarchy, updated information (metadata, URLs, etc.) becomes available. If an Interactive is open while the new information appears, the app calls mflySync with this subset of updated information.  The parameter is an array of JSON objects that represent changed items.
-
-Expect mflySync to be called many times.  Each time may contain a subset of changed information for the app.
-
-The best use of mflySync is to listen for changes to “launched” status. For example, if the Interactive wishes to render “New!” banners on new items, and have those banners clear when the user launches the item, the Interactive would need to listen to mflySync and remove the “New!” banner when launched=true for a given item.
-
-*Example:*<br>
-
-	function mflySync(obj) {
-		// Handle mflySync
-	}
-
-*Availability:* iOS
-
-
-### mflyResume
-The app calls this function when the app opens and shows the Interactive.  If you need to start animation or take other action when the Interactive shows, this is the place to do it.
-
-*Example:*<br>
-
-	function mflyResume() {
-		// Handle mflyResume
-	}
-
-*Availability:* iOS, Android
-
-
-### mflyPause
-The app calls this function when the user hides the Interactive. If you need to stop animation, submit a form, or take other action when the Interactive hides, this is the place to do it.
-
-*Example:*<br>
-
-	function mflyPause() {
-		// Handle mflyPause
-	}
-
-*Availability:* iOS, Android
+*Availability:* iOS, Android, Windows 8
 
 
 ----------
