@@ -144,7 +144,7 @@ Use the [Mediafly Interactives Publisher](https://bitbucket.org/mediafly/mediafl
 * Optimally package the Interactive for you
 * Push the package up into the Airship content management system **very quickly**
 
-To learn more, read the [publish.py comments](https://bitbucket.org/mediafly/mediafly-interactivespublisher/src/1ca748f205eff3a8e8794acdcd64e9ddc1f7d338/publish.py?at=default).
+To learn more, read the [publish.py comments](https://bitbucket.org/mediafly/mediafly-interactivespublisher/src/tip/publish.py?at=default).
 
 
 ## Testing on device
@@ -208,12 +208,12 @@ Controlling the app is done by opening a window to a special URL through JavaScr
 #### Next
 *URL:* mfly://control/next <br>
 *Description:* Opens the next Item in the Folder or Collection <br>
-*Availability:* iOS, Android
+*Availability:* iOS, Android, Windows 8
 
 #### Previous
 *URL:* mfly://control/previous <br>
 *Description:* Opens the previous Item in the Folder or Collection <br>
-*Availability:* iOS, Android
+*Availability:* iOS, Android, Windows 8
 
 #### Get information about a folder or item
 
@@ -255,7 +255,7 @@ Controlling the app is done by opening a window to a special URL through JavaScr
             “keywords”: [“keyword1”, “keyword2”, “keyword3”],
             “new”: 1
         }
-*Availability:* iOS. Android, Windows 8 coming soon.
+*Availability:* iOS. Android, Windows 8
 
         
 #### Get contents of a folder
@@ -324,7 +324,7 @@ Controlling the app is done by opening a window to a special URL through JavaScr
 #### Refresh the contents of the app
 *URL:* mfly://control/refresh <br>
 *Description:* Trigger the app to refresh its content. If items have changed, this should trigger mflySync calls appropriately. <br>
-*Availability:* iOS
+*Availability:* iOS, Android
 
 #### Show Annotations
 *URL:* mfly://control/showAnnotations <br>
@@ -352,7 +352,7 @@ To create either link, simply create a typical `<a href>` link with the source p
 #### Goto an item or a folder
 *URL:* mfly://control/goto/[id] <br>
 *Description:* Gotos the specified item or folder, where [id] is the ID of the item or folder.  As described above, when the app goes to another item or folder, the navigational stack behind the destination is thrown away, and the user is given the same navigational capabilities as if they opened the destination item directly. The ID for a folder can be found in Airship. Expand the item, and the ID is displayed at the bottom. <br>
-*Availability:* iOS (Android and Windows 8 coming soon)
+*Availability:* iOS, Android
 
 
 ### Search
@@ -459,7 +459,7 @@ Mediafly's apps have been optimized for very advanced synchronization and downlo
 #### Show Downloader
 *URL:* mfly://control/showDownloader?x=[x-coord]&y=[y-coord]&w=[width]&h=[height] <br>
 *Description:* Shows the Downloader dialog at x-coord, y-coord coordinates with specified width and height. <br>
-*Availability:* iOS
+*Availability:* iOS, Android (soon)
 
 #### Get total download progress
 *URL:* mfly://data/download/status <br>
@@ -472,6 +472,8 @@ Mediafly's apps have been optimized for very advanced synchronization and downlo
           "progress":0.12, 
           "fails":1
         }
+
+*Availability:* iOS, Android (soon)
 
 #### Get download progress for a single item
 *URL:* mfly://data/download/status/[id] <br>
@@ -492,14 +494,14 @@ Mediafly's apps have been optimized for very advanced synchronization and downlo
 		Result:
         { "exceed": 0.34 }
 
-*Availability:* iOS
+*Availability:* iOS, Android (soon)
 
 
 
 #### Add to Downloader
 *URL:* mfly://control/addToDownloader/[id]<br>
 *Description:* Instruct the app to add an item to the Downloader. Response code 200 = item was added to the Downloader. Response code 404 if id is not found.<br>
-*Availability:* iOS
+*Availability:* iOS, Android (soon)
 
 
 
@@ -513,7 +515,7 @@ Interactives can listen for changes to total download status with mflyDownloadSt
 			// Handle download status object
 		}
 
-*Availability:* iOS
+*Availability:* iOS, Android (soon)
 
 ### Notifications
 
@@ -578,7 +580,7 @@ where notifications = JSON Object of all notifications, where key=id and value=J
 		  latitude: 41.851231, 
 		  longitude: -87.652345 
 		}
-*Availability:* iOS, Android, Windows 8 (soon)
+*Availability:* iOS, Android, Windows 8
 
 
 ----------
@@ -665,7 +667,7 @@ The best use of mflySync is to listen for changes to “launched” status. For 
 		// Handle mflySync
 	}
 
-*Availability:* iOS
+*Availability:* iOS, Android, Windows 8
 
 
 ### mflyResume
@@ -926,10 +928,10 @@ Please note that asking too many times may put the Downloader into a race condit
 As you can see, embedding requires care. You cannot assume that the embedded item is available yet, because it may be behind some longer items in the Downloader. Instead, you have to try to fetch the content and monitor response codes.
 
 *Example:*<br>
-We recommend using mflyCommands.js for this purpose. See our [open-source Interactives](https://bitbucket.org/mediafly/mediafly-interactives-tools-and-examples/src/18033ec5a6c7ad4fb38d89b539eeb3c021b0716e/examples/Embed/Containing%20Interactive/?at=default) for a working example of Embed.
+We recommend using mflyCommands.js for this purpose. See our [open-source Interactives](https://bitbucket.org/mediafly/mediafly-interactives-tools-and-examples/src/tip/examples/Embed%20and%20Data%20Items/Containing%20Interactive/?at=default) for a working example of Embed.
 
 
-*Availability:* iOS, Android
+*Availability:* iOS, Android, Windows 8
 
 
 -----
@@ -1034,7 +1036,7 @@ Since Interactives are embedded web pages, on some (particularly iOS) devices th
 
 To address this, we recommend using [Hammer.js](http://eightmedia.github.io/hammer.js/), a mobile-focused touch gesture library.
 
-We have created a detailed example within Mediafly Interactives Tools and Examples that demonstrates this, [here](https://bitbucket.org/mediafly/mediafly-interactives-tools-and-examples/src/98dc1548d87fadeb15613896eb8335b2c772003e/examples/Swipe/app/?at=default).
+We have created a detailed example within Mediafly Interactives Tools and Examples that demonstrates this, [here](https://bitbucket.org/mediafly/mediafly-interactives-tools-and-examples/src/tip/examples/Swipe/app/?at=default).
 
 ### Smoother scrolling
 By default, iOS scrolling in the UIWebView is exactly controlled by your finger. You can drag the web view down and up, but you cannot "throw" the page in a direction. Furthermore, if you have a lot of large images on the page, scrolling can become choppy.
@@ -1067,6 +1069,9 @@ Mediafly publishes blog posts illustrating interesting ways to use Interactives.
 -----
 
 ## Other stuff
+
+### Google Group
+Please [join our Google Group](https://groups.google.com/forum/?hl=en#!forum/mediafly-interactives) to keep up with the latest information, udates and news. As well, learn from and get help from other Interactives builders and customers.
 
 ### Changelog
 Please see the [repository](https://bitbucket.org/mediafly/mediafly-interactives-documentation/commits/all) of this document for a changelog.
