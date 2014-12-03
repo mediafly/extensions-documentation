@@ -188,27 +188,41 @@ supports Python, this is the path for you.</p>
 
 <h2>Testing on device</h2>
 
-<h3>iOS</h3>
+<h3>weinre</h3>
 
-<p>There are two approaches that allow developers to interact with their Interactive when running on a device:</p>
+<p>We strongly recommend the use of <a href="http://people.apache.org/~pmuellr/weinre-docs/latest/">weinre</a>, the WEb INspector REmote. It is a debugger for remote web pages, and in particular, it <i>allows you to debug web pages on mobile devices with your laptop</i>.</p>
+
+<h4>How to use it</h4>
+
+<p>Please read the <a href="http://people.apache.org/~pmuellr/weinre-docs/latest/Installing.html">installation</a> and <a href="http://people.apache.org/~pmuellr/weinre-docs/latest/Running.html">run</a> instructions on the website for details. But here is a simple overview:</p>
 
 <ol>
-<li><p><a href="jsconsole.com">jsconsole.com</a>. This is a clever mechanism which allows you to interact with JavaScript on your device remotely. You:</p>
-
-<ol type="a">
-<li>Start a remote debugging session with <code>:listen [id]</code>.</li>
-<li>Add the script that is generated into your Interactive</li>
-<li>Load the Interactive into Airship and open it on your device</li>
-<li>Interact with the Interactive via jsconsole.com.</li>
-</ol>
-</li>
-<li><p>For trusted partners, we are building the capability to use the iOS Simulator to launch Whitebox and remotely debug with Safari's Web Inspector. Contact us for more information.</p></li>
+<li>Install the tool via npm, (e.g. npm -g install weinre)</li>
+<li>Run the debug server locally (e.g. weinre —boundHost 10.0.0.111)</li>
+<li>Update the Interactive with a <code>&lt;script&gt;</code> tag to point to the debug server, and publish the new Interactive in Airship (e.g. <code>&lt;script src="http://10.0.0.111:8080/target/target-script-min.js"&gt;&lt;/script&gt;</code>). Open the Interactive on your app</li>
+<li>Point your PC/Mac browser to the debug client (e.g. http://10.0.0.111:8080)</li>
 </ol>
 
 
-<h3>Android</h3>
+<p>You now have access to a relatively full featured web development tool for your Interactives!</p>
 
-<p>Please see <a href="https://developers.google.com/chrome-developer-tools/docs/remote-debugging">Remote Debugging Chrome on Android</a>. Note that this only applies to Android 4.4+.</p>
+<h4>Let's see it in action</h4>
+
+<p>We completed steps 1 and 2, and instrumented one of our apps, Kitchen Sink, with the <code>&lt;script&gt;</code> tag from 3. We open the Interactive, and see that it looks the same as without the <code>&lt;script&gt;</code> tag:</p>
+
+<p><img src="http://devdocs.mediafly.com/interactives/images/weinre/1.%20Kitchen%20Sink.png" alt="Kitchen Sink on the device. Looks the same as without the new tag." /></p>
+
+<p>We now point our PC/Mac browser to http://10.0.0.111:8080/client, and click on the "debug client user interface: http://10.0.0.111:8080/client/#anonymous" link. We see a window that looks like this:</p>
+
+<p><img src="http://devdocs.mediafly.com/interactives/images/weinre/2.%20Debug%20Client%20Home.png" alt="Weinre debug client home" /></p>
+
+<p>We can tap on other tabs and see the tools familiar to web developers building and testing with major browsers. E.g. here is a view from the Elements tab.</p>
+
+<p><img src="http://devdocs.mediafly.com/interactives/images/weinre/3.%20Debug%20Client%20Elements.png" alt="Weinre debug client Elements" /></p>
+
+<p>The Elements, Resources, Network, Timeline, and Console tabs all perform as you would expect from their Chrome/Firefox/IE counterparts.</p>
+
+<p>We've tested across all of our device platforms (iOS, Android, Windows 8), and each performs well.</p>
 
 <hr />
 
@@ -426,7 +440,7 @@ Example 2:
 
 <h3>Collections</h3>
 
-<p>Collections allow users to create a "personal playlist" of items. Oftentimes this is used as a wa to organize items for, say, an upcoming meeting with a customer. Collections are pointers to items, not copies of items; updating the original item in Airship will update the item in the Collection as well.</p>
+<p>Collections allow users to create a "personal playlist" of items. Oftentimes this is used as a way to organize items for, say, an upcoming meeting with a customer. Collections are pointers to items, not copies of items; updating the original item in Airship will update the item in the Collection as well.</p>
 
 <h4>Show "Collections"</h4>
 
@@ -999,16 +1013,35 @@ $.ajax({
 
 <hr />
 
-<h2>Embedding an image or another Interactive</h2>
+<h2>Embedding data, images, or another Interactives</h2>
 
-<p>Interactives have the ability to embed items that exist in the app into it.  This is primarily used to embed images and other Interactives.  Documents, audio and video embeds will “stream” the media if they aren’t downloaded. HTML and YouTube links that are embedded may result in errors if the user is offline. The best user experience will be provided to the user only if embedding is limited to images and Interactives.</p>
+<h3>Overview</h3>
+
+<p>Interactives have the ability to embed items that exist in the app into it.  This is used for four primary purposes:</p>
 
 <ul>
-<li>To embed an Interactive, create an <code>&lt;iframe&gt;</code> and set the src to <code>mfly://data/embed/[id]</code> where [id] is the ID of the Interactive you wish to embed</li>
-<li>To embed an image, create an <code>&lt;img&gt;</code> and set the src to <code>mfly://data/embed/[id]</code> where [id] is the ID of the image you wish to embed</li>
-<li>Embed can also be used to pull data items from the app into the Interactive.</li>
+<li>Retrieve another item that contains structured data (JSON, XML, CSV)</li>
+<li>Embed another item that is an image and render it as an image in this Interactive</li>
+<li>Embed another Interactive into an iframe on this Interactive</li>
+<li>Embed a page from a PowerPoint, PDF, or Word document</li>
 </ul>
 
+
+<p>Embedding other types (audio, video, URLs) will have unexpected results. The best user experience will be provided to the user only if embedding is limited to data, images, documents and Interactives.</p>
+
+<ul>
+<li>To retrieve a data item, use AJAX to retrieve <code>mfly://data/embed/[id]</code> where [id] is the ID of the data item you wish to obtain. Be ready to retry if the item has not yet completed downloading. See below for details.</li>
+<li>To embed an image, create an <code>&lt;img&gt;</code> and set its src to <code>mfly://data/embed/[id]</code> where [id] is the ID of the image you wish to embed. Only set the src <i>after</i> you know the Interactive has completed downloading. See below for details.</li>
+<li>To embed an Interactive, construct an <code>&lt;iframe&gt;</code> and set its src to <code>mfly://data/embed/[id]</code>, where [id] is the ID of the Interactive you wish to embed. Only set the src <i>after</i> you know the Interactive has completed downloading. See below for details.</li>
+<li>To embed the page from a document as an image, create an <code>&lt;img&gt;</code> and set its src to <code>mfly://data/embed/[id]?position=[pos]</code> where [id] is the ID of the document you wish to embed, and [pos] is the page/slide number. Only set the src <i>after</i> you know the Interactive has completed downloading. See below for details. This method is only available on iOS, currently.</li>
+</ul>
+
+
+<h3>Example</h3>
+
+<p>We recommend using mflyCommands.js for this purpose. See our <a href="https://bitbucket.org/mediafly/mediafly-interactives-tools-and-examples/src/tip/examples/Embed%20and%20Data%20Items/Containing%20Interactive/?at=default">open-source Interactives</a> for a working example of Embed.</p>
+
+<h3>Details</h3>
 
 <p>Here are the HTTP response codes by platform. Unfortunately, these are not all the same because of differing security limitations across platforms.</p>
 
@@ -1042,10 +1075,7 @@ $.ajax({
 
 <p>Please note that asking too many times may put the Downloader into a race condition, as each request will trigger the Downloader to poll and possibly start downloading again.  So, please be considerate and retry no more than once every few seconds.</p>
 
-<p>As you can see, embedding requires care. You cannot assume that the embedded item is available yet, because it may be behind some longer items in the Downloader. Instead, you have to try to fetch the content and monitor response codes.</p>
-
-<p><em>Example:</em><br>
-We recommend using mflyCommands.js for this purpose. See our <a href="https://bitbucket.org/mediafly/mediafly-interactives-tools-and-examples/src/tip/examples/Embed%20and%20Data%20Items/Containing%20Interactive/?at=default">open-source Interactives</a> for a working example of Embed.</p>
+<p>As you can see, embedding requires care. You cannot assume that the embedded item is available yet, because it may be behind some longer items in the Downloader. Instead, you have to try to fetch the content and monitor response codes. This is why we suggest using mflyCommands.js as shown in the example above.</p>
 
 <p><em>Availability:</em> iOS, Android, Windows 8</p>
 

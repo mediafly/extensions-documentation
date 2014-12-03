@@ -148,24 +148,36 @@ To learn more, read the [publish.py comments](https://bitbucket.org/mediafly/med
 
 
 ## Testing on device
-### iOS
 
-There are two approaches that allow developers to interact with their Interactive when running on a device:
+### weinre
+We strongly recommend the use of [weinre](http://people.apache.org/~pmuellr/weinre-docs/latest/), the WEb INspector REmote. It is a debugger for remote web pages, and in particular, it <i>allows you to debug web pages on mobile devices with your laptop</i>.
 
-1. [jsconsole.com](jsconsole.com). This is a clever mechanism which allows you to interact with JavaScript on your device remotely. You:
+#### How to use it
+Please read the [installation](http://people.apache.org/~pmuellr/weinre-docs/latest/Installing.html) and [run](http://people.apache.org/~pmuellr/weinre-docs/latest/Running.html) instructions on the website for details. But here is a simple overview:
 
-	a. Start a remote debugging session with ```:listen [id]```.
-	b. Add the script that is generated into your Interactive
-	c. Load the Interactive into Airship and open it on your device
-	d. Interact with the Interactive via jsconsole.com.
-	
-	
-2. For trusted partners, we are building the capability to use the iOS Simulator to launch Whitebox and remotely debug with Safari's Web Inspector. Contact us for more information.
+1. Install the tool via npm, (e.g. npm -g install weinre)
+2. Run the debug server locally (e.g. weinre —boundHost 10.0.0.111)
+3. Update the Interactive with a ```<script>``` tag to point to the debug server, and publish the new Interactive in Airship (e.g. ```<script src="http://10.0.0.111:8080/target/target-script-min.js"></script>```). Open the Interactive on your app
+4. Point your PC/Mac browser to the debug client (e.g. http://10.0.0.111:8080)
 
+You now have access to a relatively full featured web development tool for your Interactives!
 
-### Android
+#### Let's see it in action
+We completed steps 1 and 2, and instrumented one of our apps, Kitchen Sink, with the ```<script>``` tag from 3. We open the Interactive, and see that it looks the same as without the ```<script>``` tag:
 
-Please see [Remote Debugging Chrome on Android](https://developers.google.com/chrome-developer-tools/docs/remote-debugging). Note that this only applies to Android 4.4+.
+![Kitchen Sink on the device. Looks the same as without the new tag.](http://devdocs.mediafly.com/interactives/images/weinre/1. Kitchen Sink.png)
+
+We now point our PC/Mac browser to http://10.0.0.111:8080/client, and click on the "debug client user interface: http://10.0.0.111:8080/client/#anonymous" link. We see a window that looks like this:
+
+![Weinre debug client home](http://devdocs.mediafly.com/interactives/images/weinre/2. Debug Client Home.png)
+
+We can tap on other tabs and see the tools familiar to web developers building and testing with major browsers. E.g. here is a view from the Elements tab.
+
+![Weinre debug client Elements](http://devdocs.mediafly.com/interactives/images/weinre/3. Debug Client Elements.png)
+
+The Elements, Resources, Network, Timeline, and Console tabs all perform as you would expect from their Chrome/Firefox/IE counterparts.
+
+We've tested across all of our device platforms (iOS, Android, Windows 8), and each performs well.
 
 
 ----------
@@ -373,7 +385,7 @@ Mediafly's apps provide real-time, native search as a core part of the functiona
 
 
 ### Collections
-Collections allow users to create a "personal playlist" of items. Oftentimes this is used as a wa to organize items for, say, an upcoming meeting with a customer. Collections are pointers to items, not copies of items; updating the original item in Airship will update the item in the Collection as well.
+Collections allow users to create a "personal playlist" of items. Oftentimes this is used as a way to organize items for, say, an upcoming meeting with a customer. Collections are pointers to items, not copies of items; updating the original item in Airship will update the item in the Collection as well.
 
 
 #### Show "Collections"
@@ -905,14 +917,28 @@ This example retrieves value data for a given key, using jQuery.
 
 ----------
 
-## Embedding an image or another Interactive
+## Embedding data, images, or another Interactives
 
-Interactives have the ability to embed items that exist in the app into it.  This is primarily used to embed images and other Interactives.  Documents, audio and video embeds will “stream” the media if they aren’t downloaded. HTML and YouTube links that are embedded may result in errors if the user is offline. The best user experience will be provided to the user only if embedding is limited to images and Interactives.
+### Overview
+Interactives have the ability to embed items that exist in the app into it.  This is used for four primary purposes:
 
+* Retrieve another item that contains structured data (JSON, XML, CSV)
+* Embed another item that is an image and render it as an image in this Interactive
+* Embed another Interactive into an iframe on this Interactive
+* Embed a page from a PowerPoint, PDF, or Word document
+ 
+Embedding other types (audio, video, URLs) will have unexpected results. The best user experience will be provided to the user only if embedding is limited to data, images, documents and Interactives.
 
-* To embed an Interactive, create an ```<iframe>``` and set the src to ```mfly://data/embed/[id]``` where [id] is the ID of the Interactive you wish to embed
-* To embed an image, create an ```<img>``` and set the src to ```mfly://data/embed/[id]``` where [id] is the ID of the image you wish to embed
-* Embed can also be used to pull data items from the app into the Interactive.
+* To retrieve a data item, use AJAX to retrieve ```mfly://data/embed/[id]``` where [id] is the ID of the data item you wish to obtain. Be ready to retry if the item has not yet completed downloading. See below for details.
+* To embed an image, create an ```<img>``` and set its src to ```mfly://data/embed/[id]``` where [id] is the ID of the image you wish to embed. Only set the src <i>after</i> you know the Interactive has completed downloading. See below for details.
+* To embed an Interactive, construct an ```<iframe>``` and set its src to ```mfly://data/embed/[id]```, where [id] is the ID of the Interactive you wish to embed. Only set the src <i>after</i> you know the Interactive has completed downloading. See below for details.
+* To embed the page from a document as an image, create an ```<img>``` and set its src to ```mfly://data/embed/[id]?position=[pos]``` where [id] is the ID of the document you wish to embed, and [pos] is the page/slide number. Only set the src <i>after</i> you know the Interactive has completed downloading. See below for details. This method is only available on iOS, currently.
+
+### Example
+
+We recommend using mflyCommands.js for this purpose. See our [open-source Interactives](https://bitbucket.org/mediafly/mediafly-interactives-tools-and-examples/src/tip/examples/Embed%20and%20Data%20Items/Containing%20Interactive/?at=default) for a working example of Embed.
+
+### Details
 
 Here are the HTTP response codes by platform. Unfortunately, these are not all the same because of differing security limitations across platforms.
 
@@ -925,11 +951,7 @@ Item not found | HTTP response code 404 (Not found) | HTTP response code 404 (No
 
 Please note that asking too many times may put the Downloader into a race condition, as each request will trigger the Downloader to poll and possibly start downloading again.  So, please be considerate and retry no more than once every few seconds.
   
-As you can see, embedding requires care. You cannot assume that the embedded item is available yet, because it may be behind some longer items in the Downloader. Instead, you have to try to fetch the content and monitor response codes.
-
-*Example:*<br>
-We recommend using mflyCommands.js for this purpose. See our [open-source Interactives](https://bitbucket.org/mediafly/mediafly-interactives-tools-and-examples/src/tip/examples/Embed%20and%20Data%20Items/Containing%20Interactive/?at=default) for a working example of Embed.
-
+As you can see, embedding requires care. You cannot assume that the embedded item is available yet, because it may be behind some longer items in the Downloader. Instead, you have to try to fetch the content and monitor response codes. This is why we suggest using mflyCommands.js as shown in the example above.
 
 *Availability:* iOS, Android, Windows 8
 
