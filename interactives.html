@@ -228,53 +228,62 @@ supports Python, this is the path for you.</p>
 
 <h1>API and Howtos</h1>
 
+<p>This section describes all of the APIs available to Interactives developers. For each call, we list the mflyCommands.js call as well as the base URL. Please use the mflyCommands.js call where possible.</p>
+
 <h2>Controlling the app</h2>
 
 <p>Controlling the app is done by opening a window to a special URL through JavaScript. The container app will handle this as an instruction to handle.  The list of available URLs, and their appropriate actions, are listed below.</p>
 
-<p><strong><em>PLEASE NOTE</em></strong>: every Interactive must allow the user to invoke either mfly://control/showControlBars or mfly://control/done in some way. Else, there is no way to exit the Interactive, as they run full-screen.</p>
+<p><strong><em>PLEASE NOTE</em></strong>: Every Interactive must allow the user to either close the item or show the control bars. Else, the user will be stuck within the Interactive, with no way to exit.</p>
 
 <h3>Basic controls</h3>
 
 <h4>Close the item</h4>
 
-<p><em>URL:</em> mfly://control/done <br>
+<p><em>mflyCommands.js:</em> mflyCommands.close() <br>
+<em>URL:</em> mfly://control/done <br>
 <em>Description:</em> Closes the item and returns the user to where they were before. <br>
 <em>Availability:</em> iOS, Android, Windows 8</p>
 
 <h4>Show control bars</h4>
 
-<p><em>URL:</em> mfly://control/showControlBars <br>
+<p><em>mflyCommands.js:</em> mflyCommands.showControlBars() <br>
+<em>URL:</em> mfly://control/showControlBars <br>
 <em>Description:</em> Shows the control bars. <br>
 <em>Availability:</em> iOS, Android</p>
 
 <h4>Hide control bars</h4>
 
-<p><em>URL:</em> mfly://control/hideControlBars <br>
+<p><em>mflyCommands.js:</em> mflyCommands.hideControlBars() <br>
+<em>URL:</em> mfly://control/hideControlBars <br>
 <em>Description:</em> Hides the control bars. <br>
 <em>Availability:</em> iOS, Android</p>
 
 <h4>Browse</h4>
 
-<p><em>URL:</em> mfly://control/browse <br>
+<p><em>mflyCommands.js:</em> mflyCommands.browse() <br>
+<em>URL:</em> mfly://control/browse <br>
 <em>Description:</em> Multiple Interactives can layer on top of each other, to represent different layers of hierarchy. The developer may wish to allow the user to navigate the hierarchy using the core Mediafly app with the default grid/list view, e.g. if a “More” or “Browse” button is presented.  This URL closes all Interactives in the stack and takes the user to that hierarchy in the core app if called. <br>
 <em>Availability:</em> iOS</p>
 
 <h4>Next</h4>
 
-<p><em>URL:</em> mfly://control/next <br>
+<p><em>mflyCommands.js:</em> mflyCommands.next() <br>
+<em>URL:</em> mfly://control/next <br>
 <em>Description:</em> Opens the next Item in the Folder or Collection <br>
 <em>Availability:</em> iOS, Android, Windows 8</p>
 
 <h4>Previous</h4>
 
-<p><em>URL:</em> mfly://control/previous <br>
+<p><em>mflyCommands.js:</em> mflyCommands.previous() <br>
+<em>URL:</em> mfly://control/previous <br>
 <em>Description:</em> Opens the previous Item in the Folder or Collection <br>
 <em>Availability:</em> iOS, Android, Windows 8</p>
 
 <h4>Get information about a folder or item</h4>
 
-<p><em>URL:</em> mfly://data/item/[id] <br>
+<p><em>mflyCommands.js:</em> mflyCommands.getItem(<em>id</em>) <br>
+<em>URL:</em> mfly://data/item/[id] <br>
 <em>Description:</em> Return a JSON representation of a folder or item. <br>
 <em>Examples:</em></p>
 
@@ -318,8 +327,9 @@ Example 2:
 
 <h4>Get contents of a folder</h4>
 
-<p><em>URL:</em> mfly://data/folder/[id] <br>
-<em>Description:</em> Return a JSON representation of the contents of a folder. To get the contents of the top-level folder, use id of __root__.</p>
+<p><em>mflyCommands.js:</em> mflyCommands.getFolder(<em>id</em>) <br>
+<em>URL:</em> mfly://data/folder/[id] <br>
+<em>Description:</em> Return a JSON representation of the <em>contents</em> of a folder. To get the contents of the top-level folder, use id of __root__.</p>
 
 <pre><code>Example:
     GET mfly://data/folder/slug2
@@ -358,38 +368,51 @@ Example 2:
 
 <h4>Show Settings</h4>
 
-<p><em>URL:</em> mfly://control/showSettings?x=[x-coord]&amp;y=[y-coord]&amp;w=[width]&amp;h=[height] <br>
+<p><em>mflyCommands.js:</em> mflyCommands.showSettings(<em>x-coord, y-coord, width, height</em>) <br>
+<em>URL:</em> mfly://control/showSettings?x=[x-coord]&amp;y=[y-coord]&amp;w=[width]&amp;h=[height] <br>
 <em>Description:</em> Shows the settings dialog at x-coord, y-coord coordinates with the specified width and height. <br>
-<em>Availability:</em> iOS</p>
+<em>Availability:</em> iOS, Android</p>
 
 <h4>Show User Management Dialog</h4>
 
-<p><em>URL:</em> mfly://control/showUserManagement&amp;x=[x-coord]&amp;y=[y-coord]&amp;w=[width]&amp;h=[height] <br>
-<em>Description:</em> Shows the User Management dialog, which allows the user to login or manage users. <br>
-<em>Availability:</em> iOS</p>
+<p><em>mflyCommands.js:</em> mflyCommands.showUserManagement(<em>x-coord, y-coord, width, height</em>) <br>
+<em>URL:</em> mfly://control/showUserManagement&amp;x=[x-coord]&amp;y=[y-coord]&amp;w=[width]&amp;h=[height] <br>
+<em>Description:</em> Shows the User Management dialog, which allows the user to login or manage users. Parameters x-coord, y-coord, width, and height are all optional, and only work with iOS.<br>
+<em>Availability:</em> iOS, Android</p>
 
 <h4>Show Second Screen Options dialog</h4>
 
-<p><em>URL:</em> mfly://control/secondScreenOptions <br>
+<p><em>mflyCommands.js:</em> Coming soon!
+<em>URL:</em> mfly://control/secondScreenOptions <br>
 <em>Description:</em> Shows the Second Screen Options dialog. <br>
 <em>Availability:</em> iOS</p>
 
 <h4>Email</h4>
 
-<p><em>URL:</em> mfly://control/email/[id] <br>
+<p><em>mflyCommands.js:</em> mflyCommands.email(<em>id</em>) <br>
+<em>URL:</em> mfly://control/email/[id] <br>
 <em>Description:</em> If the item can be emailed, invoke email from within the app. <br>
-<em>Availability:</em> iOS</p>
+<em>Availability:</em> iOS, Android</p>
 
 <h4>Refresh the contents of the app</h4>
 
-<p><em>URL:</em> mfly://control/refresh <br>
+<p><em>mflyCommands.js:</em> mflyCommands.refresh() <br>
+<em>URL:</em> mfly://control/refresh <br>
 <em>Description:</em> Trigger the app to refresh its content. If items have changed, this should trigger mflySync calls appropriately. <br>
 <em>Availability:</em> iOS, Android</p>
 
 <h4>Show Annotations</h4>
 
-<p><em>URL:</em> mfly://control/showAnnotations <br>
+<p><em>mflyCommands.js:</em> mflyCommands.showAnnotations() <br>
+<em>URL:</em> mfly://control/showAnnotations <br>
 <em>Description:</em> If annotations are enabled, show the annotations control bar. <br>
+<em>Availability:</em> iOS</p>
+
+<h4>Take and email Screenshot</h4>
+
+<p><em>mflyCommands.js:</em> mflyCommands.takeAndEmailScreenshot() <br>
+<em>URL:</em> mfly://control/takeAndEmailScreenshot <br>
+<em>Description:</em> App will take a screenshot and populate the email with that screenshot. <br>
 <em>Availability:</em> iOS</p>
 
 <h3>Links (Open and Goto)</h3>
@@ -400,19 +423,22 @@ Example 2:
 
 <h4>Open an item</h4>
 
-<p><em>URL:</em> mfly://item/[id] <br>
+<p><em>mflyCommands.js:</em> mflyCommands.openItem(<em>id</em>) <br>
+<em>URL:</em> mfly://item/[id] <br>
 <em>Description:</em> Opens the specified item, where [id] is the ID of the item.  As described above, the historical navigational stack is maintained, and the user can return to it. The ID for an item can be found in Airship. Expand the item, and the ID is displayed at the bottom. <br>
 <em>Availability:</em> iOS, Android, Windows 8</p>
 
 <h4>Open a folder</h4>
 
-<p><em>URL:</em> mfly://folder/[id] <br>
+<p><em>mflyCommands.js:</em> mflyCommands.openFolder(<em>id</em>) <br>
+<em>URL:</em> mfly://folder/[id] <br>
 <em>Description:</em> Opens the specified folder, where [id] is the ID of the folder.  As described above, the historical navigational stack is maintained, and the user can return to it. The ID for a folder can be found in Airship. Expand the item, and the ID is displayed at the bottom. <br>
 <em>Availability:</em> iOS, Android, Windows 8</p>
 
 <h4>Goto an item or a folder</h4>
 
-<p><em>URL:</em> mfly://control/goto/[id] <br>
+<p><em>mflyCommands.js:</em> mflyCommands.goto(<em>id</em>) <br>
+<em>URL:</em> mfly://control/goto/[id] <br>
 <em>Description:</em> Gotos the specified item or folder, where [id] is the ID of the item or folder.  As described above, when the app goes to another item or folder, the navigational stack behind the destination is thrown away, and the user is given the same navigational capabilities as if they opened the destination item directly. The ID for a folder can be found in Airship. Expand the item, and the ID is displayed at the bottom. <br>
 <em>Availability:</em> iOS, Android</p>
 
@@ -422,19 +448,21 @@ Example 2:
 
 <ol>
 <li>Use the native app's core Search UI. In this case, you simply need to open the Search dialog and let the user use that dialog. See "Show Search dialog" below.</li>
-<li>Implement your own UI. In this case, you use mfly:// calls to get search results given terms, and then render the UI as you wish. See "Search by keyword" below.</li>
+<li>Implement your own UI. In this case, you use mflyCommands.search() or mfly:// calls to get search results given terms, and then render the UI as you wish. See "Search by keyword" below.</li>
 </ol>
 
 
 <h4>Show Search dialog</h4>
 
-<p><em>Description:</em> Shows the search dialog at x-coord, y-coord coordinates with the specified width and height. <br>
+<p><em>mflyCommands.js:</em> mflyCommands.showSearch(<em>x-coord, y-coord, width, height</em>) <br>
+<em>Description:</em> Shows the search dialog at x-coord, y-coord coordinates with the specified width and height. Parameters x-coord, y-coord, width, and height are all optional, and only work with iOS. <br>
 <em>URL:</em> mfly://control/showSearch?x=[x-coord]&amp;y=[y-coord]&amp;w=[width]&amp;h=[height]<br>
 <em>Availability:</em> iOS</p>
 
 <h4>Search by keyword</h4>
 
-<p><em>URL:</em> mfly://data/search?term=[alpha]<br>
+<p><em>mflyCommands.js:</em> mflyCommands.search(<em>term</em>) <br>
+<em>URL:</em> mfly://data/search?term=[term]<br>
 <em>Description:</em> Conduct a search for the given keyword. Return value is a JSON-array of folders and items, similar in format to a call to mfly://folder/[id].<br>
 <em>Availability:</em> iOS</p>
 
@@ -444,19 +472,22 @@ Example 2:
 
 <h4>Show "Collections"</h4>
 
-<p><em>URL:</em> mfly://control/showCollections?x=[x-coord]&amp;y=[y-coord]&amp;w=[width]&amp;h=[height] <br>
-<em>Description:</em> Shows the Collections dialog at x-coord, y-coord coordinates with specified width and height. <br>
+<p><em>mflyCommands.js:</em> mflyCommands.showCollections(<em>x-coord, y-coord, width, height</em>) <br>
+<em>URL:</em> mfly://control/showCollections?x=[x-coord]&amp;y=[y-coord]&amp;w=[width]&amp;h=[height] <br>
+<em>Description:</em> Shows the Collections dialog at x-coord, y-coord coordinates with specified width and height. Parameters x-coord, y-coord, width, and height are all optional, and only work with iOS.<br>
 <em>Availability:</em> iOS</p>
 
-<h4>Show "Add to Collections"</h4>
+<h4>Show "Add to Collection"</h4>
 
-<p><em>URL:</em> mfly://control/showAddToCollection?id=[itemId]&amp;x=[x-coord]&amp;y=[y-coord]&amp;w=[width]&amp;h=[height] <br>
-<em>Description:</em> Shows the Add To Collections dialog at x-coord, y-coord coordinates with specified width and height for the specified item. <br>
+<p><em>mflyCommands.js:</em> mflyCommands.showAddToCollection(<em>x-coord, y-coord, width, height</em>) <br>
+<em>URL:</em> mfly://control/showAddToCollection?id=[itemId]&amp;x=[x-coord]&amp;y=[y-coord]&amp;w=[width]&amp;h=[height] <br>
+<em>Description:</em> Shows the Add To Collections dialog at x-coord, y-coord coordinates with specified width and height for the specified item. Parameters x-coord, y-coord, width, and height are all optional, and only work with iOS. <br>
 <em>Availability:</em> iOS</p>
 
 <h4>Get the list of Collections</h4>
 
-<p><em>URL:</em> mfly://data/collections <br>
+<p><em>mflyCommands.js:</em> mflyCommands.getCollections() <br>
+<em>URL:</em> mfly://data/collections <br>
 <em>Description:</em> Return a JSON representation of the list of Collections</p>
 
 <pre><code>Example:
@@ -486,7 +517,8 @@ Example 2:
 
 <h4>Get the contents of a Collection</h4>
 
-<p><em>URL:</em> mfly://data/collection/[collection unique ID] <br>
+<p><em>mflyCommands.js:</em> mflyCommands.getCollection(<em>collection ID</em>) <br>
+<em>URL:</em> mfly://data/collection/[collection ID] <br>
 <em>Description:</em> Return a JSON representation of the contents of a collection, in a similar format to Get Folder.</p>
 
 <pre><code>Example:
@@ -527,13 +559,15 @@ Example 2:
 
 <h4>Show Downloader</h4>
 
-<p><em>URL:</em> mfly://control/showDownloader?x=[x-coord]&amp;y=[y-coord]&amp;w=[width]&amp;h=[height] <br>
-<em>Description:</em> Shows the Downloader dialog at x-coord, y-coord coordinates with specified width and height. <br>
+<p><em>mflyCommands.js:</em> mflyCommands.showDownloader(<em>x-coord, y-coord, width, height</em>) <br>
+<em>URL:</em> mfly://control/showDownloader?x=[x-coord]&amp;y=[y-coord]&amp;w=[width]&amp;h=[height] <br>
+<em>Description:</em> Shows the Downloader dialog at x-coord, y-coord coordinates with specified width and height. Parameters x-coord, y-coord, width, and height are all optional, and only work with iOS. <br>
 <em>Availability:</em> iOS, Android (soon)</p>
 
 <h4>Get total download progress</h4>
 
-<p><em>URL:</em> mfly://data/download/status <br>
+<p><em>mflyCommands.js:</em> mflyCommands.getDownloadStatus() <br>
+<em>URL:</em> mfly://data/download/status <br>
 <em>Description:</em> Get total download progress, as a range between 0 (no downloads started) and 1 (all downloads complete), and number of failed downloads. <br></p>
 
 <pre><code>Example:
@@ -549,7 +583,8 @@ Example 2:
 
 <h4>Get download progress for a single item</h4>
 
-<p><em>URL:</em> mfly://data/download/status/[id] <br>
+<p><em>mflyCommands.js:</em> mflyCommands.getDownloadStatus(<em>id</em>) <br>
+<em>URL:</em> mfly://data/download/status/[id] <br>
 <em>Description:</em> Get download status for a single item. The attribute may be "progress" (download is progressing normally), "error" (download is in an error state), or "exceed" (download won't proceed because the cellular limit set for the app has been exceeded). <br></p>
 
 <pre><code>Example:
@@ -572,7 +607,8 @@ Example:
 
 <h4>Add to Downloader</h4>
 
-<p><em>URL:</em> mfly://control/addToDownloader/[id]<br>
+<p><em>mflyCommands.js:</em> mflyCommands.addToDownloader(<em>id</em>) <br>
+<em>URL:</em> mfly://control/addToDownloader/[id]<br>
 <em>Description:</em> Instruct the app to add an item to the Downloader. Response code 200 = item was added to the Downloader. Response code 404 if id is not found.<br>
 <em>Availability:</em> iOS, Android (soon)</p>
 
@@ -595,7 +631,8 @@ Example:
 
 <h4>Get notification status for a folder</h4>
 
-<p><em>URL:</em> mfly://data/getNotificationStatus/[id]<br>
+<p><em>mflyCommands.js:</em> mflyCommands.getNotificationStatus(<em>id</em>) <br>
+<em>URL:</em> mfly://data/getNotificationStatus/[id]<br>
 <em>Description:</em> Get the notification status for a folder. If the folder is valid, response code is 200 and body is a JSON object similar to this:<br></p>
 
 <pre><code>Example:
@@ -608,20 +645,23 @@ Example:
 
 <h4>Add a folder to notifications</h4>
 
-<p><em>URL:</em> mfly://data/addNotification/[id]<br>
+<p><em>mflyCommands.js:</em> mflyCommands.addNotification(<em>id</em>) <br>
+<em>URL:</em> mfly://data/addNotification/[id]<br>
 <em>Description:</em> Instruct the app to subscribe the folder for notifications. Response code 200 if successful, 304 if folder was already subscribed, and 500 if an error occurred.<br>
 <em>Availability:</em> iOS</p>
 
 <h4>Remove a folder from notifications</h4>
 
-<p><em>URL:</em> mfly://data/removeNotification/[id]<br>
+<p><em>mflyCommands.js:</em> mflyCommands.removeNotification(<em>id</em>) <br>
+<em>URL:</em> mfly://data/removeNotification/[id]<br>
 <em>Description:</em> Instruct the app to unsubscribe the folder from notifications. Response code 200 if successful, 304 if folder was not already subscribed, and 500 if an error occurred.<br>
 <em>Availability:</em> iOS</p>
 
-<h4>Display the notifications manager</h4>
+<h4>Show the notifications manager</h4>
 
-<p><em>URL:</em> mfly://control/showNotificationsManager<br>
-<em>Description:</em> Display the notifications manager<br>
+<p><em>mflyCommands.js:</em> mflyCommands.showNotificationsManager(<em>x-coord, y-coord, width, height</em>) <br>
+<em>URL:</em> mfly://control/showNotificationsManager<br>
+<em>Description:</em> Display the notifications manager. Parameters x-coord, y-coord, width, and height are all optional, and only work with iOS. <br>
 <em>Availability:</em> iOS</p>
 
 <h4>Listen for when notifications are changed</h4>
@@ -647,7 +687,8 @@ Example:
 
 <h4>Request latitude/longitude</h4>
 
-<p><em>URL:</em> mfly://data/gps<br>
+<p><em>mflyCommands.js:</em> mflyCommands.getGpsCoordinates() <br>
+<em>URL:</em> mfly://data/gps<br>
 <em>Description:</em> Interactives can request latitude and longitude from the app. This is useful for apps that connect to external services to report lat/lon, or use the Haversine (Big Earth) formula to calculate rough distances.<br></p>
 
 <pre><code>Example:
@@ -904,7 +945,24 @@ Example:
 
 <h3>Save data</h3>
 
-<p>To save data to the app container, make an AJAX GET to <code>mfly://data/info/[key]?method=PUT&amp;value=[value]</code>, where [key] is the key you wish to use, and [value] is the value for that key.</p>
+<p>To save data to the app container, call mflyCommands.putValue(<em>key, value</em>), where <em>key</em> is the key you wish to save, and <em>value</em> is the value for that key.</p>
+
+<p><em>Example:</em><br>
+This example saves key/value data, using mflyCommands.js.</p>
+
+<pre><code>var key = $('#key').val();
+var value = { name: ‘abc’, value: ‘def’ };
+
+mflyCommands.putValue(key, value)
+    .done(function(data, status) {
+        // Success! Do something.
+    })
+    .fail(function(deferred, status) {
+        // Error! Do something.
+    });
+</code></pre>
+
+<p>Alternatively, you can make the calls directly with AJAX, but we strongly recommend using mflyCommands instead. To make an AJAX GET to <code>mfly://data/info/[key]?method=PUT&amp;value=[value]</code>, where [key] is the key you wish to use, and [value] is the value for that key.</p>
 
 <p>HTTP response codes:</p>
 
@@ -942,7 +1000,9 @@ $.ajax({
 
 <h3>Retrieve data</h3>
 
-<p>You can retrieve value information from keys in multiple ways. In all cases:</p>
+<p>You can retrieve value information from keys in multiple ways using mflyCommands.js.</p>
+
+<p>Alternatively, you can make the calls directly with AJAX, but we strongly recommend using mflyCommands instead. When making calls directly,</p>
 
 <ul>
 <li>Response of 200 OK indicates a successful get of an existing key. The body of the response will contain the values indicated below.</li>
@@ -952,68 +1012,87 @@ $.ajax({
 
 <h4>Single key</h4>
 
-<p>To get data for a specific key from the app container, make an AJAX GET to <code>mfly://data/info/[key]</code>, where [key] is the key you wish to use.</p>
+<p>To get data for a specific key from the app container, use mflyCommands.getValue(<em>key</em>).</p>
 
-<p>On successful retrieval, body will contain the value of the key.</p>
+<p><em>Example:</em></p>
+
+<pre><code>// Assume key 'abc' has been set to value '123'.
+
+mflyCommands.getValue('abc')
+    .done(function(data, status) {
+        // Success! Do something.
+        console.log(data);
+    })
+    .fail(function(deferred, status) {
+        // Error! Do something.
+    });
+
+// Console output: 123
+</code></pre>
+
+<p>On successful retrieval, data will contain the value of the key.</p>
 
 <h4>All keys</h4>
 
-<p>To get data for all keys from the app container, make an AJAX GET to <code>mfly://data/info</code> .</p>
+<p>To get data for all keys from the app container, use mflyCommands.getValues().</p>
 
-<p>On successful retrieval, body will contain a JSON object enumerating all keys and values, such as:</p>
+<p><em>Example:</em></p>
 
-<pre><code>{ "key1": "value1", "key2": "value2", ... } 
+<pre><code>// Assume key 'abc' has been set to value '123', and key 'def' has been set to value '456'.
+
+mflyCommands.getValues()
+    .done(function(data, status) {
+        // Success! Do something.
+        console.log(data);
+    })
+    .fail(function(deferred, status) {
+        // Error! Do something.
+    });
+
+// Console output: { "abc": "123", "def": "456" }
 </code></pre>
+
+<p>On successful retrieval, body will contain a JSON object enumerating all keys and values, as shown above.</p>
 
 <h4>Key prefix</h4>
 
-<p>To get data for all keys that begin with X, make an AJAX GET to <code>mfly://data/info?prefix=X</code></p>
+<p>To get data for all keys that begin with X, use mflyCommands.getValues(<em>prefix</em>). On successful retrieval, data will contain a JSON object enumerating all keys and values where the keys begin with X.</p>
 
-<p>On successful retrieval, body will contain a JSON object enumerating all keys and values where the keys begin with X. For example, if list of keys/values in app are:</p>
+<p><em>Example:</em></p>
 
-<ul>
-<li>key=snow, value=white</li>
-<li>key=snowball, value=round</li>
-<li>key=fire, value=red</li>
-</ul>
+<pre><code>// Assume:
+//   key 'snow' has been set to value 'white',
+//   key 'snowball' has been set to value 'round',
+//   key 'fire' has been set to value 'red'
 
+mflyCommands.getValues('snow')
+    .done(function(data, status) {
+        // Success! Do something.
+        console.log(data);
+    })
+    .fail(function(deferred, status) {
+        // Error! Do something.
+    });
 
-<p>Then:
-GET <code>mfly://data/info?prefix=snow</code>
-returns</p>
+// Console output: { "snow": "white", "snowball": "round" }
 
-<pre><code>{ "snow": "white", "snowball": "round" } 
-</code></pre>
+mflyCommands.getValues('abc')
+    .done(function(data, status) {
+        // Success! Do something.
+        console.log(data);
+    })
+    .fail(function(deferred, status) {
+        // Error! Do something.
+    });
 
-<p>GET <code>mfly://data/info?prefix=abc</code>
-returns</p>
-
-<pre><code>{} 
-</code></pre>
-
-<h4>Example</h4>
-
-<p>This example retrieves value data for a given key, using jQuery.</p>
-
-<pre><code>var key = $('#key).val();
-$.ajax({
-    type: "GET",
-    url: "mfly://data/info/" + key,
-    success: function(result, status, xhr) {
-        // Success!
-        value = JSON.parse(result);
-    },
-    error: function(xhr) {
-        // Error! Examine the response code to understand the cause of the error.
-    }
-});
+// Console output: {}
 </code></pre>
 
 <p><em>Availability:</em> iOS, Android, Windows 8</p>
 
 <hr />
 
-<h2>Embedding data, images, or another Interactives</h2>
+<h2>Embedding data, images, other Interactives, or pages</h2>
 
 <h3>Overview</h3>
 
@@ -1030,18 +1109,18 @@ $.ajax({
 <p>Embedding other types (audio, video, URLs) will have unexpected results. The best user experience will be provided to the user only if embedding is limited to data, images, documents and Interactives.</p>
 
 <ul>
-<li>To retrieve a data item, use AJAX to retrieve <code>mfly://data/embed/[id]</code> where [id] is the ID of the data item you wish to obtain. Be ready to retry if the item has not yet completed downloading. See below for details.</li>
-<li>To embed an image, create an <code>&lt;img&gt;</code> and set its src to <code>mfly://data/embed/[id]</code> where [id] is the ID of the image you wish to embed. Only set the src <i>after</i> you know the Interactive has completed downloading. See below for details.</li>
-<li>To embed an Interactive, construct an <code>&lt;iframe&gt;</code> and set its src to <code>mfly://data/embed/[id]</code>, where [id] is the ID of the Interactive you wish to embed. Only set the src <i>after</i> you know the Interactive has completed downloading. See below for details.</li>
-<li>To embed the page from a document as an image, create an <code>&lt;img&gt;</code> and set its src to <code>mfly://data/embed/[id]?position=[pos]</code> where [id] is the ID of the document you wish to embed, and [pos] is the page/slide number. Only set the src <i>after</i> you know the Interactive has completed downloading. See below for details. This method is only available on iOS, currently.</li>
+<li>To retrieve a data item, use <code>mflyCommands.getData(id)</code>, where <em>id</em> is the ID of the data item you wish to obtain.</li>
+<li>To embed an image, create an <code>&lt;img&gt;</code> that refers to a loading image. In JavaScript, call <code>mflyCommands.embed($element, id)</code>, where <em>$element</em> is a jQuery reference to the img element, and <em>id</em> is the Airship id of the image item.</li>
+<li>To embed another Interactive, construct an <code>&lt;iframe&gt;</code>. In JavaScript, call <code>mflyCommands.embed($element, id)</code>, where <em>$element</em> is a jQuery reference to the iframe element, and <em>id</em> is the Airship id of the other Interactive.</li>
+<li>To embed the page from a document as an image, create an <code>&lt;img&gt;</code> that refers to a loading image. In JavaScript, call <code>mflyCommands.embed($element, id, page)</code>, where <em>$element</em> is a jQuery reference to the img element, <em>id</em> is the Airship id of the image item, and <em>page</em> is the page number that you wish to embed.</li>
 </ul>
 
 
 <h3>Example</h3>
 
-<p>We recommend using mflyCommands.js for this purpose. See our <a href="https://bitbucket.org/mediafly/mediafly-interactives-tools-and-examples/src/tip/examples/Embed%20and%20Data%20Items/Containing%20Interactive/?at=default">open-source Interactives</a> for a working example of Embed.</p>
+<p>See our <a href="https://bitbucket.org/mediafly/mediafly-interactives-tools-and-examples/src/tip/examples/Embed%20and%20Data%20Items/Containing%20Interactive/?at=default">open-source 'Embed and Data Items' Interactive</a> for an excellent working example of all four types of Embed described above.</p>
 
-<h3>Details</h3>
+<h3>Technical details</h3>
 
 <p>Here are the HTTP response codes by platform. Unfortunately, these are not all the same because of differing security limitations across platforms.</p>
 
@@ -1121,7 +1200,11 @@ $.ajax({
 </code></pre>
 
 <ol>
-<li>(Optional) The app can be notified when the user flips second-screen mode on or off. When the user changes to/from second-screen mode, the app will call mflySecondScreenAvailable(bool), where bool is true or false. Apps can react to this call to render a button to invoke the Second Screen Options dialog.</li>
+<li><p>(Optional) Create a button that the user taps to bring up the Second Screen Options dialog. This button in the Interactive would mimic the button in the native app that allows the user to switch between iOS, Mirroring, and Second Screen. When tapped, the Interactive should invoke:</p>
+
+<pre><code> mflyCommands.showSecondScreenOptions();
+</code></pre></li>
+<li><p>(Optional) The app can be notified when the user flips second-screen mode on or off. When the user changes to/from second-screen mode, the app will call mflySecondScreenAvailable(bool), where bool is true or false. Apps can react to this call to render a button to invoke the Second Screen Options dialog.</p></li>
 </ol>
 
 
