@@ -267,6 +267,44 @@ supports Python, this is the path for you.</p>
 
 <p><strong><em>PLEASE NOTE</em></strong>: Every Interactive must allow the user to either close the item or show the control bars. Else, the user will be stuck within the Interactive, with no way to exit.</p>
 
+<h3>Getting baseline information</h3>
+
+<p><em>mflyCommands.js:</em> mflyCommands.getInteractiveInfo() <br>
+<em>URL:</em> mfly://data/interactive <br>
+<em>Description:</em> Obtains baseline information about this Interactive. Interactives can call this function and receive a JSON Object of initial configuration.  E.g. on iOS, the object params may look like this:</p>
+
+<pre><code>    {
+        "user": "jshah@mediafly.com",
+        "displayName": "John Doe",
+        "item": "Custom Dynamic Interactive 1.2",
+        “id”: “29342938241238product234234”,
+        "osType": "iOS",
+        "osVersion": "6.1.2",
+        "appVersion": "6.1.4.405",
+        "deviceId": "4639ufu115f0630a13a8744e8b5cc6309b46",
+        "lastUpdated": "2014-02-03T07:04:07-06:00"
+    }
+</code></pre>
+
+<p><em>Parameters:</em><br></p>
+
+<ul>
+<li>user: The system's username, if any</li>
+<li>displayName: display name. Can be email, first+last, or something similar. May be blank in the case of content libraries that don't require logging in</li>
+<li>item: title of this Interactive</li>
+<li>id: the slug (unique id) of this Interactive within Airship</li>
+<li>osType: which OS (iOS, Android, Windows 8)</li>
+<li>osVersion: which version of the OS</li>
+<li>appVersion: which version of the app</li>
+<li>deviceId: the unique device ID for this device</li>
+<li>lastUpdated: the lasted updated time. This is good for debugging purposes, to help you identify which version of the Interactive you are looking at on the device</li>
+</ul>
+
+
+<p>Note that not every parameter is available on every platform.</p>
+
+<p><em>Availability:</em> iOS (soon), Android, Windows 8 (soon), web (soon)</p>
+
 <h3>Basic controls</h3>
 
 <h4>Close the item</h4>
@@ -315,7 +353,7 @@ supports Python, this is the path for you.</p>
 
 <p><em>mflyCommands.js:</em> mflyCommands.getItem(<em>id</em>) <br>
 <em>URL:</em> mfly://data/item/[id] <br>
-<em>Description:</em> Return a JSON representation of a folder or item. <br>
+<em>Description:</em> Return a JSON representation of a folder or item. To get the contents of the folder, rely on the mflyCommands.getFolder(<em>id</em>) <br>
 <em>Examples:</em></p>
 
 <pre><code>Example 1:      
@@ -340,7 +378,6 @@ Example 2:
     Result:
     {
         "id": "slug2", 
-        “items”: [“slug3”, “slug4”],
         "url": "mfly://item/slug2", 
         "type": "folder", 
         "name": "Name", 
@@ -544,7 +581,7 @@ Example 2:
     ] 
 </code></pre>
 
-<p><em>Availability:</em> iOS</p>
+<p><em>Availability:</em> iOS (483), mflyCommands.js (1.2)</p>
 
 <h4>Get the contents of a Collection</h4>
 
@@ -553,7 +590,7 @@ Example 2:
 <em>Description:</em> Return a JSON representation of the contents of a collection, in a similar format to Get Folder.</p>
 
 <pre><code>Example:
-    GET mfly://data/collections/collection1
+    mflyCommands.getCollection("collection1");
     Result:
     [ 
       { 
@@ -582,7 +619,36 @@ Example 2:
     ] 
 </code></pre>
 
-<p><em>Availability:</em> iOS</p>
+<p><em>Availability:</em> iOS (483), mflyCommands.js (1.2)</p>
+
+<h4>Create a Collection</h4>
+
+<p><em>mflyCommands.js:</em> mflyCommands.createCollection(<em>collection name</em>) <br>
+<em>URL:</em> mfly://data/createCollection?name=[name] <br>
+<em>Description:</em> Creates the collection, and returns a success or failure error code.</p>
+
+<pre><code>Example:
+    mflyCommands.createCollection("Collection 2");
+    Result:
+    {
+        "id": "collection2id",
+        "name": "Collection 2"
+    }
+</code></pre>
+
+<p><em>Availability:</em> iOS (570), mflyCommands.js (1.3.5)</p>
+
+<h4>Add item to a Collection</h4>
+
+<p><em>mflyCommands.js:</em> mflyCommands.addItemToCollection(<em>collection ID</em>, <em>item ID</em>) <br>
+<em>URL:</em> mfly://data/addItemToCollection?id=[collection ID]&amp;item=[item ID] <br>
+<em>Description:</em> Adds the item to the Collection. If Collection exists and it can be created, response code is 200. If Collection does not exist, response code is 404 with body "Collection not found.". If item does not exist, response code is 404 with body "Item not found."</p>
+
+<pre><code>Example:
+    mflyCommands.addItemToCollection("collection2id", "item4id");
+</code></pre>
+
+<p><em>Availability:</em> iOS (570), mflyCommands.js (1.3.5)</p>
 
 <h3>Downloader</h3>
 
@@ -639,9 +705,16 @@ Example:
 <h4>Add to Downloader</h4>
 
 <p><em>mflyCommands.js:</em> mflyCommands.addToDownloader(<em>id</em>) <br>
-<em>URL:</em> mfly://control/addToDownloader/[id]<br>
+<em>URL:</em> mfly://data/addToDownloader/[id]<br>
 <em>Description:</em> Instruct the app to add an item to the Downloader. Response code 200 = item was added to the Downloader. Response code 404 if id is not found.<br>
-<em>Availability:</em> iOS, Android (soon)</p>
+<em>Availability:</em> iOS, Android, Windows 8 (soon)</p>
+
+<h4>Remove from Downloader</h4>
+
+<p><em>mflyCommands.js:</em> mflyCommands.removeFromDownloader(<em>id</em>) <br>
+<em>URL:</em> mfly://data/removeFromDownloader/[id]<br>
+<em>Description:</em> Instruct the app to remove the item from the Downloader. Response code 200 = item was removed from the Downloader. Response code 404 if id is not found.<br>
+<em>Availability:</em> iOS, Android, Windows 8 (soon)</p>
 
 <h4>mflyDownloadStatus</h4>
 
@@ -1189,6 +1262,17 @@ mflyCommands.getValues('abc')
 
 <p><em>Availability:</em> iOS, Android, Windows 8</p>
 
+<h3>Reporting when embedding pages</h3>
+
+<p>Our Reporting system automatically captures who viewed what, when, and where, when using the native app that sits underneath the Interactive. However, when you embed pages, the app loses that information and is unable to tell our systems about view data.</p>
+
+<p>To inform our Reporting system of a page view, post a page view after the page has been shown to the user:</p>
+
+<p><em>mflyCommands.js:</em> mflyCommands.postPageView(<em>item ID</em>, <em>page number</em>) <br>
+<em>URL:</em> mfly://data/postaction/[item ID]?page=[page number] <br>
+<em>Description:</em> Posts the page view to the Mediafly Reporting system. Item ID is the id of the item, as seen in Airship. Page number is the page that was displayed (starting at page 1).
+<em>Availability:</em> iOS (575), mflyCommands.js (1.3.6)</p>
+
 <hr />
 
 <h2>Support widescreen on iOS</h2>
@@ -1312,5 +1396,54 @@ mflyCommands.getValues('abc')
 <p>By default, iOS scrolling in the UIWebView is exactly controlled by your finger. You can drag the web view down and up, but you cannot "throw" the page in a direction. Furthermore, if you have a lot of large images on the page, scrolling can become choppy.</p>
 
 <p>To alleviate this, consider implementing <code>-webkit-overflow-scrolling: touch</code> on your DOM nodes that handle scrolling. When set to touch, UIWebView uses native-style scrolling on your node.</p>
+
+<hr />
+
+<h1>Appendix</h1>
+
+<p>Additional information that doesn't fit very well elsewhere.</p>
+
+<h2>Supporting Interactives for the Web</h2>
+
+<p>We will release support for Interactives for the Web Viewer in Q2 2015. Like other platforms, this support will be rolled out slowly over time, as specific customers demand specific features.</p>
+
+<p>With Web Interactives, developers can now also support all major browsers and all major mobile platforms easily and cleanly.</p>
+
+<h3>How does it work?</h3>
+
+<p>Web Interactives will be able to make use of the same delivery mechanism and API as Interactives available on iOS, Android and Windows 8 today. When the user opens an Interactive in the Web Viewer, the web server will:</p>
+
+<ul>
+<li>Unzip the Interactive zip file</li>
+<li>Point to index.html</li>
+<li>Proxy requests to the Interactives API to the correct URL</li>
+</ul>
+
+
+<p>Provided that you are using mflyCommands.js, the API will remain largely unchanged. Only a few minor issues need to be addressed for you to take full advantage of Interactives on the Web.</p>
+
+<h3>Required changes</h3>
+
+<p>The following changes need to be made to your existing Interactives to support Interactives on the Web:</p>
+
+<ol>
+<li><p><strong>Use mflyCommands.js, and keep it up to date</strong>. This should be your primary way to access our API. Don't make mfly:// calls to the API directly, as those simply will not work in web browsers.</p></li>
+<li><p><strong>Don't assume a specific browser or size</strong>. The luxurious days of assuming latest Safari (iOS) or Google Chrome (Android 4.4+) are over. Build your Interactive like you would a standard website, because, it can be opened on any browser like a standard website.</p></li>
+<li><p><strong>Don't rely on mflyDataInit, rely on mflyCommands.getInteractiveInfo() </strong>. Web Interactives will not call "into" the Interactive. This means that mflyDataInit, mflySync, mflyResume, mflyPause, and mflyInit are not supported. Instead, make a new call once the document has been initialized: <code>mflyCommands.getInteractiveInfo()</code>. This asynchronous function will obtain the same information that mflyDataInit used to be called with, like so:</p>
+
+<pre><code> mflyCommands.getInteractiveInfo()
+     .done(function(data) {
+         // data contains a JSON object with information 
+         // about this app, user and Interactive
+     }).fail(function() {
+         // handle failure
+     });
+</code></pre></li>
+<li><p><strong> Don't include a file at the root of your Interactive called mflyManifest.json</strong>*. We doubt you would, but if you do, it is likely to be overwritten by one of your apps as a part of the initialization process.</p></li>
+<li><p><strong>Adjust mflyCommands.getFolder(id) call signature change</strong>. The call signature for mflyCommands.getFolder(id) (which maps to mfly://data/folder/[id]) has changed. Previously, if any of its items were also folders, it would return the items within the folders as an array of IDs. This has changed, and those subfolders no longer includes the items key at all. A separate mflyCommands.getFolder(id) call will have to be made on those children folders.</p></li>
+<li><p><strong>Each URL should be able to establish its own state</strong>. Don't pass around variables like you would in a traditional application. This breaks on websites, and it will break on web Interactives.</p></li>
+<li><p><strong>All resources must be accessed in a relative way</strong>. Don't try to construct absolute URLs to assets within your .zip file, as that path will undoutedly differ on other platforms.</p></li>
+</ol>
+
 </body>
 </html>

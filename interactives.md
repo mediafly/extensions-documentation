@@ -219,6 +219,39 @@ Controlling the app is done by opening a window to a special URL through JavaScr
 
 ***PLEASE NOTE***: Every Interactive must allow the user to either close the item or show the control bars. Else, the user will be stuck within the Interactive, with no way to exit.
 
+### Getting baseline information
+*mflyCommands.js:* mflyCommands.getInteractiveInfo() <br>
+*URL:* mfly://data/interactive <br>
+*Description:* Obtains baseline information about this Interactive. Interactives can call this function and receive a JSON Object of initial configuration.  E.g. on iOS, the object params may look like this:
+
+		{
+		  	"user": "jshah@mediafly.com",
+			"displayName": "John Doe",
+			"item": "Custom Dynamic Interactive 1.2",
+			“id”: “29342938241238product234234”,
+			"osType": "iOS",
+			"osVersion": "6.1.2",
+			"appVersion": "6.1.4.405",
+			"deviceId": "4639ufu115f0630a13a8744e8b5cc6309b46",
+			"lastUpdated": "2014-02-03T07:04:07-06:00"
+		}
+
+*Parameters:*<br>
+
+* user: The system's username, if any
+* displayName: display name. Can be email, first+last, or something similar. May be blank in the case of content libraries that don't require logging in
+* item: title of this Interactive
+* id: the slug (unique id) of this Interactive within Airship
+* osType: which OS (iOS, Android, Windows 8)
+* osVersion: which version of the OS
+* appVersion: which version of the app
+* deviceId: the unique device ID for this device
+* lastUpdated: the lasted updated time. This is good for debugging purposes, to help you identify which version of the Interactive you are looking at on the device
+
+Note that not every parameter is available on every platform.
+
+*Availability:* iOS (soon), Android, Windows 8 (soon), web (soon)
+
 
 ### Basic controls
 
@@ -262,7 +295,7 @@ Controlling the app is done by opening a window to a special URL through JavaScr
 #### Get information about a folder or item
 *mflyCommands.js:* mflyCommands.getItem(_id_) <br>
 *URL:* mfly://data/item/[id] <br>
-*Description:* Return a JSON representation of a folder or item. <br>
+*Description:* Return a JSON representation of a folder or item. To get the contents of the folder, rely on the mflyCommands.getFolder(_id_) <br>
 *Examples:*
 
 	Example 1:		
@@ -287,7 +320,6 @@ Controlling the app is done by opening a window to a special URL through JavaScr
 		Result:
         {
             "id": "slug2", 
-            “items”: [“slug3”, “slug4”],
             "url": "mfly://item/slug2", 
             "type": "folder", 
             "name": "Name", 
@@ -480,7 +512,7 @@ Collections allow users to create a "personal playlist" of items. Oftentimes thi
           }
         ] 
 
-*Availability:* iOS
+*Availability:* iOS (483), mflyCommands.js (1.2)
 
 
 #### Get the contents of a Collection
@@ -489,7 +521,7 @@ Collections allow users to create a "personal playlist" of items. Oftentimes thi
 *Description:* Return a JSON representation of the contents of a collection, in a similar format to Get Folder.
 
 	Example:
-		GET mfly://data/collections/collection1
+		mflyCommands.getCollection("collection1");
 		Result:
 		[ 
           { 
@@ -517,7 +549,33 @@ Collections allow users to create a "personal playlist" of items. Oftentimes thi
           } 
         ] 
         
-*Availability:* iOS
+*Availability:* iOS (483), mflyCommands.js (1.2)
+
+#### Create a Collection
+*mflyCommands.js:* mflyCommands.createCollection(_collection name_) <br>
+*URL:* mfly://data/createCollection?name=[name] <br>
+*Description:* Creates the collection, and returns a success or failure error code.
+
+	Example:
+		mflyCommands.createCollection("Collection 2");
+		Result:
+		{
+			"id": "collection2id",
+			"name": "Collection 2"
+		}
+
+*Availability:* iOS (570), mflyCommands.js (1.3.5)
+
+
+#### Add item to a Collection
+*mflyCommands.js:* mflyCommands.addItemToCollection(_collection ID_, _item ID_) <br>
+*URL:* mfly://data/addItemToCollection?id=[collection ID]&item=[item ID] <br>
+*Description:* Adds the item to the Collection. If Collection exists and it can be created, response code is 200. If Collection does not exist, response code is 404 with body "Collection not found.". If item does not exist, response code is 404 with body "Item not found."
+
+	Example:
+		mflyCommands.addItemToCollection("collection2id", "item4id");
+
+*Availability:* iOS (570), mflyCommands.js (1.3.5)
 
 
 ### Downloader
@@ -527,27 +585,28 @@ Mediafly's apps have been optimized for very advanced synchronization and downlo
 *mflyCommands.js:* mflyCommands.showDownloader(_x-coord, y-coord, width, height_) <br>
 *URL:* mfly://control/showDownloader?x=[x-coord]&y=[y-coord]&w=[width]&h=[height] <br>
 *Description:* Shows the Downloader dialog at x-coord, y-coord coordinates with specified width and height. Parameters x-coord, y-coord, width, and height are all optional, and only work with iOS. <br>
-*Availability:* iOS, Android (soon)
+*Availability:* iOS, Android
 
 #### Get total download progress
 *mflyCommands.js:* mflyCommands.getDownloadStatus() <br>
 *URL:* mfly://data/download/status <br>
-*Description:* Get total download progress, as a range between 0 (no downloads started) and 1 (all downloads complete), and number of failed downloads. <br>
+*Description:* Get total download progress, as a range between 0 (no downloads started) and 1 (all downloads complete), number of failed downloads, and number of downloads for whom storage has been exceeded. <br>
 
 	Example:
 		GET mfly://data/download/status
 		Result:
         {
           "progress":0.12, 
-          "fails":1
+          "fails":1,
+          "storageExceeded": 3
         }
 
-*Availability:* iOS, Android (soon)
+*Availability:* iOS (586+ for storageExceeded), Android (2.22.98+)
 
 #### Get download progress for a single item
 *mflyCommands.js:* mflyCommands.getDownloadStatus(_id_) <br>
 *URL:* mfly://data/download/status/[id] <br>
-*Description:* Get download status for a single item. The attribute may be "progress" (download is progressing normally), "error" (download is in an error state), or "exceed" (download won't proceed because the cellular limit set for the app has been exceeded). <br>
+*Description:* Get download status for a single item. The attribute may be "progress" (download is progressing normally), "error" (download is in an error state), "cellularExceeded" (download won't proceed because the cellular limit set for the app has been exceeded; iOS only), or "storageExceeded" (download won't proceed because there is no more available storage on this device). <br>
 
 	Example:
 		GET mfly://data/download/status/[id]
@@ -562,31 +621,42 @@ Mediafly's apps have been optimized for very advanced synchronization and downlo
 	Example:
 		GET mfly://data/download/status/[id]
 		Result:
-        { "exceed": 0.34 }
+        { "cellularExceeded": 0.34 }
 
-*Availability:* iOS, Android (soon)
+	Example:
+		GET mfly://data/download/status/[id]
+		Result:
+        { "storageExceeded": true }
+
+*Availability:* iOS (586+ for storageExceeded), Android (2.22.98+)
 
 
 
 #### Add to Downloader
 *mflyCommands.js:* mflyCommands.addToDownloader(_id_) <br>
-*URL:* mfly://control/addToDownloader/[id]<br>
+*URL:* mfly://data/addToDownloader/[id]<br>
 *Description:* Instruct the app to add an item to the Downloader. Response code 200 = item was added to the Downloader. Response code 404 if id is not found.<br>
-*Availability:* iOS, Android (soon)
+*Availability:* iOS, Android, Windows 8
 
 
+#### Remove from Downloader
+*mflyCommands.js:* mflyCommands.removeFromDownloader(_id_) <br>
+*URL:* mfly://data/removeFromDownloader/[id]<br>
+*Description:* Instruct the app to remove the item from the Downloader. Response code 200 = item was removed from the Downloader. Response code 404 if id is not found.<br>
+*Availability:* iOS, Android, Windows 8
 
 
 #### mflyDownloadStatus
-Interactives can listen for changes to total download status with mflyDownloadStatus. This function is called approximately once per second while a download is being conducted. The Interactive simply needs to implement this function and take some (short-running) action. The parameter is a JSON object that indicates progress percentage as a decimal from 0 to 1, and fail count as an integer.
+Interactives can listen for changes to total download status with mflyDownloadStatus. This function is called approximately once per second while a download is being conducted. The Interactive simply needs to implement this function and take some (short-running) action. The parameter is a JSON object that indicates progress percentage as a decimal from 0 to 1, fail count as an integer, and number of items for whom storage has been exceeded.
 
 	Example:
 	    function mflyDownloadStatus(obj) {
-			// obj = { 'progress': 0.12, 'fails': 1 }
+			// obj = { 'progress': 0.12, 'fails': 1, 'storageExceeded': 3 }
 			// Handle download status object
 		}
 
-*Availability:* iOS, Android (soon)
+*Availability:* iOS (586+ for storageExceeded), Android (2.22.98+)
+
 
 ### Notifications
 
@@ -1065,6 +1135,19 @@ As you can see, embedding requires care. You cannot assume that the embedded ite
 
 *Availability:* iOS, Android, Windows 8
 
+### Reporting when embedding pages
+
+Our Reporting system automatically captures who viewed what, when, and where, when using the native app that sits underneath the Interactive. However, when you embed pages, the app loses that information and is unable to tell our systems about view data.
+
+To inform our Reporting system of a page view, post a page view after the page has been shown to the user:
+
+*mflyCommands.js:* mflyCommands.postPageView(_item ID_, _page number_) <br>
+*URL:* mfly://data/postaction/[item ID]?page=[page number] <br>
+*Description:* Posts the page view to the Mediafly Reporting system. Item ID is the id of the item, as seen in Airship. Page number is the page that was displayed (starting at page 1).
+*Availability:* iOS (575), mflyCommands.js (1.3.6)
+
+
+
 
 -----
 
@@ -1180,4 +1263,51 @@ By default, iOS scrolling in the UIWebView is exactly controlled by your finger.
 To alleviate this, consider implementing ```-webkit-overflow-scrolling: touch``` on your DOM nodes that handle scrolling. When set to touch, UIWebView uses native-style scrolling on your node.
 
 
+----------
 
+
+Appendix
+===============
+
+Additional information that doesn't fit very well elsewhere.
+
+
+## Supporting Interactives for the Web
+We will release support for Interactives for the Web Viewer in Q2 2015. Like other platforms, this support will be rolled out slowly over time, as specific customers demand specific features.
+
+With Web Interactives, developers can now also support all major browsers and all major mobile platforms easily and cleanly.
+
+### How does it work?
+Web Interactives will be able to make use of the same delivery mechanism and API as Interactives available on iOS, Android and Windows 8 today. When the user opens an Interactive in the Web Viewer, the web server will:
+
+* Unzip the Interactive zip file
+* Point to index.html
+* Proxy requests to the Interactives API to the correct URL
+
+Provided that you are using mflyCommands.js, the API will remain largely unchanged. Only a few minor issues need to be addressed for you to take full advantage of Interactives on the Web.
+
+
+### Required changes
+The following changes need to be made to your existing Interactives to support Interactives on the Web:
+
+1. **Use mflyCommands.js, and keep it up to date**. This should be your primary way to access our API. Don't make mfly:// calls to the API directly, as those simply will not work in web browsers.
+
+2. **Don't assume a specific browser or size**. The luxurious days of assuming latest Safari (iOS) or Google Chrome (Android 4.4+) are over. Build your Interactive like you would a standard website, because, it can be opened on any browser like a standard website.
+
+3. **Don't rely on mflyDataInit, rely on mflyCommands.getInteractiveInfo() **. Web Interactives will not call "into" the Interactive. This means that mflyDataInit, mflySync, mflyResume, mflyPause, and mflyInit are not supported. Instead, make a new call once the document has been initialized: ```mflyCommands.getInteractiveInfo()```. This asynchronous function will obtain the same information that mflyDataInit used to be called with, like so:
+
+		mflyCommands.getInteractiveInfo()
+			.done(function(data) {
+				// data contains a JSON object with information 
+				// about this app, user and Interactive
+			}).fail(function() {
+				// handle failure
+			});
+
+4. ** Don't include a file at the root of your Interactive called mflyManifest.json***. We doubt you would, but if you do, it is likely to be overwritten by one of your apps as a part of the initialization process.
+
+5. **Adjust mflyCommands.getFolder(id) call signature change**. The call signature for mflyCommands.getFolder(id) (which maps to mfly://data/folder/[id]) has changed. Previously, if any of its items were also folders, it would return the items within the folders as an array of IDs. This has changed, and those subfolders no longer includes the items key at all. A separate mflyCommands.getFolder(id) call will have to be made on those children folders.
+
+6. **Each URL should be able to establish its own state**. Don't pass around variables like you would in a traditional application. This breaks on websites, and it will break on web Interactives.
+
+7. **All resources must be accessed in a relative way**. Don't try to construct absolute URLs to assets within your .zip file, as that path will undoutedly differ on other platforms.
