@@ -213,6 +213,9 @@ API and Howtos
 
 This section describes all of the APIs available to Interactives developers. For each call, we list the mflyCommands.js call as well as the base URL. Please use the mflyCommands.js call where possible.
 
+** A note on 'Availability':** You will see many API calls have no version numbers within the Availability column. In these cases, the calls have been in existence for a sufficiently long period of time that Interactives developers no longer need to worry about whether their clients' apps support those calls anymore.
+
+
 
 ## Controlling the app
 Controlling the app is done by opening a window to a special URL through JavaScript. The container app will handle this as an instruction to handle.  The list of available URLs, and their appropriate actions, are listed below.
@@ -250,7 +253,7 @@ Controlling the app is done by opening a window to a special URL through JavaScr
 
 Note that not every parameter is available on every platform.
 
-*Availability:* iOS (soon), Android, Windows 8 (soon), web (soon)
+*Availability:* mflyCommands.js (1.4.4), iOS (588), Android (2.23.05), Windows 8 (soon), Web Viewer (1-Apr-2015)
 
 
 ### Basic controls
@@ -259,7 +262,7 @@ Note that not every parameter is available on every platform.
 *mflyCommands.js:* mflyCommands.close() <br>
 *URL:* mfly://control/done <br>
 *Description:* Closes the item and returns the user to where they were before. <br>
-*Availability:* iOS, Android, Windows 8
+*Availability:* iOS, Android, Windows 8, Web Viewer
 
 #### Show control bars
 *mflyCommands.js:* mflyCommands.showControlBars() <br>
@@ -331,7 +334,7 @@ Note that not every parameter is available on every platform.
             “keywords”: [“keyword1”, “keyword2”, “keyword3”],
             “new”: 1
         }
-*Availability:* iOS. Android, Windows 8
+*Availability:* iOS, Android, Windows 8, Web Viewer
 
         
 #### Get contents of a folder
@@ -369,7 +372,7 @@ Note that not every parameter is available on every platform.
           } 
         ] 
 
-*Availability:* iOS, Android, Windows 8
+*Availability:* iOS, Android, Windows 8, Web Viewer
 
 
 ### App features
@@ -389,7 +392,7 @@ Note that not every parameter is available on every platform.
 
 
 #### Show Second Screen Options dialog
-*mflyCommands.js:* Coming soon!
+*mflyCommands.js:* mflyCommands.showSecondScreenOptions() <br>
 *URL:* mfly://control/secondScreenOptions <br>
 *Description:* Shows the Second Screen Options dialog. <br>
 *Availability:* iOS
@@ -433,19 +436,54 @@ To create either link, simply create a typical `<a href>` link with the source p
 *mflyCommands.js:* mflyCommands.openItem(_id_) <br>
 *URL:* mfly://item/[id] <br>
 *Description:* Opens the specified item, where [id] is the ID of the item.  As described above, the historical navigational stack is maintained, and the user can return to it. The ID for an item can be found in Airship. Expand the item, and the ID is displayed at the bottom. <br>
-*Availability:* iOS, Android, Windows 8
+*Availability:* iOS, Android, Windows 8, Web Viewer
 	
 #### Open a folder
 *mflyCommands.js:* mflyCommands.openFolder(_id_) <br>
 *URL:* mfly://folder/[id] <br>
 *Description:* Opens the specified folder, where [id] is the ID of the folder.  As described above, the historical navigational stack is maintained, and the user can return to it. The ID for a folder can be found in Airship. Expand the item, and the ID is displayed at the bottom. <br>
-*Availability:* iOS, Android, Windows 8
+*Availability:* iOS, Android, Windows 8, Web Viewer
 
 #### Goto an item or a folder
 *mflyCommands.js:* mflyCommands.goto(_id_) <br>
 *URL:* mfly://control/goto/[id] <br>
 *Description:* Gotos the specified item or folder, where [id] is the ID of the item or folder.  As described above, when the app goes to another item or folder, the navigational stack behind the destination is thrown away, and the user is given the same navigational capabilities as if they opened the destination item directly. The ID for a folder can be found in Airship. Expand the item, and the ID is displayed at the bottom. <br>
 *Availability:* iOS, Android
+
+
+### Filter
+We often find that developers need to identify folders and items that match a specific set of metadata. Often they want to use custom metadata fields as a way to drive hierarchy and categorization, and not rely on the actual hierarchy for that purpose. It makes sense in some use cases, because the people who will be managing content are often different from how the Interactive should be rendered. 
+
+To support this, use Filter. Filter accepts up to three key=value pairs as JSON parameters, and returns a constrained list of folders and items that match ALL of the key=value pairs provided. The return value is a JSON Array of JSON Objects that match the various folders and items with the specified filter conditions, or an empty JSON Array if none match.
+
+*mflyCommands.js:* mflyCommands.filter(_obj_) <br>
+*URL:* mfly://data/filter?[key1=value1][&keyN=valueN]<br>
+Examples:
+
+	Example 1:
+	
+		mflyCommands.filter({ "type": "folder" }).done(function(results) {
+			// results contains, e.g.
+			// [ { "id": "123", "type": "folder", "shouldShow": true, ... },
+			//   { "id": "234", "type": "folder", "shouldShow": false, ... } ]
+		});
+	
+	Example 2:
+	
+		mflyCommands.filter({ "type": "folder", "shouldShow": false }).done(function(results) {
+			// results contains, e.g.
+			// [ { "id": "234", "type": "folder", "shouldShow": false, ... } ]
+		});
+	
+	Example 3:
+	
+		mflyCommands.filter({ "type": "folder", "key": "sillyKey" }).done(function(results) {
+			// results contains, e.g.
+			// []
+		});
+
+*Availability:* iOS (590), Android (soon), Windows 8 (2.0.0.52), Web Viewer (15-Apr-2015). Requires mflyCommands.js 1.4.5+
+
 
 
 ### Search
@@ -475,7 +513,7 @@ Collections allow users to create a "personal playlist" of items. Oftentimes thi
 *mflyCommands.js:* mflyCommands.showCollections(_x-coord, y-coord, width, height_) <br>
 *URL:* mfly://control/showCollections?x=[x-coord]&y=[y-coord]&w=[width]&h=[height] <br>
 *Description:* Shows the Collections dialog at x-coord, y-coord coordinates with specified width and height. Parameters x-coord, y-coord, width, and height are all optional, and only work with iOS.<br>
-*Availability:* iOS
+*Availability:* iOS, Android (2.22.91)
 
 
 #### Show "Add to Collection"
@@ -512,7 +550,7 @@ Collections allow users to create a "personal playlist" of items. Oftentimes thi
           }
         ] 
 
-*Availability:* iOS (483), mflyCommands.js (1.2)
+*Availability:* iOS (483), Android (2.22.91). Requires mflyCommands.js 1.2+
 
 
 #### Get the contents of a Collection
@@ -549,7 +587,7 @@ Collections allow users to create a "personal playlist" of items. Oftentimes thi
           } 
         ] 
         
-*Availability:* iOS (483), mflyCommands.js (1.2)
+*Availability:* iOS (483), Android (2.22.91), Requires mflyCommands.js 1.2+
 
 #### Create a Collection
 *mflyCommands.js:* mflyCommands.createCollection(_collection name_) <br>
@@ -564,7 +602,7 @@ Collections allow users to create a "personal playlist" of items. Oftentimes thi
 			"name": "Collection 2"
 		}
 
-*Availability:* iOS (570), mflyCommands.js (1.3.5)
+*Availability:* iOS (570), Android (2.22.91), Requires mflyCommands.js 1.3.5+
 
 
 #### Add item to a Collection
@@ -575,7 +613,7 @@ Collections allow users to create a "personal playlist" of items. Oftentimes thi
 	Example:
 		mflyCommands.addItemToCollection("collection2id", "item4id");
 
-*Availability:* iOS (570), mflyCommands.js (1.3.5)
+*Availability:* iOS (570), Android (2.22.91), Requires mflyCommands.js 1.3.5+
 
 
 ### Downloader
@@ -643,7 +681,7 @@ Mediafly's apps have been optimized for very advanced synchronization and downlo
 *mflyCommands.js:* mflyCommands.removeFromDownloader(_id_) <br>
 *URL:* mfly://data/removeFromDownloader/[id]<br>
 *Description:* Instruct the app to remove the item from the Downloader. Response code 200 = item was removed from the Downloader. Response code 404 if id is not found.<br>
-*Availability:* iOS, Android, Windows 8
+*Availability:* iOS (575), Android (2.22.76), Windows 8 (2.0.0.50)
 
 
 #### mflyDownloadStatus
@@ -738,6 +776,9 @@ The app sends many kinds of events into the Interactive, in case the Interactive
 
 
 ### mflyDataInit
+
+<b>PLEASE NOTE:</b> We plan to deprecate mflyDataInit in favor of mflyCommands.getInteractiveInfo in the near future. Please migrate to using mflyCommands.getInteractiveInfo where possible.
+
 This function has two uses:
 
 1. Receive configuration information from the app, and
@@ -800,22 +841,6 @@ Optionally, Interactives can then return a JSON Object with specifics on how the
 *Availability:* iOS, Android, Windows 8. Not all parameters will be available on Android or Windows 8.
 
 
-### mflySync
-As the app synchronizes all folders within a user’s hierarchy, updated information (metadata, URLs, etc.) becomes available. If an Interactive is open while the new information appears, the app calls mflySync with this subset of updated information.  The parameter is an array of JSON objects that represent changed items.
-
-Expect mflySync to be called many times.  Each time may contain a subset of changed information for the app.
-
-The best use of mflySync is to listen for changes to “launched” status. For example, if the Interactive wishes to render “New!” banners on new items, and have those banners clear when the user launches the item, the Interactive would need to listen to mflySync and remove the “New!” banner when launched=true for a given item.
-
-*Example:*<br>
-
-	function mflySync(obj) {
-		// Handle mflySync
-	}
-
-*Availability:* iOS, Android, Windows 8
-
-
 ### mflyResume
 The app calls this function when the app opens and shows the Interactive.  If you need to start animation or take other action when the Interactive shows, this is the place to do it.
 
@@ -838,6 +863,27 @@ The app calls this function when the user hides the Interactive. If you need to 
 	}
 
 *Availability:* iOS, Android
+
+
+### mflySync (DEPRECATED)
+
+<b>PLEASE NOTE</b>: mflySync is deprecated. As we migrate to support Interactives on our Web Viewer, using a called-in mflySync as a method of keeping content in sync is not in-line with how websites behave. Furthermore, after several years of use, we have seen almost no usage of mflySync. Therefore please consider it deprecated as of 01-May-2015, and remove its usage from your Interactives.
+
+
+As the app synchronizes all folders within a user’s hierarchy, updated information (metadata, URLs, etc.) becomes available. If an Interactive is open while the new information appears, the app calls mflySync with this subset of updated information.  The parameter is an array of JSON objects that represent changed items.
+
+Expect mflySync to be called many times.  Each time may contain a subset of changed information for the app.
+
+The best use of mflySync is to listen for changes to “launched” status. For example, if the Interactive wishes to render “New!” banners on new items, and have those banners clear when the user launches the item, the Interactive would need to listen to mflySync and remove the “New!” banner when launched=true for a given item.
+
+*Example:*<br>
+
+	function mflySync(obj) {
+		// Handle mflySync
+	}
+
+*Availability:* iOS, Android, Windows 8
+
 
 
 ### mflyInit (DEPRECATED)
@@ -997,7 +1043,7 @@ This example saves key/value data, using jQuery.
 		}
 	});
 
-*Availability:* iOS, Android, Windows 8
+*Availability:* iOS, Android, Windows 8, Web Viewer
 
 ### Retrieve data
 
@@ -1091,7 +1137,7 @@ To get data for all keys that begin with X, use mflyCommands.getValues(_prefix_)
 
 
 
-*Availability:* iOS, Android, Windows 8
+*Availability:* iOS, Android, Windows 8, Web Viewer
 
 
 ----------
@@ -1133,7 +1179,7 @@ Please note that asking too many times may put the Downloader into a race condit
   
 As you can see, embedding requires care. You cannot assume that the embedded item is available yet, because it may be behind some longer items in the Downloader. Instead, you have to try to fetch the content and monitor response codes. This is why we suggest using mflyCommands.js as shown in the example above.
 
-*Availability:* iOS, Android, Windows 8
+*Availability:* iOS, Android, Windows 8, Web Viewer
 
 ### Reporting when embedding pages
 
@@ -1144,7 +1190,7 @@ To inform our Reporting system of a page view, post a page view after the page h
 *mflyCommands.js:* mflyCommands.postPageView(_item ID_, _page number_) <br>
 *URL:* mfly://data/postaction/[item ID]?page=[page number] <br>
 *Description:* Posts the page view to the Mediafly Reporting system. Item ID is the id of the item, as seen in Airship. Page number is the page that was displayed (starting at page 1).
-*Availability:* iOS (575), mflyCommands.js (1.3.6)
+*Availability:* iOS (575). Requires mflyCommands.js 1.3.6+
 
 
 
