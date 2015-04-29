@@ -1142,13 +1142,13 @@ To get data for all keys that begin with X, use mflyCommands.getValues(_prefix_)
 
 ----------
 
-## Embedding data, images, other Interactives, or pages
+## Embedding, images, other Interactives, or pages
 
 ### Overview
 Interactives have the ability to embed items that exist in the app into it.  This is used for four primary purposes:
 
-* Retrieve another item that contains structured data (JSON, XML, CSV)
-* Embed another item that is an image and render it as an image in this Interactive
+* Retrieve an item that contains structured data (JSON, XML, CSV)
+* Embed an item that is an image and render it as an image in this Interactive
 * Embed another Interactive into an iframe on this Interactive
 * Embed a page from a PowerPoint, PDF, or Word document
 
@@ -1156,9 +1156,15 @@ Embedding other types (audio, video, URLs) will have unexpected results. The bes
 
 * To retrieve a data item, use ```mflyCommands.getData(id)```, where _id_ is the ID of the data item you wish to obtain.
 * To embed an image, create an ```<img>``` that refers to a loading image. In JavaScript, call ```mflyCommands.embed($element, id)```, where _$element_ is a jQuery reference to the img element, and _id_ is the Airship id of the image item.
+	* You can also use `mflyCommands.embedImage($element, id, options)` and supply dimensions for the image to be embedded (only supported on Web Viewer and requires mflyCommands.js version 1.4.10). This can be particularly helpful to scale down high resolution images to so browsers can load them quicker. _options_ are defined as:
+		* _size_ (string):   format is WxH (e.g. "200x200")
+		* _width_ (number): Width of the image
+		* _height_ (number): Height of the image
+		* _maxWidth_ (number): Maximum width of the image
+		* _maxHeight_ (number): Maximum height of the image
+		* _rotate_ (number): Degree of rotation to apply to the image. Values of 0, 90, 180, 270, or 360 are acceptable.
 * To embed another Interactive, construct an ```<iframe>```. In JavaScript, call ```mflyCommands.embed($element, id)```, where _$element_ is a jQuery reference to the iframe element, and _id_ is the Airship id of the other Interactive.
 * To embed the page from a document as an image, create an ```<img>``` that refers to a loading image. In JavaScript, call ```mflyCommands.embed($element, id, page)```, where _$element_ is a jQuery reference to the img element, _id_ is the Airship id of the image item, and _page_ is the page number that you wish to embed.
-
 
 ### Example
 
