@@ -16,7 +16,7 @@ Interactives are all the components that make up a static website:
 * CSS
 * Images
 
-All of these files are zipped up in a specific way and uploaded to Mediafly Airship. 
+All of these files are zipped up in a specific way and uploaded to Mediafly Airship.
 
 When the user opens the Interactive, the app loads and renders the Interactive much like it would a traditional web page.
 ![image](http://devdocs.mediafly.com/interactives/images/Interactives%20Overview.png)
@@ -30,7 +30,7 @@ To ensure that the apps work consistently and correctly, the Interactive builder
 		<link rel="stylesheet" href="css/main.css">
 
     and an index.html file containing the following is not acceptable for offline use, because the files are absolutely referenced.
-    
+
 		<script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
 		<link rel="stylesheet" href="http://mediafly.com/css/main.css">
 
@@ -101,7 +101,7 @@ A. Zip the contents of the containing folder, not the folder itself. For example
 ![Do not zip from here](http://devdocs.mediafly.com/interactives/images/packaging/1. Do not zip from here.png) Do not zip from here...
 
 ![Zip from here](http://devdocs.mediafly.com/interactives/images/packaging/2. Zip from here.png) ... Zip from here
-    
+
 B. Upload the zip file you created into the Airship content management system:
 
 ![image](http://devdocs.mediafly.com/interactives/images/packaging/3. Drag into Airship.png)
@@ -121,7 +121,7 @@ E. Load it up on the device (iOS, Android, Windows 8, etc.) and test
 <a name="packaging_interactives_2"></a>
 ### 2. Shell command
 
-This method is a slight improvement to [#1](#packaging_interactives_1) above, and is good if you are using a Mac or Linux 
+This method is a slight improvement to [#1](#packaging_interactives_1) above, and is good if you are using a Mac or Linux
 system and are familiar with using Terminal / Shell.
 
 A. Open a Terminal window/Shell into the root of your Interactive
@@ -301,42 +301,42 @@ Note that not every parameter is available on every platform.
 *Description:* Return a JSON representation of a folder or item. To get the contents of the folder, rely on the mflyCommands.getFolder(_id_) <br>
 *Examples:*
 
-	Example 1:		
+	Example 1:
 		GET mfly://data/item/slug1
 		Result:
-        { 
-            "id": "slug1", 
-            "url": "mfly://item/slug1", 
-            "type": "video", 
-            "name": "Name", 
-            "description": "Description", 
-            "date": "2010-11-12T06:15:15:00-06:00", 
-            "received": "2012-12-19T16:45:14:00-06:00", 
-            "thumbnailUrl": "mfly://image/123", 
-            "launched": "true", 
-            “keywords”: [“keyword4”] 
-        } 
-        
-        
+        {
+            "id": "slug1",
+            "url": "mfly://item/slug1",
+            "type": "video",
+            "name": "Name",
+            "description": "Description",
+            "date": "2010-11-12T06:15:15:00-06:00",
+            "received": "2012-12-19T16:45:14:00-06:00",
+            "thumbnailUrl": "mfly://image/123",
+            "launched": "true",
+            “keywords”: [“keyword4”]
+        }
+
+
     Example 2:
 		GET mfly://data/item/slug2
 		Result:
         {
-            "id": "slug2", 
-            "url": "mfly://item/slug2", 
-            "type": "folder", 
-            "name": "Name", 
-            "description": "Description", 
-            "date": "2010-11-12T06:15:15:00-06:00", 
-            "received": "2012-12-19T16:45:14:00-06:00", 
-            "thumbnailUrl": "mfly://image/123", 
+            "id": "slug2",
+            "url": "mfly://item/slug2",
+            "type": "folder",
+            "name": "Name",
+            "description": "Description",
+            "date": "2010-11-12T06:15:15:00-06:00",
+            "received": "2012-12-19T16:45:14:00-06:00",
+            "thumbnailUrl": "mfly://image/123",
             "launched": "false",
             “keywords”: [“keyword1”, “keyword2”, “keyword3”],
             “new”: 1
         }
 *Availability:* iOS, Android, Windows 8, Web Viewer
 
-        
+
 #### Get contents of a folder
 *mflyCommands.js:* mflyCommands.getFolder(_id_) <br>
 *URL:* mfly://data/folder/[id] <br>
@@ -345,32 +345,32 @@ Note that not every parameter is available on every platform.
 	Example:
 		GET mfly://data/folder/slug2
 		Result:
-		[ 
-          { 
-            "id": "slug3", 
-            "url": "mfly://item/slug3", 
-            "type": "video", 
-            "name": "Name", 
-            "description": "Description", 
-            "date": "2010-11-12T06:15:15:00-06:00", 
-            "received": "2012-12-19T16:45:14:00-06:00", 
-            "thumbnailUrl": "mfly://image/123", 
-            "launched": "true", 
-            “keywords”: [“keyword4”] 
-          }, 
-          { 
-            "id": "slug4", 
-            “items”: [“slug5”], 
-            "url": "mfly://folder/slug4", 
-            "type": "folder", 
-            "name": "Name", 
-            "description": "Description", 
-            "date": "2010-11-12T06:15:15:00-06:00", 
-            "received": "2012-12-19T16:45:14:00-06:00", 
-            "thumbnailUrl": "mfly://image/123", 
-            "launched": "false" 
-          } 
-        ] 
+		[
+          {
+            "id": "slug3",
+            "url": "mfly://item/slug3",
+            "type": "video",
+            "name": "Name",
+            "description": "Description",
+            "date": "2010-11-12T06:15:15:00-06:00",
+            "received": "2012-12-19T16:45:14:00-06:00",
+            "thumbnailUrl": "mfly://image/123",
+            "launched": "true",
+            “keywords”: [“keyword4”]
+          },
+          {
+            "id": "slug4",
+            “items”: [“slug5”],
+            "url": "mfly://folder/slug4",
+            "type": "folder",
+            "name": "Name",
+            "description": "Description",
+            "date": "2010-11-12T06:15:15:00-06:00",
+            "received": "2012-12-19T16:45:14:00-06:00",
+            "thumbnailUrl": "mfly://image/123",
+            "launched": "false"
+          }
+        ]
 
 *Availability:* iOS, Android, Windows 8, Web Viewer
 
@@ -437,7 +437,7 @@ To create either link, simply create a typical `<a href>` link with the source p
 *URL:* mfly://item/[id] <br>
 *Description:* Opens the specified item, where [id] is the ID of the item.  As described above, the historical navigational stack is maintained, and the user can return to it. The ID for an item can be found in Airship. Expand the item, and the ID is displayed at the bottom. <br>
 *Availability:* iOS, Android, Windows 8, Web Viewer
-	
+
 #### Open a folder
 *mflyCommands.js:* mflyCommands.openFolder(_id_) <br>
 *URL:* mfly://folder/[id] <br>
@@ -452,7 +452,7 @@ To create either link, simply create a typical `<a href>` link with the source p
 
 
 ### Filter
-We often find that developers need to identify folders and items that match a specific set of metadata. Often they want to use custom metadata fields as a way to drive hierarchy and categorization, and not rely on the actual hierarchy for that purpose. It makes sense in some use cases, because the people who will be managing content are often different from how the Interactive should be rendered. 
+We often find that developers need to identify folders and items that match a specific set of metadata. Often they want to use custom metadata fields as a way to drive hierarchy and categorization, and not rely on the actual hierarchy for that purpose. It makes sense in some use cases, because the people who will be managing content are often different from how the Interactive should be rendered.
 
 To support this, use Filter. Filter accepts up to three key=value pairs as JSON parameters, and returns a constrained list of folders and items that match ALL of the key=value pairs provided. The return value is a JSON Array of JSON Objects that match the various folders and items with the specified filter conditions, or an empty JSON Array if none match.
 
@@ -461,22 +461,22 @@ To support this, use Filter. Filter accepts up to three key=value pairs as JSON 
 Examples:
 
 	Example 1:
-	
+
 		mflyCommands.filter({ "type": "folder" }).done(function(results) {
 			// results contains, e.g.
 			// [ { "id": "123", "type": "folder", "shouldShow": true, ... },
 			//   { "id": "234", "type": "folder", "shouldShow": false, ... } ]
 		});
-	
+
 	Example 2:
-	
+
 		mflyCommands.filter({ "type": "folder", "shouldShow": false }).done(function(results) {
 			// results contains, e.g.
 			// [ { "id": "234", "type": "folder", "shouldShow": false, ... } ]
 		});
-	
+
 	Example 3:
-	
+
 		mflyCommands.filter({ "type": "folder", "key": "sillyKey" }).done(function(results) {
 			// results contains, e.g.
 			// []
@@ -502,7 +502,7 @@ Mediafly's apps provide real-time, native search as a core part of the functiona
 *mflyCommands.js:* mflyCommands.search(_term_) <br>
 *URL:* mfly://data/search?term=[term]<br>
 *Description:* Conduct a search for the given keyword. Return value is a JSON-array of folders and items, similar in format to a call to mfly://folder/[id].<br>
-*Availability:* iOS
+*Availability:* iOS, Web Viewer
 
 
 ### Collections
@@ -531,24 +531,24 @@ Collections allow users to create a "personal playlist" of items. Oftentimes thi
 	Example:
 		GET mfly://data/collections
 		Result:
-		[ 
-          { 
-            "id": "collection1", 
-            "name": "Collection 1", 
+		[
+          {
+            "id": "collection1",
+            "name": "Collection 1",
             "items": [
               id_1_if_item_1_in_collection,
               id_2_if_item_2_in_collection,
             ]
-          }, 
-          { 
-            "id": "collection2", 
-            "name": "Collection 2", 
+          },
+          {
+            "id": "collection2",
+            "name": "Collection 2",
             "items": [
               id_3_if_item_1_in_collection,
               id_4_if_item_1_in_collection,
             ]
           }
-        ] 
+        ]
 
 *Availability:* iOS (483), Android (2.22.91). Requires mflyCommands.js 1.2+
 
@@ -561,32 +561,32 @@ Collections allow users to create a "personal playlist" of items. Oftentimes thi
 	Example:
 		mflyCommands.getCollection("collection1");
 		Result:
-		[ 
-          { 
-            "id": "slug1", 
-            "url": "mfly://item/slug1", 
-            "type": "video", 
-            "name": "Name", 
-            "description": "Description", 
-            "date": "2010-11-12T06:15:15:00-06:00", 
-            "received": "2012-12-19T16:45:14:00-06:00", 
-            "thumbnailUrl": "mfly://image/123", 
-            "launched": "true", 
-            “keywords”: [“keyword4”] 
-          }, 
-          { 
-            "id": "slug2", 
-            "url": "mfly://folder/slug3", 
-            "type": "pdf", 
-            "name": "Name", 
-            "description": "Description", 
-            "date": "2010-11-12T06:15:15:00-06:00", 
-            "received": "2012-12-19T16:45:14:00-06:00", 
-            "thumbnailUrl": "mfly://image/123", 
-            "launched": "false" 
-          } 
-        ] 
-        
+		[
+          {
+            "id": "slug1",
+            "url": "mfly://item/slug1",
+            "type": "video",
+            "name": "Name",
+            "description": "Description",
+            "date": "2010-11-12T06:15:15:00-06:00",
+            "received": "2012-12-19T16:45:14:00-06:00",
+            "thumbnailUrl": "mfly://image/123",
+            "launched": "true",
+            “keywords”: [“keyword4”]
+          },
+          {
+            "id": "slug2",
+            "url": "mfly://folder/slug3",
+            "type": "pdf",
+            "name": "Name",
+            "description": "Description",
+            "date": "2010-11-12T06:15:15:00-06:00",
+            "received": "2012-12-19T16:45:14:00-06:00",
+            "thumbnailUrl": "mfly://image/123",
+            "launched": "false"
+          }
+        ]
+
 *Availability:* iOS (483), Android (2.22.91), Requires mflyCommands.js 1.2+
 
 #### Create a Collection
@@ -634,7 +634,7 @@ Mediafly's apps have been optimized for very advanced synchronization and downlo
 		GET mfly://data/download/status
 		Result:
         {
-          "progress":0.12, 
+          "progress":0.12,
           "fails":1,
           "storageExceeded": 3
         }
@@ -706,7 +706,7 @@ When notifications are enabled for an app, users can subscribe or unsubscribe to
 *Description:* Get the notification status for a folder. If the folder is valid, response code is 200 and body is a JSON object similar to this:<br>
 
 	Example:
-		{ 
+		{
 			"notification":"[status]" // [status] is email|none
 		}
 
@@ -740,11 +740,11 @@ Interactives can listen for when notification status changes in the app by imple
 where notifications = JSON Object of all notifications, where key=id and value=JSON Object of new notification. E.g. notifications may be something like:
 
 
-	notifications = { 
-    	"id1": { "notification": "email" }, 
-	    "id2": { "notification": "none" } 
-	} 
-	  
+	notifications = {
+    	"id1": { "notification": "email" },
+	    "id2": { "notification": "none" }
+	}
+
 *Availability:* iOS
 
 
@@ -759,9 +759,9 @@ where notifications = JSON Object of all notifications, where key=id and value=J
 	Example:
 		GET mfly://data/gps
 		Response:
-		{ 
-		  latitude: 41.851231, 
-		  longitude: -87.652345 
+		{
+		  latitude: 41.851231,
+		  longitude: -87.652345
 		}
 *Availability:* iOS, Android, Windows 8
 
@@ -894,63 +894,63 @@ The app calls this function when the app launches an Interactive.  The parameter
 
 For example, if a user has the following hierarchy:
 
-	  folder [id=slug1] 
-	    item [id=slug2] 
-	    folder [id=slug3] 
-	      item [id=slug4] 
+	  folder [id=slug1]
+	    item [id=slug2]
+	    folder [id=slug3]
+	      item [id=slug4]
 
 then the object may look like this:
 
-	{ 
+	{
 	  “version”: 2,
 	  “slug1” : {
-	    "id": "slug1", 
+	    "id": "slug1",
 	    “items”: [“slug2”, “slug3”],
-	    "url": "mfly://folder/slug1", 
-	    "type": "folder", 
-	    "name": "Name", 
-	    "description": "Description", 
-	    "date": "2010-11-12T06:15:15:00-06:00", 
-	    "received": "2012-12-19T16:45:14:00-06:00", 
-	    "thumbnailUrl": "mfly://image/123", 
+	    "url": "mfly://folder/slug1",
+	    "type": "folder",
+	    "name": "Name",
+	    "description": "Description",
+	    "date": "2010-11-12T06:15:15:00-06:00",
+	    "received": "2012-12-19T16:45:14:00-06:00",
+	    "thumbnailUrl": "mfly://image/123",
 	    "launched": "false",
 	    “keywords”: [“keyword1”, “keyword2”, “keyword3”],
 	    “new”: 1
 	  },
 	  “slug2” : {
-	    "id": "slug2", 
-	    "url": "mfly://item/slug2", 
-	    "type": "video", 
-	    "name": "Name", 
-	    "description": "Description", 
-	    "date": "2010-11-12T06:15:15:00-06:00", 
-	    "received": "2012-12-19T16:45:14:00-06:00", 
-	    "thumbnailUrl": "mfly://image/123", 
+	    "id": "slug2",
+	    "url": "mfly://item/slug2",
+	    "type": "video",
+	    "name": "Name",
+	    "description": "Description",
+	    "date": "2010-11-12T06:15:15:00-06:00",
+	    "received": "2012-12-19T16:45:14:00-06:00",
+	    "thumbnailUrl": "mfly://image/123",
         "launched": "true",
         “keywords”: [“keyword4”],
         “downloadModel”: “DownloadableShareable”
       },
       “slug3” : {
-        "id": "slug3", 
+        "id": "slug3",
         “items”: [“slug4”],
-        "url": "mfly://folder/slug3", 
-        "type": "folder", 
-        "name": "Name", 
-        "description": "Description", 
-        "date": "2010-11-12T06:15:15:00-06:00", 
-        "received": "2012-12-19T16:45:14:00-06:00", 
-        "thumbnailUrl": "mfly://image/123", 
+        "url": "mfly://folder/slug3",
+        "type": "folder",
+        "name": "Name",
+        "description": "Description",
+        "date": "2010-11-12T06:15:15:00-06:00",
+        "received": "2012-12-19T16:45:14:00-06:00",
+        "thumbnailUrl": "mfly://image/123",
         "launched": "false"
       },
       “slug4” : {
-        "id": "slug4", 
-        "url": "mfly://item/slug4", 
-        "type": "interactive", 
-        "name": "Name", 
-        "description": "Description", 
-        "date": "2010-11-12T06:15:15:00-06:00", 
-        "received": "2012-12-19T16:45:14:00-06:00", 
-        "thumbnailUrl": "mfly://image/123", 
+        "id": "slug4",
+        "url": "mfly://item/slug4",
+        "type": "interactive",
+        "name": "Name",
+        "description": "Description",
+        "date": "2010-11-12T06:15:15:00-06:00",
+        "received": "2012-12-19T16:45:14:00-06:00",
+        "thumbnailUrl": "mfly://image/123",
         "launched": "true",
         “new”: 1,
         “downloadModel”: “DownloadableProtected”
@@ -1071,7 +1071,7 @@ To get data for a specific key from the app container, use mflyCommands.getValue
         .fail(function(deferred, status) {
             // Error! Do something.
         });
-    
+
     // Console output: 123
 
 On successful retrieval, data will contain the value of the key.
@@ -1093,13 +1093,13 @@ To get data for all keys from the app container, use mflyCommands.getValues().
         .fail(function(deferred, status) {
             // Error! Do something.
         });
-    
+
     // Console output: { "abc": "123", "def": "456" }
 
 
 On successful retrieval, body will contain a JSON object enumerating all keys and values, as shown above.
 
-	
+
 #### Key prefix ####
 
 To get data for all keys that begin with X, use mflyCommands.getValues(_prefix_). On successful retrieval, data will contain a JSON object enumerating all keys and values where the keys begin with X.
@@ -1119,9 +1119,9 @@ To get data for all keys that begin with X, use mflyCommands.getValues(_prefix_)
         .fail(function(deferred, status) {
             // Error! Do something.
         });
-    
+
     // Console output: { "snow": "white", "snowball": "round" }
-    
+
     mflyCommands.getValues('abc')
         .done(function(data, status) {
             // Success! Do something.
@@ -1130,10 +1130,10 @@ To get data for all keys that begin with X, use mflyCommands.getValues(_prefix_)
         .fail(function(deferred, status) {
             // Error! Do something.
         });
-    
+
     // Console output: {}
-    
-    
+
+
 
 
 
@@ -1176,7 +1176,7 @@ Item not found | HTTP response code 404 (Not found) | HTTP response code 404 (No
 
 
 Please note that asking too many times may put the Downloader into a race condition, as each request will trigger the Downloader to poll and possibly start downloading again.  So, please be considerate and retry no more than once every few seconds.
-  
+
 As you can see, embedding requires care. You cannot assume that the embedded item is available yet, because it may be behind some longer items in the Downloader. Instead, you have to try to fetch the content and monitor response codes. This is why we suggest using mflyCommands.js as shown in the example above.
 
 *Availability:* iOS, Android, Windows 8, Web Viewer
@@ -1213,10 +1213,10 @@ To support this mode in an Interactive, the Interactive must do a few things.
 		  “mflyWideScreenSupport”: true
 		  ...
 		}
-	
+
 	Other parameters may exist in this JSON object, of course, but mflyWideScreenSupport is the key to initiate proper app support for widescreen.
 
-2. If the app has sent mflyWideScreenSupport=true in mflyDataInit, the Interactive should expect to receive a call from the app to mflyWideScreen(useWideScreen), where useWidescreen is either true or false. 
+2. If the app has sent mflyWideScreenSupport=true in mflyDataInit, the Interactive should expect to receive a call from the app to mflyWideScreen(useWideScreen), where useWidescreen is either true or false.
 
 
 *Example:*<br>
@@ -1224,7 +1224,7 @@ To support this mode in an Interactive, the Interactive must do a few things.
         <script>
             function mflyWideScreen(useWideScreen) {
                 if (useWideScreen) {
-                    // Refresh the UI to show in 16x9 mode, 
+                    // Refresh the UI to show in 16x9 mode,
                     // probably by adjusting CSS. On the iPad, black bars will
                     // appear above and below the content.
                 } else {
@@ -1264,18 +1264,18 @@ To account for this, we suggest tagging the <body> element with a class that den
 1. You may tag specific images or image types based on whether they are in second screen or not:
 
 		<style>
-        .ipad .carousel_image       { width: 1024px; height: 378px; 
+        .ipad .carousel_image       { width: 1024px; height: 378px;
         	background:url('image.png'); background-size: 1024px 378px; }
-        .widescreen .carousel_image { width: 960px; height: 354px; 
+        .widescreen .carousel_image { width: 960px; height: 354px;
         	background:url(''image.png'); background-size: 960px 354px; }
 		</style>
-		
+
 2. The body tag is initially decorated to be iPad-focused:
 
 		<body class="ipad">
 		...
 		</body>
-		
+
 3. When the user switches between Second Screen and Disabled, the <body> tag changes its class:
 
 		<script>
@@ -1344,7 +1344,7 @@ The following changes need to be made to your existing Interactives to support I
 
 		mflyCommands.getInteractiveInfo()
 			.done(function(data) {
-				// data contains a JSON object with information 
+				// data contains a JSON object with information
 				// about this app, user and Interactive
 			}).fail(function() {
 				// handle failure
