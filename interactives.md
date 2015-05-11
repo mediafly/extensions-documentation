@@ -462,7 +462,7 @@ Examples:
 
 	Example 1:
 
-		mflyCommands.filter({ "type": "folder" }).done(function(results) {
+		mflyCommands.filter({ "shouldShow": false }).done(function(results) {
 			// results contains, e.g.
 			// [ { "id": "123", "type": "folder", "shouldShow": true, ... },
 			//   { "id": "234", "type": "folder", "shouldShow": false, ... } ]
@@ -470,14 +470,7 @@ Examples:
 
 	Example 2:
 
-		mflyCommands.filter({ "type": "folder", "shouldShow": false }).done(function(results) {
-			// results contains, e.g.
-			// [ { "id": "234", "type": "folder", "shouldShow": false, ... } ]
-		});
-
-	Example 3:
-
-		mflyCommands.filter({ "type": "folder", "key": "sillyKey" }).done(function(results) {
+		mflyCommands.filter({ "shouldShow": false, "key": "doesNotExist" }).done(function(results) {
 			// results contains, e.g.
 			// []
 		});

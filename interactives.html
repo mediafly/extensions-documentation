@@ -358,35 +358,35 @@ supports Python, this is the path for you.</p>
 <em>Description:</em> Return a JSON representation of a folder or item. To get the contents of the folder, rely on the mflyCommands.getFolder(<em>id</em>) <br>
 <em>Examples:</em></p>
 
-<pre><code>Example 1:      
+<pre><code>Example 1:
     GET mfly://data/item/slug1
     Result:
-    { 
-        "id": "slug1", 
-        "url": "mfly://item/slug1", 
-        "type": "video", 
-        "name": "Name", 
-        "description": "Description", 
-        "date": "2010-11-12T06:15:15:00-06:00", 
-        "received": "2012-12-19T16:45:14:00-06:00", 
-        "thumbnailUrl": "mfly://image/123", 
-        "launched": "true", 
-        “keywords”: [“keyword4”] 
-    } 
+    {
+        "id": "slug1",
+        "url": "mfly://item/slug1",
+        "type": "video",
+        "name": "Name",
+        "description": "Description",
+        "date": "2010-11-12T06:15:15:00-06:00",
+        "received": "2012-12-19T16:45:14:00-06:00",
+        "thumbnailUrl": "mfly://image/123",
+        "launched": "true",
+        “keywords”: [“keyword4”]
+    }
 
 
 Example 2:
     GET mfly://data/item/slug2
     Result:
     {
-        "id": "slug2", 
-        "url": "mfly://item/slug2", 
-        "type": "folder", 
-        "name": "Name", 
-        "description": "Description", 
-        "date": "2010-11-12T06:15:15:00-06:00", 
-        "received": "2012-12-19T16:45:14:00-06:00", 
-        "thumbnailUrl": "mfly://image/123", 
+        "id": "slug2",
+        "url": "mfly://item/slug2",
+        "type": "folder",
+        "name": "Name",
+        "description": "Description",
+        "date": "2010-11-12T06:15:15:00-06:00",
+        "received": "2012-12-19T16:45:14:00-06:00",
+        "thumbnailUrl": "mfly://image/123",
         "launched": "false",
         “keywords”: [“keyword1”, “keyword2”, “keyword3”],
         “new”: 1
@@ -404,32 +404,32 @@ Example 2:
 <pre><code>Example:
     GET mfly://data/folder/slug2
     Result:
-    [ 
-      { 
-        "id": "slug3", 
-        "url": "mfly://item/slug3", 
-        "type": "video", 
-        "name": "Name", 
-        "description": "Description", 
-        "date": "2010-11-12T06:15:15:00-06:00", 
-        "received": "2012-12-19T16:45:14:00-06:00", 
-        "thumbnailUrl": "mfly://image/123", 
-        "launched": "true", 
-        “keywords”: [“keyword4”] 
-      }, 
-      { 
-        "id": "slug4", 
-        “items”: [“slug5”], 
-        "url": "mfly://folder/slug4", 
-        "type": "folder", 
-        "name": "Name", 
-        "description": "Description", 
-        "date": "2010-11-12T06:15:15:00-06:00", 
-        "received": "2012-12-19T16:45:14:00-06:00", 
-        "thumbnailUrl": "mfly://image/123", 
-        "launched": "false" 
-      } 
-    ] 
+    [
+      {
+        "id": "slug3",
+        "url": "mfly://item/slug3",
+        "type": "video",
+        "name": "Name",
+        "description": "Description",
+        "date": "2010-11-12T06:15:15:00-06:00",
+        "received": "2012-12-19T16:45:14:00-06:00",
+        "thumbnailUrl": "mfly://image/123",
+        "launched": "true",
+        “keywords”: [“keyword4”]
+      },
+      {
+        "id": "slug4",
+        “items”: [“slug5”],
+        "url": "mfly://folder/slug4",
+        "type": "folder",
+        "name": "Name",
+        "description": "Description",
+        "date": "2010-11-12T06:15:15:00-06:00",
+        "received": "2012-12-19T16:45:14:00-06:00",
+        "thumbnailUrl": "mfly://image/123",
+        "launched": "false"
+      }
+    ]
 </code></pre>
 
 <p><em>Availability:</em> iOS, Android, Windows 8, Web Viewer</p>
@@ -524,7 +524,7 @@ Examples:</p>
 
 <pre><code>Example 1:
 
-    mflyCommands.filter({ "type": "folder" }).done(function(results) {
+    mflyCommands.filter({ "shouldShow": false }).done(function(results) {
         // results contains, e.g.
         // [ { "id": "123", "type": "folder", "shouldShow": true, ... },
         //   { "id": "234", "type": "folder", "shouldShow": false, ... } ]
@@ -532,14 +532,7 @@ Examples:</p>
 
 Example 2:
 
-    mflyCommands.filter({ "type": "folder", "shouldShow": false }).done(function(results) {
-        // results contains, e.g.
-        // [ { "id": "234", "type": "folder", "shouldShow": false, ... } ]
-    });
-
-Example 3:
-
-    mflyCommands.filter({ "type": "folder", "key": "sillyKey" }).done(function(results) {
+    mflyCommands.filter({ "shouldShow": false, "key": "doesNotExist" }).done(function(results) {
         // results contains, e.g.
         // []
     });
@@ -569,7 +562,7 @@ Example 3:
 <p><em>mflyCommands.js:</em> mflyCommands.search(<em>term</em>) <br>
 <em>URL:</em> mfly://data/search?term=[term]<br>
 <em>Description:</em> Conduct a search for the given keyword. Return value is a JSON-array of folders and items, similar in format to a call to mfly://folder/[id].<br>
-<em>Availability:</em> iOS</p>
+<em>Availability:</em> iOS, Web Viewer</p>
 
 <h3>Collections</h3>
 
@@ -598,24 +591,24 @@ Example 3:
 <pre><code>Example:
     GET mfly://data/collections
     Result:
-    [ 
-      { 
-        "id": "collection1", 
-        "name": "Collection 1", 
+    [
+      {
+        "id": "collection1",
+        "name": "Collection 1",
         "items": [
           id_1_if_item_1_in_collection,
           id_2_if_item_2_in_collection,
         ]
-      }, 
-      { 
-        "id": "collection2", 
-        "name": "Collection 2", 
+      },
+      {
+        "id": "collection2",
+        "name": "Collection 2",
         "items": [
           id_3_if_item_1_in_collection,
           id_4_if_item_1_in_collection,
         ]
       }
-    ] 
+    ]
 </code></pre>
 
 <p><em>Availability:</em> iOS (483), Android (2.22.91). Requires mflyCommands.js 1.2+</p>
@@ -629,31 +622,31 @@ Example 3:
 <pre><code>Example:
     mflyCommands.getCollection("collection1");
     Result:
-    [ 
-      { 
-        "id": "slug1", 
-        "url": "mfly://item/slug1", 
-        "type": "video", 
-        "name": "Name", 
-        "description": "Description", 
-        "date": "2010-11-12T06:15:15:00-06:00", 
-        "received": "2012-12-19T16:45:14:00-06:00", 
-        "thumbnailUrl": "mfly://image/123", 
-        "launched": "true", 
-        “keywords”: [“keyword4”] 
-      }, 
-      { 
-        "id": "slug2", 
-        "url": "mfly://folder/slug3", 
-        "type": "pdf", 
-        "name": "Name", 
-        "description": "Description", 
-        "date": "2010-11-12T06:15:15:00-06:00", 
-        "received": "2012-12-19T16:45:14:00-06:00", 
-        "thumbnailUrl": "mfly://image/123", 
-        "launched": "false" 
-      } 
-    ] 
+    [
+      {
+        "id": "slug1",
+        "url": "mfly://item/slug1",
+        "type": "video",
+        "name": "Name",
+        "description": "Description",
+        "date": "2010-11-12T06:15:15:00-06:00",
+        "received": "2012-12-19T16:45:14:00-06:00",
+        "thumbnailUrl": "mfly://image/123",
+        "launched": "true",
+        “keywords”: [“keyword4”]
+      },
+      {
+        "id": "slug2",
+        "url": "mfly://folder/slug3",
+        "type": "pdf",
+        "name": "Name",
+        "description": "Description",
+        "date": "2010-11-12T06:15:15:00-06:00",
+        "received": "2012-12-19T16:45:14:00-06:00",
+        "thumbnailUrl": "mfly://image/123",
+        "launched": "false"
+      }
+    ]
 </code></pre>
 
 <p><em>Availability:</em> iOS (483), Android (2.22.91), Requires mflyCommands.js 1.2+</p>
@@ -708,7 +701,7 @@ Example 3:
     GET mfly://data/download/status
     Result:
     {
-      "progress":0.12, 
+      "progress":0.12,
       "fails":1,
       "storageExceeded": 3
     }
@@ -783,7 +776,7 @@ Example:
 <em>Description:</em> Get the notification status for a folder. If the folder is valid, response code is 200 and body is a JSON object similar to this:<br></p>
 
 <pre><code>Example:
-    { 
+    {
         "notification":"[status]" // [status] is email|none
     }
 </code></pre>
@@ -822,10 +815,10 @@ Example:
 
 <p>where notifications = JSON Object of all notifications, where key=id and value=JSON Object of new notification. E.g. notifications may be something like:</p>
 
-<pre><code>notifications = { 
-    "id1": { "notification": "email" }, 
-    "id2": { "notification": "none" } 
-} 
+<pre><code>notifications = {
+    "id1": { "notification": "email" },
+    "id2": { "notification": "none" }
+}
 </code></pre>
 
 <p><em>Availability:</em> iOS</p>
@@ -841,9 +834,9 @@ Example:
 <pre><code>Example:
     GET mfly://data/gps
     Response:
-    { 
-      latitude: 41.851231, 
-      longitude: -87.652345 
+    {
+      latitude: 41.851231,
+      longitude: -87.652345
     }
 </code></pre>
 
@@ -989,64 +982,64 @@ Example:
 
 <p>For example, if a user has the following hierarchy:</p>
 
-<pre><code>  folder [id=slug1] 
-    item [id=slug2] 
-    folder [id=slug3] 
-      item [id=slug4] 
+<pre><code>  folder [id=slug1]
+    item [id=slug2]
+    folder [id=slug3]
+      item [id=slug4]
 </code></pre>
 
 <p>then the object may look like this:</p>
 
-<pre><code>{ 
+<pre><code>{
   “version”: 2,
   “slug1” : {
-    "id": "slug1", 
+    "id": "slug1",
     “items”: [“slug2”, “slug3”],
-    "url": "mfly://folder/slug1", 
-    "type": "folder", 
-    "name": "Name", 
-    "description": "Description", 
-    "date": "2010-11-12T06:15:15:00-06:00", 
-    "received": "2012-12-19T16:45:14:00-06:00", 
-    "thumbnailUrl": "mfly://image/123", 
+    "url": "mfly://folder/slug1",
+    "type": "folder",
+    "name": "Name",
+    "description": "Description",
+    "date": "2010-11-12T06:15:15:00-06:00",
+    "received": "2012-12-19T16:45:14:00-06:00",
+    "thumbnailUrl": "mfly://image/123",
     "launched": "false",
     “keywords”: [“keyword1”, “keyword2”, “keyword3”],
     “new”: 1
   },
   “slug2” : {
-    "id": "slug2", 
-    "url": "mfly://item/slug2", 
-    "type": "video", 
-    "name": "Name", 
-    "description": "Description", 
-    "date": "2010-11-12T06:15:15:00-06:00", 
-    "received": "2012-12-19T16:45:14:00-06:00", 
-    "thumbnailUrl": "mfly://image/123", 
+    "id": "slug2",
+    "url": "mfly://item/slug2",
+    "type": "video",
+    "name": "Name",
+    "description": "Description",
+    "date": "2010-11-12T06:15:15:00-06:00",
+    "received": "2012-12-19T16:45:14:00-06:00",
+    "thumbnailUrl": "mfly://image/123",
     "launched": "true",
     “keywords”: [“keyword4”],
     “downloadModel”: “DownloadableShareable”
   },
   “slug3” : {
-    "id": "slug3", 
+    "id": "slug3",
     “items”: [“slug4”],
-    "url": "mfly://folder/slug3", 
-    "type": "folder", 
-    "name": "Name", 
-    "description": "Description", 
-    "date": "2010-11-12T06:15:15:00-06:00", 
-    "received": "2012-12-19T16:45:14:00-06:00", 
-    "thumbnailUrl": "mfly://image/123", 
+    "url": "mfly://folder/slug3",
+    "type": "folder",
+    "name": "Name",
+    "description": "Description",
+    "date": "2010-11-12T06:15:15:00-06:00",
+    "received": "2012-12-19T16:45:14:00-06:00",
+    "thumbnailUrl": "mfly://image/123",
     "launched": "false"
   },
   “slug4” : {
-    "id": "slug4", 
-    "url": "mfly://item/slug4", 
-    "type": "interactive", 
-    "name": "Name", 
-    "description": "Description", 
-    "date": "2010-11-12T06:15:15:00-06:00", 
-    "received": "2012-12-19T16:45:14:00-06:00", 
-    "thumbnailUrl": "mfly://image/123", 
+    "id": "slug4",
+    "url": "mfly://item/slug4",
+    "type": "interactive",
+    "name": "Name",
+    "description": "Description",
+    "date": "2010-11-12T06:15:15:00-06:00",
+    "received": "2012-12-19T16:45:14:00-06:00",
+    "thumbnailUrl": "mfly://image/123",
     "launched": "true",
     “new”: 1,
     “downloadModel”: “DownloadableProtected”
@@ -1243,15 +1236,15 @@ mflyCommands.getValues('abc')
 
 <hr />
 
-<h2>Embedding data, images, other Interactives, or pages</h2>
+<h2>Embedding, images, other Interactives, or pages</h2>
 
 <h3>Overview</h3>
 
 <p>Interactives have the ability to embed items that exist in the app into it.  This is used for four primary purposes:</p>
 
 <ul>
-<li>Retrieve another item that contains structured data (JSON, XML, CSV)</li>
-<li>Embed another item that is an image and render it as an image in this Interactive</li>
+<li>Retrieve an item that contains structured data (JSON, XML, CSV)</li>
+<li>Embed an item that is an image and render it as an image in this Interactive</li>
 <li>Embed another Interactive into an iframe on this Interactive</li>
 <li>Embed a page from a PowerPoint, PDF, or Word document</li>
 </ul>
@@ -1261,7 +1254,22 @@ mflyCommands.getValues('abc')
 
 <ul>
 <li>To retrieve a data item, use <code>mflyCommands.getData(id)</code>, where <em>id</em> is the ID of the data item you wish to obtain.</li>
-<li>To embed an image, create an <code>&lt;img&gt;</code> that refers to a loading image. In JavaScript, call <code>mflyCommands.embed($element, id)</code>, where <em>$element</em> is a jQuery reference to the img element, and <em>id</em> is the Airship id of the image item.</li>
+<li>To embed an image, create an <code>&lt;img&gt;</code> that refers to a loading image. In JavaScript, call <code>mflyCommands.embed($element, id)</code>, where <em>$element</em> is a jQuery reference to the img element, and <em>id</em> is the Airship id of the image item.
+
+<ul>
+<li>You can also use <code>mflyCommands.embedImage($element, id, options)</code> and supply dimensions for the image to be embedded (only supported on Web Viewer and requires mflyCommands.js version 1.4.10). This can be particularly helpful to scale down high resolution images to so browsers can load them quicker. <em>options</em> are defined as:
+
+<ul>
+<li><em>size</em> (string):   format is WxH (e.g. "200x200")</li>
+<li><em>width</em> (number): Width of the image</li>
+<li><em>height</em> (number): Height of the image</li>
+<li><em>maxWidth</em> (number): Maximum width of the image</li>
+<li><em>maxHeight</em> (number): Maximum height of the image</li>
+<li><em>rotate</em> (number): Degree of rotation to apply to the image. Values of 0, 90, 180, 270, or 360 are acceptable.</li>
+</ul>
+</li>
+</ul>
+</li>
 <li>To embed another Interactive, construct an <code>&lt;iframe&gt;</code>. In JavaScript, call <code>mflyCommands.embed($element, id)</code>, where <em>$element</em> is a jQuery reference to the iframe element, and <em>id</em> is the Airship id of the other Interactive.</li>
 <li>To embed the page from a document as an image, create an <code>&lt;img&gt;</code> that refers to a loading image. In JavaScript, call <code>mflyCommands.embed($element, id, page)</code>, where <em>$element</em> is a jQuery reference to the img element, <em>id</em> is the Airship id of the image item, and <em>page</em> is the page number that you wish to embed.</li>
 </ul>
@@ -1351,7 +1359,7 @@ mflyCommands.getValues('abc')
 <pre><code>    &lt;script&gt;
         function mflyWideScreen(useWideScreen) {
             if (useWideScreen) {
-                // Refresh the UI to show in 16x9 mode, 
+                // Refresh the UI to show in 16x9 mode,
                 // probably by adjusting CSS. On the iPad, black bars will
                 // appear above and below the content.
             } else {
@@ -1395,9 +1403,9 @@ mflyCommands.getValues('abc')
 <li><p>You may tag specific images or image types based on whether they are in second screen or not:</p>
 
 <pre><code> &lt;style&gt;
- .ipad .carousel_image       { width: 1024px; height: 378px; 
+ .ipad .carousel_image       { width: 1024px; height: 378px;
      background:url('image.png'); background-size: 1024px 378px; }
- .widescreen .carousel_image { width: 960px; height: 354px; 
+ .widescreen .carousel_image { width: 960px; height: 354px;
      background:url(''image.png'); background-size: 960px 354px; }
  &lt;/style&gt;
 </code></pre></li>
@@ -1480,7 +1488,7 @@ mflyCommands.getValues('abc')
 
 <pre><code> mflyCommands.getInteractiveInfo()
      .done(function(data) {
-         // data contains a JSON object with information 
+         // data contains a JSON object with information
          // about this app, user and Interactive
      }).fail(function() {
          // handle failure
