@@ -1158,6 +1158,8 @@ Embedding other types (audio, video, URLs) will have unexpected results. The bes
 		* _rotate_ (number): Degree of rotation to apply to the image. Values of 0, 90, 180, 270, or 360 are acceptable.
 * To embed another Interactive, construct an ```<iframe>```. In JavaScript, call ```mflyCommands.embed($element, id)```, where _$element_ is a jQuery reference to the iframe element, and _id_ is the Airship id of the other Interactive.
 * To embed the page from a document as an image, create an ```<img>``` that refers to a loading image. In JavaScript, call ```mflyCommands.embed($element, id, page)```, where _$element_ is a jQuery reference to the img element, _id_ is the Airship id of the image item, and _page_ is the page number that you wish to embed.
+* Please note: if you are embedding an image asset for the web Viewer, please consider directly accessing the ```resourceUrl``` attribute instead of using ```mflyCommands.embed```. This will improve loading speed, caching, and reduce network requests. See the [optional changes](#optional_changes) section below.
+
 
 ### Example
 
@@ -1349,10 +1351,25 @@ The following changes need to be made to your existing Interactives to support I
 				// handle failure
 			});
 
-4. ** Don't include a file at the root of your Interactive called mflyManifest.json***. We doubt you would, but if you do, it is likely to be overwritten by one of your apps as a part of the initialization process.
+4. *** Don't include a file at the root of your Interactive called mflyManifest.json***. We doubt you would, but if you do, it is likely to be overwritten by one of your apps as a part of the initialization process.
 
 5. **Adjust mflyCommands.getFolder(id) call signature change**. The call signature for mflyCommands.getFolder(id) (which maps to mfly://data/folder/[id]) has changed. Previously, if any of its items were also folders, it would return the items within the folders as an array of IDs. This has changed, and those subfolders no longer includes the items key at all. A separate mflyCommands.getFolder(id) call will have to be made on those children folders.
 
 6. **Each URL should be able to establish its own state**. Don't pass around variables like you would in a traditional application. This breaks on websites, and it will break on web Interactives.
 
 7. **All resources must be accessed in a relative way**. Don't try to construct absolute URLs to assets within your .zip file, as that path will undoutedly differ on other platforms.
+
+
+### Optional changes
+The following changes will help improve performance for your Interactives when opened in the Web Viewer.
+
+1. **To render images, consider using the ```resourceUrl``` attribute and not mflyCommands.embed**. The resourceUrl attribute can be found on mflyCommands.[getFolder, getItem, filter], and other calls that return full item models. The benefits are many:
+
+	* resourceUrl requests are more easily cached by browsers
+	* resourceUrl requests return the original image in its original format (jpg, png, gif), with no transcoding
+	* resourceUrl requests require one less redirect, which means faster load times
+	
+	There are downsides to using resourceUrl as well, however.
+
+	* Because resourceUrl (currently) only exists on the web Viewer, you will need to separate your approach of laying in images between our web Viewer and our mobile platforms.
+	* If you need to ask Mediafly's servers to resize images, you will need to use mflyCommands.embed to do so, as resourceUrl returns the image as-is.
