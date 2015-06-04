@@ -314,7 +314,16 @@ Note that not every parameter is available on every platform.
             "received": "2012-12-19T16:45:14:00-06:00",
             "thumbnailUrl": "mfly://image/123",
             "launched": "true",
-            “keywords”: [“keyword4”]
+            “keywords”: [“keyword4”],
+			"hierarchy": [
+			{
+				"id": "__root__",
+				"name": "Root folder"
+			},
+			{
+				"id": "9cf282320e6340ee8b830e5376d54531product91921",
+				"name": "Parent Folder"
+			}]
         }
 
 
@@ -332,7 +341,12 @@ Note that not every parameter is available on every platform.
             "thumbnailUrl": "mfly://image/123",
             "launched": "false",
             “keywords”: [“keyword1”, “keyword2”, “keyword3”],
-            “new”: 1
+            “new”: 1,
+			"hierarchy": [
+			{
+				"id": "__root__",
+				"name": "Root folder"
+			}]
         }
 *Availability:* iOS, Android, Windows 8, Web Viewer
 
@@ -356,7 +370,16 @@ Note that not every parameter is available on every platform.
             "received": "2012-12-19T16:45:14:00-06:00",
             "thumbnailUrl": "mfly://image/123",
             "launched": "true",
-            “keywords”: [“keyword4”]
+            “keywords”: [“keyword4”],
+			"hierarchy": [
+			{
+				"id": "__root__",
+				"name": "Root folder"
+			},
+			{
+				"id": "9cf282320e6340ee8b830e5376d54531product91921",
+				"name": "Parent Folder"
+			}]
           },
           {
             "id": "slug4",
@@ -368,7 +391,16 @@ Note that not every parameter is available on every platform.
             "date": "2010-11-12T06:15:15:00-06:00",
             "received": "2012-12-19T16:45:14:00-06:00",
             "thumbnailUrl": "mfly://image/123",
-            "launched": "false"
+            "launched": "false",
+			"hierarchy": [
+			{
+				"id": "__root__",
+				"name": "Root folder"
+			},
+			{
+				"id": "9cf282320e6340ee8b830e5376d54531product91921",
+				"name": "Parent Folder"
+			}]
           }
         ]
 
@@ -1385,7 +1417,7 @@ The following changes will help improve performance for your Interactives when o
 	* resourceUrl requests are more easily cached by browsers
 	* resourceUrl requests return the original image in its original format (jpg, png, gif), with no transcoding
 	* resourceUrl requests require one less redirect, which means faster load times
-	
+
 	There are downsides to using resourceUrl as well, however.
 
 	* Because resourceUrl (currently) only exists on the web Viewer, you will need to separate your approach of laying in images between our web Viewer and our mobile platforms.
