@@ -759,6 +759,23 @@ where notifications = JSON Object of all notifications, where key=id and value=J
 *Availability:* iOS, Android, Windows 8
 
 
+### Get Sync Status
+
+#### Get the current sync status ####
+*mflyCommands.js:* mflyCommands.getSyncStatus() <br>
+*URL:* mfly://data/getSyncStatus<br>
+*Description:* Interactives can request the current sync status from the app. This is useful for interactives if they wish to wait until sync is completed before showing certain parts of the UI.<br>
+
+	Example:
+		GET mfly://data/getSyncStatus
+		Response:
+		{
+		  complete: 26,
+		  total: 28,
+		  isrunning: true
+		}
+*Availability:* iOS, Android
+
 
 ----------
 
