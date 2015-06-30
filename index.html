@@ -8,24 +8,42 @@
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script>
-        $(function(){
-            $("#includedContent").load("interactives.html", function() {
-                $("img").addClass("img-responsive");
-                var $toc = $("#nav_toc");
-                $(":header").each(function(i, h) {
-                    // Only do this for h1 and h2
-                    var $h = $(h);
-                    var tagname = h.tagName.toLowerCase();
-                    if (tagname === 'h1' || tagname === 'h2' || tagname === 'h3') {
-                        // Add an <a name> to right before the tag
-                        var html = $h.html();
-                        var name_ref = html.replace(/\W/g, '_').toLowerCase();
-                        $h.before('<a name="' + name_ref + '"></a>');
+        var hash = '';
 
-                        // Now add a link to that <a name> in the TOC
-                        var li = "<li class='toc_" + tagname + "'>";
-                        var append = $(li + "<a href='#" + name_ref + "'>" + $(h).html().trim() + "</a></li>");
-                        $(append).appendTo($toc);
+        $(document).ready(function() {
+            hash = window.location.hash || '';
+            hash = hash.replace("#",'');
+            $(function(){
+                $("#includedContent").load("interactives.html", function() {
+                    $("img").addClass("img-responsive");
+                    var $toc = $("#nav_toc");
+                    $(":header").each(function(i, h) {
+                        // Only do this for h1, h2 and h3
+                        var $h = $(h);
+                        var tagname = h.tagName.toLowerCase();
+                        if (tagname === 'h1' || tagname === 'h2' || tagname === 'h3') {
+                            // Add an <a name> to right before the tag
+                            var html = $h.html();
+                            var name_ref = html.replace(/\W/g, '_').toLowerCase();
+                            $h.before('<a name="' + name_ref + '"></a>');
+
+                            // Now add a link to that <a name> in the TOC
+                            var li = "<li class='toc_" + tagname + "'>";
+                            var append = $(li + "<a href='#" + name_ref + "'>" + $(h).html().trim() + "</a></li>");
+                            $(append).appendTo($toc);
+                        }
+                    });
+
+                    // Jump to hash if defined
+                    if (hash) {
+                        var obj = $("[name='" + hash + "']");
+                        if (obj) {
+                            obj[0].scrollIntoView();
+                            $('html,body').animate({scrollTop: obj.offset().top - 60}, 'slow');
+                        }
+                        setTimeout(function() {
+                            $('html,body').animate({scrollTop: obj.offset().top - 60}, 'slow');
+                        }, 500);
                     }
                 });
             });
