@@ -215,7 +215,7 @@ This section describes all of the APIs available to Interactives developers. For
 
 ** A note on 'Availability':** You will see many API calls have no version numbers within the Availability column. In these cases, the calls have been in existence for a sufficiently long period of time that Interactives developers no longer need to worry about whether their clients' apps support those calls anymore.
 
-
+** Keeping mflyCommands up-to-date:** mflyCommands.js is available on the [bower package manager](http://bower.io/). This is the recommended way of consuming it as a dependency in your interactive. Link to the bower package: http://bower.io/search/?q=mfly-commands
 
 ## Controlling the app
 Controlling the app is done by opening a window to a special URL through JavaScript. The container app will handle this as an instruction to handle.  The list of available URLs, and their appropriate actions, are listed below.
