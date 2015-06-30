@@ -213,9 +213,9 @@ API and Howtos
 
 This section describes all of the APIs available to Interactives developers. For each call, we list the mflyCommands.js call as well as the base URL. Please use the mflyCommands.js call where possible.
 
-** A note on 'Availability':** You will see many API calls have no version numbers within the Availability column. In these cases, the calls have been in existence for a sufficiently long period of time that Interactives developers no longer need to worry about whether their clients' apps support those calls anymore.
+*A note on 'Availability':* You will see many API calls have no version numbers within the Availability column. In these cases, the calls have been in existence for a sufficiently long period of time that Interactives developers no longer need to worry about whether their clients' apps support those calls anymore.
 
-** Keeping mflyCommands up-to-date:** mflyCommands.js is available on the [bower package manager](http://bower.io/). This is the recommended way of consuming it as a dependency in your interactive. Link to the bower package: http://bower.io/search/?q=mfly-commands
+*Keeping mflyCommands up-to-date:* mflyCommands.js is available on the [bower package manager](http://bower.io/). This is the recommended way of consuming it as a dependency in your interactive. The bower package can be found here: [http://bower.io/search/?q=mfly-commands](http://bower.io/search/?q=mfly-commands)
 
 ## Controlling the app
 Controlling the app is done by opening a window to a special URL through JavaScript. The container app will handle this as an instruction to handle.  The list of available URLs, and their appropriate actions, are listed below.
@@ -496,8 +496,8 @@ Examples:
 
 		mflyCommands.filter({ "shouldShow": false }).done(function(results) {
 			// results contains, e.g.
-			// [ { "id": "123", "type": "folder", "shouldShow": true, ... },
-			//   { "id": "234", "type": "folder", "shouldShow": false, ... } ]
+			// [ { "id": "123", "shouldShow": true, ... },
+			//   { "id": "234", "shouldShow": false, ... } ]
 		});
 
 	Example 2:
@@ -815,7 +815,15 @@ where notifications = JSON Object of all notifications, where key=id and value=J
 
 
 ## Being controlled by the app
-The app sends many kinds of events into the Interactive, in case the Interactive is interested in reacting to those events. These are done by calling specific JavaScript functions. If the appropriately named function is defined, they will be called by the app at the appropriate time, and the Interactive can take action. If the function does not exist, nothing will happen.
+Mediafly's apps send many kinds of events into the Interactive. These events can be listened to by the Interactive reactively, and the Interactive can then take action. These capabilities are only availble to the native apps, not to web Viewer.
+
+There are two methods in which this happens:
+
+1. The old way. If an appropriately named JavaScript function is defined, they will be called by the app at the appropriate time, and the Interactive can take action. If the function does not exist, the console log will show a "function not defined" error and the Interactive will continue execution.
+2. The new way. Recently created features will make use of JavaScript events in the DOM's document object. This better matches how other JavaScript frameworks similar to Interactives are structured.
+
+Each feature listed below indicates which method it uses.
+
 
 
 ### mflyDataInit
@@ -828,7 +836,13 @@ This function has two uses:
 2. Send configuration parameters to the app
 
 #### Use 1: Receive configuration information from the app
-Interactives can implement mflyDataInit and receive within the params parameter a JSON Object of initial configuration.  E.g. on iOS, params may be a JSON Object such as this:
+Interactives can implement mflyDataInit, using method 1.
+
+		function mflyDataInit(obj) {
+			// obj = JSON object that contains initial configuration
+		}
+
+mflyDataInit will be called with a JSON object that contains initial configuration.  E.g. on iOS, params may be a JSON Object such as this:
 
 		{
 			"mflyInitVersionMaximum": "2",
@@ -908,24 +922,34 @@ The app calls this function when the user hides the Interactive. If you need to 
 *Availability:* iOS, Android
 
 
-### mflySync (DEPRECATED)
-
-<b>PLEASE NOTE</b>: mflySync is deprecated. As we migrate to support Interactives on our Web Viewer, using a called-in mflySync as a method of keeping content in sync is not in-line with how websites behave. Furthermore, after several years of use, we have seen almost no usage of mflySync. Therefore please consider it deprecated as of 01-May-2015, and remove its usage from your Interactives.
-
-
-As the app synchronizes all folders within a user’s hierarchy, updated information (metadata, URLs, etc.) becomes available. If an Interactive is open while the new information appears, the app calls mflySync with this subset of updated information.  The parameter is an array of JSON objects that represent changed items.
-
-Expect mflySync to be called many times.  Each time may contain a subset of changed information for the app.
-
-The best use of mflySync is to listen for changes to “launched” status. For example, if the Interactive wishes to render “New!” banners on new items, and have those banners clear when the user launches the item, the Interactive would need to listen to mflySync and remove the “New!” banner when launched=true for a given item.
+### Sync Status
+Our apps are built to automatically sync all folders on launch and at regular intervals. Sometimes, the Interactive needs to know about the status of sync to ensure that sufficient content is loaded before rendering the Interactive. To receive information about the status of sync, apps can listen to events injected into the DOM's document object, and react to those events.
 
 *Example:*<br>
 
-	function mflySync(obj) {
-		// Handle mflySync
-	}
+    document.addEventListener("mflySyncStatus", function(d) {
+        if (d && d.detail) {
+        	// Handle Sync Status
+            $("#syncEventHandlerResult").html(JSON.stringify(d.detail, null, 2));
+        }
+    }, false);
+    
+The detail attribute of the event object will be structure as JSON with 2-3 fields, like so:
 
-*Availability:* iOS, Android, Windows 8
+    {
+        complete: 26,
+        total: 28,
+        isrunning: true
+    }
+    
+where the JSON object's attributes have the following meaning:
+
+* complete: the number of folders that have been synced
+* total: the total number of folders known to the app. Note that this may not be defined immediately on application start, and may change if there are dramatic changes of what is available to the user.
+* isrunning: true|false, indicating whether the sync is currently running.
+
+*Availability:* iOS (604), Android (2.23.59)
+
 
 
 
