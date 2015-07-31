@@ -542,7 +542,7 @@ Collections allow users to create a "personal playlist" of items. Oftentimes thi
 
 
 #### Show "Add to Collection"
-*mflyCommands.js:* mflyCommands.showAddToCollection(_x-coord, y-coord, width, height_) <br>
+*mflyCommands.js:* mflyCommands.showAddToCollection(itemId, _x-coord, y-coord, width, height_) <br>
 *URL:* mfly://control/showAddToCollection?id=[itemId]&x=[x-coord]&y=[y-coord]&w=[width]&h=[height] <br>
 *Description:* Shows the Add To Collections dialog at x-coord, y-coord coordinates with specified width and height for the specified item. Parameters x-coord, y-coord, width, and height are all optional, and only work with iOS. <br>
 *Availability:* iOS
@@ -933,7 +933,7 @@ Our apps are built to automatically sync all folders on launch and at regular in
             $("#syncEventHandlerResult").html(JSON.stringify(d.detail, null, 2));
         }
     }, false);
-    
+
 The detail attribute of the event object will be structure as JSON with 2-3 fields, like so:
 
     {
@@ -941,7 +941,7 @@ The detail attribute of the event object will be structure as JSON with 2-3 fiel
         total: 28,
         isrunning: true
     }
-    
+
 where the JSON object's attributes have the following meaning:
 
 * complete: the number of folders that have been synced
