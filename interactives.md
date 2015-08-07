@@ -807,7 +807,16 @@ where notifications = JSON Object of all notifications, where key=id and value=J
 		  total: 28,
 		  isrunning: true
 		}
-*Availability:* iOS, Android
+*Availability:* iOS
+
+### Log out
+
+#### Instruct the app to log out ####
+*mflyCommands.js:* mflyCommands.logout() <br>
+*URL:* mfly://data/logout<br>
+*Description:* When an Interactive makes this call, the app will log the current user out by de-authenticating them. The calling interactive will be closed and the app will leave the user bound (user can enter their PIN to log back in). The app will navigate to the log in screen. <br>
+
+*Availability:* iOS, Web Viewer. Requires mflyCommands.js 1.6.0+
 
 
 ----------
