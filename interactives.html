@@ -611,7 +611,7 @@ Example 2:
 
 <h4>Show "Add to Collection"</h4>
 
-<p><em>mflyCommands.js:</em> mflyCommands.showAddToCollection(<em>x-coord, y-coord, width, height</em>) <br>
+<p><em>mflyCommands.js:</em> mflyCommands.showAddToCollection(itemId, <em>x-coord, y-coord, width, height</em>) <br>
 <em>URL:</em> mfly://control/showAddToCollection?id=[itemId]&amp;x=[x-coord]&amp;y=[y-coord]&amp;w=[width]&amp;h=[height] <br>
 <em>Description:</em> Shows the Add To Collections dialog at x-coord, y-coord coordinates with specified width and height for the specified item. Parameters x-coord, y-coord, width, and height are all optional, and only work with iOS. <br>
 <em>Availability:</em> iOS</p>
@@ -895,7 +895,17 @@ Example:
     }
 </code></pre>
 
-<p><em>Availability:</em> iOS, Android</p>
+<p><em>Availability:</em> iOS</p>
+
+<h3>Log out</h3>
+
+<h4>Instruct the app to log out</h4>
+
+<p><em>mflyCommands.js:</em> mflyCommands.logout() <br>
+<em>URL:</em> mfly://data/logout<br>
+<em>Description:</em> When an Interactive makes this call, the app will log the current user out by de-authenticating them. The calling Interactive will be closed and the app will leave the user bound (user can enter their PIN to log back in). The app will navigate to the log in screen. If the customer environment does not support PIN, you may receive a 500 error.<br></p>
+
+<p><em>Availability:</em> iOS (613), Android (2.24.15), web viewer (8/20/2015). Requires mflyCommands.js 1.6.0+</p>
 
 <hr />
 
