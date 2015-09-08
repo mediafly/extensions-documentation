@@ -809,14 +809,15 @@ where notifications = JSON Object of all notifications, where key=id and value=J
 		}
 *Availability:* iOS
 
+
 ### Log out
 
 #### Instruct the app to log out ####
 *mflyCommands.js:* mflyCommands.logout() <br>
 *URL:* mfly://data/logout<br>
-*Description:* When an Interactive makes this call, the app will log the current user out by de-authenticating them. The calling interactive will be closed and the app will leave the user bound (user can enter their PIN to log back in). The app will navigate to the log in screen. <br>
+*Description:* When an Interactive makes this call, the app will log the current user out by de-authenticating them. The calling Interactive will be closed and the app will leave the user bound (user can enter their PIN to log back in). The app will navigate to the log in screen. If the customer environment does not support PIN, you may receive a 500 error.<br>
 
-*Availability:* iOS, Web Viewer. Requires mflyCommands.js 1.6.0+
+*Availability:* iOS (613), Android (2.24.15), web viewer (8/20/2015). Requires mflyCommands.js 1.6.0+
 
 
 ----------
