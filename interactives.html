@@ -1331,6 +1331,28 @@ mflyCommands.getValues('abc')
 
 <p><em>Availability:</em> iOS, Android, Windows 8, Web Viewer</p>
 
+<h3>Delete data</h3>
+
+<p>To delete a key/value pair by key from the app container, use mflyCommands.deleteKey(<em>key</em>).</p>
+
+<p><em>Example:</em></p>
+
+<pre><code>// Assume key 'abc' has been set to value '123'.
+
+mflyCommands.deleteKey('abc')
+    .done(function(data, status) {
+        // Success! Do something.
+        console.log('abc has been deleted');
+    })
+    .fail(function(deferred, status) {
+        // Error! Do something.
+    });
+
+// Console output: 'abc has been deleted'
+</code></pre>
+
+<p><em>Availability:</em> iOS (617+), Android (2.24.21), Windows 8 (soon), web viewer (8/20/2015). Requires mflyCommands.js 1.8.0+</p>
+
 <hr />
 
 <h2>Embedding, images, other Interactives, or pages</h2>
