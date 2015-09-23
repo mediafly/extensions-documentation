@@ -559,19 +559,11 @@ Collections allow users to create a "personal playlist" of items. Oftentimes thi
 		[
           {
             "id": "collection1",
-            "name": "Collection 1",
-            "items": [
-              id_1_if_item_1_in_collection,
-              id_2_if_item_2_in_collection,
-            ]
+            "name": "Collection 1"
           },
           {
             "id": "collection2",
-            "name": "Collection 2",
-            "items": [
-              id_3_if_item_1_in_collection,
-              id_4_if_item_1_in_collection,
-            ]
+            "name": "Collection 2"
           }
         ]
 
@@ -597,7 +589,16 @@ Collections allow users to create a "personal playlist" of items. Oftentimes thi
             "received": "2012-12-19T16:45:14:00-06:00",
             "thumbnailUrl": "mfly://image/123",
             "launched": "true",
-            “keywords”: [“keyword4”]
+            “keywords”: [“keyword4”],
+			"hierarchy": [
+	        {
+	            "id": "__root__",
+	            "name": "Root folder"
+	        },
+	        {
+	            "id": "9cf282320e6340ee8b830e5376d54531product91921",
+	            "name": "Parent Folder"
+	        }]
           },
           {
             "id": "slug2",
@@ -608,7 +609,16 @@ Collections allow users to create a "personal playlist" of items. Oftentimes thi
             "date": "2010-11-12T06:15:15:00-06:00",
             "received": "2012-12-19T16:45:14:00-06:00",
             "thumbnailUrl": "mfly://image/123",
-            "launched": "false"
+            "launched": "false",
+			"hierarchy": [
+	        {
+	            "id": "__root__",
+	            "name": "Root folder"
+	        },
+	        {
+	            "id": "9cf282320e6340ee8b830e5376d54531product91921",
+	            "name": "Parent Folder"
+	        }]
           }
         ]
 
@@ -633,7 +643,7 @@ Collections allow users to create a "personal playlist" of items. Oftentimes thi
 #### Add item to a Collection
 *mflyCommands.js:* mflyCommands.addItemToCollection(_collection ID_, _item ID_) <br>
 *URL:* mfly://data/addItemToCollection?id=[collection ID]&item=[item ID] <br>
-*Description:* Adds the item to the Collection. If Collection exists and it can be created, response code is 200. If Collection does not exist, response code is 404 with body "Collection not found.". If item does not exist, response code is 404 with body "Item not found."
+*Description:* Adds the item to the Collection. If Collection exists and it can be created, response code is 200. If Collection does not exist, response code is 404 with body { "message": "Collection not found." }. If item does not exist, response code is 404 with body "Item not found."
 
 	Example:
 		mflyCommands.addItemToCollection("collection2id", "item4id");
