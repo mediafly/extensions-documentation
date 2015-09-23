@@ -1226,16 +1226,6 @@ To get data for all keys that begin with X, use mflyCommands.getValues(_prefix_)
 
 ### Delete data
 
-You can delete a key/value pair by using the key using mflyCommands.js.
-
-Alternatively, you can make the calls directly with AJAX, but we strongly recommend using mflyCommands instead. When making calls directly,
-
-* Response of 200 OK indicates a successful delete of an existing key/value pair.
-* Response of 404 Not Found indicates that the key does not exist
-
-
-#### Delete Key ####
-
 To delete a key/value pair by key from the app container, use mflyCommands.deleteKey(_key_).
 
 *Example:*
@@ -1245,7 +1235,7 @@ To delete a key/value pair by key from the app container, use mflyCommands.delet
     mflyCommands.deleteKey('abc')
         .done(function(data, status) {
             // Success! Do something.
-            console.log('abc' + ' has been deleted');
+            console.log('abc has been deleted');
         })
         .fail(function(deferred, status) {
             // Error! Do something.
@@ -1253,7 +1243,7 @@ To delete a key/value pair by key from the app container, use mflyCommands.delet
 
     // Console output: 'abc has been deleted'
 
-*Availability:* iOS, Android, Windows 8, Web Viewer
+*Availability:* iOS (617+), Android (2.24.21), Windows 8 (soon), web viewer (8/20/2015). Requires mflyCommands.js 1.8.0+
 
 
 ----------
