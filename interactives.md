@@ -650,6 +650,16 @@ Collections allow users to create a "personal playlist" of items. Oftentimes thi
 
 *Availability:* iOS (570), Android (2.22.91), Requires mflyCommands.js 1.3.5+
 
+#### Remove item to a Collection
+*mflyCommands.js:* mflyCommands.removeItemFromCollection(_collection ID_, _item ID_) <br>
+*URL:* mfly://data/removeItemFromCollection?id=[collection ID]&item=[item ID] <br>
+*Description:* Removes the item from the Collection. If Collection does not exist, response code is 404 with body { "message": "Collection not found." }. If item does not exist, response code is 404 with body "Item not found."
+
+	Example:
+		mflyCommands.removeItemFromCollection("collection2id", "item4id");
+
+*Availability:* Requires mflyCommands.js 1.9.0+
+
 
 ### Downloader
 Mediafly's apps have been optimized for very advanced synchronization and download use cases. We offer a set of Interactives calls to obtain information about downloads and control the app.
