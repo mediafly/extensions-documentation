@@ -658,7 +658,7 @@ Collections allow users to create a "personal playlist" of items. Oftentimes thi
 	Example:
 		mflyCommands.removeItemFromCollection("collection2id", "item4id");
 
-*Availability:* Requires mflyCommands.js 1.9.0+
+*Availability:* iOS (623), Android (2.25.15), Requires mflyCommands.js 1.9.0+
 
 
 ### Downloader
