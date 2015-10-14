@@ -650,7 +650,7 @@ Collections allow users to create a "personal playlist" of items. Oftentimes thi
 
 *Availability:* iOS (570), Android (2.22.91), Requires mflyCommands.js 1.3.5+
 
-#### Remove item to a Collection
+#### Remove item from a Collection
 *mflyCommands.js:* mflyCommands.removeItemFromCollection(_collection ID_, _item ID_) <br>
 *URL:* mfly://data/removeItemFromCollection?id=[collection ID]&item=[item ID] <br>
 *Description:* Removes the item from the Collection. If Collection does not exist, response code is 404 with body { "message": "Collection not found." }. If item does not exist, response code is 404 with body "Item not found."
@@ -658,7 +658,7 @@ Collections allow users to create a "personal playlist" of items. Oftentimes thi
 	Example:
 		mflyCommands.removeItemFromCollection("collection2id", "item4id");
 
-*Availability:* iOS (623), Android (2.25.15), Requires mflyCommands.js 1.9.0+
+*Availability:* iOS (623), Android (2.25.15), web viewer (10/05/2015) Requires mflyCommands.js 1.9.0+
 
 
 ### Downloader
@@ -1496,3 +1496,11 @@ The following changes will help improve performance for your Interactives when o
 
 	* Because resourceUrl (currently) only exists on the web Viewer, you will need to separate your approach of laying in images between our web Viewer and our mobile platforms.
 	* If you need to ask Mediafly's servers to resize images, you will need to use mflyCommands.embed to do so, as resourceUrl returns the image as-is.
+
+## My Items
+
+An interactive can retrieve the contents of the 'My Items' folder like any other folder. However, in order to do so, the following must be taken into consideration:
+
+- My Items require that a user be logged in
+- My Items are empty until content is put into a user's My Items folder
+- The Id for My Items is always the same for an environment. You can determine the Id by querying the root folder.
