@@ -840,8 +840,30 @@ where notifications = JSON Object of all notifications, where key=id and value=J
 *Availability:* iOS (613), Android (2.24.15), web viewer (8/20/2015). Requires mflyCommands.js 1.6.0+
 
 
-----------
+### Get Online Status
 
+*mflyCommands.js:* mflyCommands.getOnlineStatus() <br>
+*URL:* mfly://data/onlineStatus<br>
+
+*Description:* Check whether the device is online<br>
+Example:
+
+	GET mfly://data/onlineStatus
+	Response:
+	{
+	  "status": "online"
+	}
+Respnose when the device is offline:
+
+	GET mfly://data/onlineStatus
+	{
+	  "status": "offline"
+	}
+
+*Availability:* iOS (540), Android (2.21.62).
+
+
+----------
 
 
 ## Being controlled by the app
