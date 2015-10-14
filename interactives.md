@@ -933,10 +933,10 @@ Optionally, Interactives can then return a JSON Object with specifics on how the
 
 *Supported parameters:*<br>
 
-* mflyInitVersion: indicates which version of mflyInit should be called by the app. Note that mflyInitVersion is only available on iOS. Android and Windows 8 support only version 3 and 4 of mflyInit. If ignored, defaults to "4".
-	* "2": default version reflected in this documentation
-	* "3": On iOS, sharing status is represented by canShare, canAccessAssetOffline, and canDownloadAsset
-	* "4": No longer sends down mflyInit. mflyInit is deprecated and causes undo burden when content libraries are large, and we plan to deprecate it in the future.
+* mflyInitVersion: indicates which version of mflyInit should be called by the app. Android supports versions 3, 4, and 5 of mflyInitVersion. Windows 8 supports only version 3 and 4 of mflyInit. If ignored, defaults to "4".
+	* "2": default version reflected in this documentation. Supported on iOS.
+	* "3": On iOS, sharing status is represented by canShare, canAccessAssetOffline, and canDownloadAsset. Supported on Android, iOS, and Windows8.
+	* "4": No longer sends down mflyInit. mflyInit is deprecated and causes undo burden when content libraries are large, and we plan to deprecate it in the future. Supported on Android, iOS and Windows 8.
 
 * mflyWideScreenSupport: if true, this makes the app aware that the Interactive can handle widescreen second screens (HDMI, Apple TV).  This is specifically for the case where the Interactive has been designed to be a presentation-worthy UI for second screens. Only available on iOS.
 
@@ -1519,10 +1519,9 @@ The following changes will help improve performance for your Interactives when o
 	* Because resourceUrl (currently) only exists on the web Viewer, you will need to separate your approach of laying in images between our web Viewer and our mobile platforms.
 	* If you need to ask Mediafly's servers to resize images, you will need to use mflyCommands.embed to do so, as resourceUrl returns the image as-is.
 
-## My Items
+## Constants
 
-An interactive can retrieve the contents of the 'My Items' folder like any other folder. However, in order to do so, the following must be taken into consideration:
+The following constants can be used across customer environments or within an environment:
 
-- My Items require that a user be logged in
-- My Items are empty until content is put into a user's My Items folder
-- The Id for My Items is always the same for an environment. You can determine the Id by querying the root folder.
+* ```__root__```: This is the ID of the top-level folder. It is consistent across all environments and all device platforms.
+* ```[environment ID]productmyitems```: This is the ID of the "My Items" folder. "My Items" is a folder that, when enabled, gives users a personal space to upload and manage their own content within the customer environment. In this case, ```[environment ID]``` is a unique 32-character string that is specific to that environment. Please contact Mediafly to obtain the string for your customers; or, simply use Get Folder on the ```__root__``` and look for My Items as the last folder in the response. In order to access My Items, the user must be logged in.
