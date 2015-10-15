@@ -1036,12 +1036,12 @@ Response:
 <p><em>Supported parameters:</em><br></p>
 
 <ul>
-<li><p>mflyInitVersion: indicates which version of mflyInit should be called by the app. Note that mflyInitVersion is only available on iOS. Android and Windows 8 support only version 3 and 4 of mflyInit. If ignored, defaults to "4".</p>
+<li><p>mflyInitVersion: indicates which version of mflyInit should be called by the app. Android supports versions 3, 4, and 5 of mflyInitVersion. Windows 8 supports only version 3 and 4 of mflyInit. If ignored, defaults to "4".</p>
 
 <ul>
-<li>"2": default version reflected in this documentation</li>
-<li>"3": On iOS, sharing status is represented by canShare, canAccessAssetOffline, and canDownloadAsset</li>
-<li>"4": No longer sends down mflyInit. mflyInit is deprecated and causes undo burden when content libraries are large, and we plan to deprecate it in the future.</li>
+<li>"2": default version reflected in this documentation. Supported on iOS.</li>
+<li>"3": On iOS, sharing status is represented by canShare, canAccessAssetOffline, and canDownloadAsset. Supported on Android, iOS, and Windows8.</li>
+<li>"4": No longer sends down mflyInit. mflyInit is deprecated and causes undo burden when content libraries are large, and we plan to deprecate it in the future. Supported on Android, iOS and Windows 8.</li>
 </ul>
 </li>
 <li><p>mflyWideScreenSupport: if true, this makes the app aware that the Interactive can handle widescreen second screens (HDMI, Apple TV).  This is specifically for the case where the Interactive has been designed to be a presentation-worthy UI for second screens. Only available on iOS.</p></li>
@@ -1692,14 +1692,13 @@ mflyCommands.deleteKey('abc')
 </ol>
 
 
-<h2>My Items</h2>
+<h2>Constants</h2>
 
-<p>An interactive can retrieve the contents of the 'My Items' folder like any other folder. However, in order to do so, the following must be taken into consideration:</p>
+<p>The following constants can be used across customer environments or within an environment:</p>
 
 <ul>
-<li>My Items require that a user be logged in</li>
-<li>My Items are empty until content is put into a user's My Items folder</li>
-<li>The Id for My Items is always the same for an environment. You can determine the Id by querying the root folder.</li>
+<li><code>__root__</code>: This is the ID of the top-level folder. It is consistent across all environments and all device platforms.</li>
+<li><code>[environment ID]productmyitems</code>: This is the ID of the "My Items" folder. "My Items" is a folder that, when enabled, gives users a personal space to upload and manage their own content within the customer environment. In this case, <code>[environment ID]</code> is a unique 32-character string that is specific to that environment. Please contact Mediafly to obtain the string for your customers; or, simply use Get Folder on the <code>__root__</code> and look for My Items as the last folder in the response. In order to access My Items, the user must be logged in.</li>
 </ul>
 
 </body>
