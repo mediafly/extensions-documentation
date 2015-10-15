@@ -567,7 +567,7 @@ Collections allow users to create a "personal playlist" of items. Oftentimes thi
           }
         ]
 
-*Availability:* iOS (483), Android (2.22.91). Requires mflyCommands.js 1.2+
+*Availability:* iOS (483), Android (2.22.91), Web Viewer (05-Oct-2015). Requires mflyCommands.js 1.2+
 
 
 #### Get the contents of a Collection
@@ -622,7 +622,7 @@ Collections allow users to create a "personal playlist" of items. Oftentimes thi
           }
         ]
 
-*Availability:* iOS (483), Android (2.22.91), Requires mflyCommands.js 1.2+
+*Availability:* iOS (483), Android (2.22.91), Web Viewer (05-Oct-2015). Requires mflyCommands.js 1.2+
 
 #### Create a Collection
 *mflyCommands.js:* mflyCommands.createCollection(_collection name_) <br>
@@ -637,7 +637,7 @@ Collections allow users to create a "personal playlist" of items. Oftentimes thi
 			"name": "Collection 2"
 		}
 
-*Availability:* iOS (570), Android (2.22.91), Requires mflyCommands.js 1.3.5+
+*Availability:* iOS (570), Android (2.22.91), Web Viewer (05-Oct-2015). Requires mflyCommands.js 1.3.5+
 
 
 #### Add item to a Collection
@@ -648,7 +648,7 @@ Collections allow users to create a "personal playlist" of items. Oftentimes thi
 	Example:
 		mflyCommands.addItemToCollection("collection2id", "item4id");
 
-*Availability:* iOS (570), Android (2.22.91), Requires mflyCommands.js 1.3.5+
+*Availability:* iOS (570), Android (2.22.91), Web Viewer (05-Oct-2015). Requires mflyCommands.js 1.3.5+
 
 #### Remove item from a Collection
 *mflyCommands.js:* mflyCommands.removeItemFromCollection(_collection ID_, _item ID_) <br>
@@ -658,7 +658,7 @@ Collections allow users to create a "personal playlist" of items. Oftentimes thi
 	Example:
 		mflyCommands.removeItemFromCollection("collection2id", "item4id");
 
-*Availability:* iOS (623), Android (2.25.15), web viewer (10/05/2015) Requires mflyCommands.js 1.9.0+
+*Availability:* iOS (623), Android (2.25.15), Web Viewer (10/05/2015) Requires mflyCommands.js 1.9.0+
 
 
 ### Downloader
