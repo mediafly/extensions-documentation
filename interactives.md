@@ -531,7 +531,7 @@ Mediafly's apps provide real-time, native search as a core part of the functiona
 
 
 ### Collections
-Collections allow users to create a "personal playlist" of items. Oftentimes this is used as a way to organize items for, say, an upcoming meeting with a customer. Collections are pointers to items, not copies of items; updating the original item in Airship will update the item in the Collection as well.
+	Collections allow users to create a "personal playlist" of items. Oftentimes this is used as a way to organize items for, say, an upcoming meeting with a customer. Collections are pointers to items, not copies of items; updating the original item in Airship will update the item in the Collection as well.
 
 
 #### Show "Collections"
@@ -659,6 +659,28 @@ Collections allow users to create a "personal playlist" of items. Oftentimes thi
 		mflyCommands.removeItemFromCollection("collection2id", "item4id");
 
 *Availability:* iOS (623), Android (2.25.15), Web Viewer (10/05/2015) Requires mflyCommands.js 1.9.0+
+
+#### Delete a Collection
+*mflyCommands.js:* mflyCommands.deleteCollection(_collection ID_, _shared_) <br>
+*URL:* mfly://data/deleteCollection/[collection ID]?shared=[true|false] <br>
+*Description:* Deletes the Collection. If Collection does not exist, response code is 404 with body { "message": "Collection not found." }.
+
+	Example:
+		mflyCommands.deleteCollection("collection2id", false);
+
+*Availability:* iOS (?), Android (?), Web Viewer (?) Requires mflyCommands.js ?.?.?+
+
+#### Reorder an item in a Collection
+*mflyCommands.js:* mflyCommands.reorderItemInCollection(_collection ID_, _item ID_, _position_) <br>
+*URL:* mfly://data/reorderItemInCollection/[collection ID]?id=[item ID]&position=[position] <br>
+*Description:* Changes the order of an item in the Collection. If Collection does not exist, response code is 404 with body { "message": "Collection not found." } is returned. If the Position parameter is not valid within the collection, response code 500 with body { "message": "Invalid position specified" } is returned.
+(Note: The position parameter is a zero-based numerical value that indicates the desired position of the item in the collection. For example:
+mfly://data/collections/[collection id]/reorderItemInCollection?id=1&position=0 would move the item to the top of the collection.)
+
+	Example:
+		mflyCommands.reorderItemInCollection("collection2id", "item4id", 2);
+
+*Availability:* iOS (?), Android (?), Web Viewer (?) Requires mflyCommands.js ?.?.?+
 
 
 ### Downloader
