@@ -666,7 +666,7 @@ Mediafly's apps provide real-time, native search as a core part of the functiona
 *Description:* Deletes the Collection. If Collection does not exist, response code is 404 with body { "message": "Collection not found." }.
 
 	Example:
-		mflyCommands.deleteCollection("collection2id", false);
+		GET mflyCommands.deleteCollection("collection2id", false);
 
 *Availability:* iOS (?), Android (?), Web Viewer (?) Requires mflyCommands.js ?.?.?+
 
@@ -678,10 +678,30 @@ Mediafly's apps provide real-time, native search as a core part of the functiona
 mfly://data/collections/[collection id]/reorderItemInCollection?id=1&position=0 would move the item to the top of the collection.)
 
 	Example:
-		mflyCommands.reorderItemInCollection("collection2id", "item4id", 2);
+		GET mflyCommands.reorderItemInCollection("collection2id", "item4id", 2);
 
 *Availability:* iOS (?), Android (?), Web Viewer (?) Requires mflyCommands.js ?.?.?+
 
+### Share Links
+An Interactive can get a share link for an item.
+*mflyCommands.js:* mflyCommands.getShare(_item ID_) <br>
+*URL:* mfly://data/share/[item ID] <br>
+*Description:* Returns an object that indicates whether the item is shareable or not. If the item is shareable, the share link is also provided.
+
+	Example:
+		GET mflyCommands.getShare("item4id");
+		Result:
+		{
+			"shareable": true,
+			"url": "https://assets.mediafly.com/shares/v?e=4hGCVQ2MYt7uO4%2fJbY67EC%2fcjC%2f1TZRiY2gKZV0HKdBON2%2fX8BL4qWJcNCAdwShBDf225NKtucVOuQ0OmMR4O4%2fZNe31JPtAI8OBBHV0kVk%3d"
+		}
+*Availability:* iOS (589), Android (2.24.04), Web Viewer (?)
+
+#### Show "Collections"
+*mflyCommands.js:* mflyCommands.showCollections(_x-coord, y-coord, width, height_) <br>
+*URL:* mfly://control/showCollections?x=[x-coord]&y=[y-coord]&w=[width]&h=[height] <br>
+*Description:* Shows the Collections dialog at x-coord, y-coord coordinates with specified width and height. Parameters x-coord, y-coord, width, and height are all optional, and only work with iOS.<br>
+*Availability:* iOS, Android (2.22.91)
 
 ### Downloader
 Mediafly's apps have been optimized for very advanced synchronization and download use cases. We offer a set of Interactives calls to obtain information about downloads and control the app.
