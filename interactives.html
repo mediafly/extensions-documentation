@@ -744,7 +744,7 @@ Example 2:
 <em>Description:</em> Deletes the Collection. If Collection does not exist, response code is 404 with body { "message": "Collection not found." }.</p>
 
 <pre><code>Example:
-    mflyCommands.deleteCollection("collection2id", false);
+    GET mflyCommands.deleteCollection("collection2id", false);
 </code></pre>
 
 <p><em>Availability:</em> iOS (?), Android (?), Web Viewer (?) Requires mflyCommands.js ?.?.?+</p>
@@ -758,10 +758,35 @@ Example 2:
 mfly://data/collections/[collection id]/reorderItemInCollection?id=1&amp;position=0 would move the item to the top of the collection.)</p>
 
 <pre><code>Example:
-    mflyCommands.reorderItemInCollection("collection2id", "item4id", 2);
+    GET mflyCommands.reorderItemInCollection("collection2id", "item4id", 2);
 </code></pre>
 
 <p><em>Availability:</em> iOS (?), Android (?), Web Viewer (?) Requires mflyCommands.js ?.?.?+</p>
+
+<h3>Share Links</h3>
+
+<p>An Interactive can get a share link for an item.
+<em>mflyCommands.js:</em> mflyCommands.getShare(<em>item ID</em>) <br>
+<em>URL:</em> mfly://data/share/[item ID] <br>
+<em>Description:</em> Returns an object that indicates whether the item is shareable or not. If the item is shareable, the share link is also provided.</p>
+
+<pre><code>Example:
+    GET mflyCommands.getShare("item4id");
+    Result:
+    {
+        "shareable": true,
+        "url": "https://assets.mediafly.com/shares/v?e=4hGCVQ2MYt7uO4%2fJbY67EC%2fcjC%2f1TZRiY2gKZV0HKdBON2%2fX8BL4qWJcNCAdwShBDf225NKtucVOuQ0OmMR4O4%2fZNe31JPtAI8OBBHV0kVk%3d"
+    }
+</code></pre>
+
+<p><em>Availability:</em> iOS (589), Android (2.24.04), Web Viewer (?)</p>
+
+<h4>Show "Collections"</h4>
+
+<p><em>mflyCommands.js:</em> mflyCommands.showCollections(<em>x-coord, y-coord, width, height</em>) <br>
+<em>URL:</em> mfly://control/showCollections?x=[x-coord]&amp;y=[y-coord]&amp;w=[width]&amp;h=[height] <br>
+<em>Description:</em> Shows the Collections dialog at x-coord, y-coord coordinates with specified width and height. Parameters x-coord, y-coord, width, and height are all optional, and only work with iOS.<br>
+<em>Availability:</em> iOS, Android (2.22.91)</p>
 
 <h3>Downloader</h3>
 
@@ -1256,7 +1281,9 @@ Response:
 
 <p>Interactives can save data to and retrieve data from the app with AJAX. This is useful for persisting data within or between Interactives. After saving, you can be sure that your data will be saved if the user restarts the app or device (and, soon, uninstalls/reinstalls the app). You can use any key you wish, which provides a lot of flexibility, but please consider providing a namespace within your keys. Otherwise, two Interactives may find ways to clobber each others’ keys.</p>
 
-<p>Key/value data is isolated by user, by app. So, two users cannot share keys, and two apps cannot share keys. Furthermore, currently all key/value data is stored on the device. So, uninstalling the app will remove all saved keys (though, there are plans to synchronize key/value data to servers).</p>
+<p>For iOS, Android and Windows 8, key/value data is isolated by user, by app. So, two users cannot share keys, and two apps cannot share keys. Furthermore, currently all key/value data is stored on the device. So, uninstalling the app will remove all saved keys (though, there are plans to synchronize key/value data to servers).</p>
+
+<p>For web interactives, key/value data is stored in Local Storage. There is no isolation provided at the moment for the data. It is advised that you prefix your keys if there is a chance that the key will be accessed from multiple environments or users. Once syncronizing of this data to servers is available, prefixing will no longer be necessary.</p>
 
 <h3>Save data</h3>
 
