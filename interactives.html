@@ -1549,6 +1549,21 @@ mflyCommands.deleteKey('abc')
 <em>Description:</em> Posts the page view to the Mediafly Reporting system. Item ID is the id of the item, as seen in Airship. Page number is the page that was displayed (starting at page 1).
 <em>Availability:</em> iOS (575). Requires mflyCommands.js 1.3.6+</p>
 
+<h3>Reporting</h3>
+
+<p>When building an interactive that implements its own navigation instead of relying on the, the interactive is responsible for notifying Mediafly's Reporting system.</p>
+
+<p>To inform our Reporting system of various actions:</p>
+
+<p><em>mflyCommands.js:</em> mflyCommands.postAction(options) <br>
+<em>URL:</em> mfly://data/actions?type=[action type]&amp;slug=[item id]&amp;term=[search term] <br>
+<em>Description:</em> Posts the action to the Mediafly Reporting system. Options object supplied contains:
+  - type (required): Type can one of the following: "collection", "document", "navigation" or "search"
+  - id (required when type is not "search"): Item ID is the id of the item, as seen in Airship
+  - term (required when type is "search"): search term used to perform a search</p>
+
+<p><em>Availability:</em> iOS (631), Android (v.2.25.81), Windows 8, Web Viewer. Requires mflyCommands.js 1.9.10+</p>
+
 <hr />
 
 <h2>Support widescreen on iOS</h2>

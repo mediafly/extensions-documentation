@@ -1382,7 +1382,20 @@ To inform our Reporting system of a page view, post a page view after the page h
 *Description:* Posts the page view to the Mediafly Reporting system. Item ID is the id of the item, as seen in Airship. Page number is the page that was displayed (starting at page 1).
 *Availability:* iOS (575). Requires mflyCommands.js 1.3.6+
 
+### Reporting
 
+When building an interactive that implements its own navigation instead of relying on the, the interactive is responsible for notifying Mediafly's Reporting system.
+
+To inform our Reporting system of various actions:
+
+*mflyCommands.js:* mflyCommands.postAction(options) <br>
+*URL:* mfly://data/actions?type=[action type]&slug=[item id]&term=[search term] <br>
+*Description:* Posts the action to the Mediafly Reporting system. Options object supplied contains:
+  - type (required): Type can one of the following: "collection", "document", "navigation" or "search"
+  - id (required when type is not "search"): Item ID is the id of the item, as seen in Airship
+  - term (required when type is "search"): search term used to perform a search
+
+*Availability:* iOS (631), Android (v.2.25.81), Windows 8, Web Viewer. Requires mflyCommands.js 1.9.10+
 
 
 -----
