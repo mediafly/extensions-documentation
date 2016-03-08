@@ -315,6 +315,8 @@ Note that not every parameter is available on every platform.
             "thumbnailUrl": "mfly://image/123",
             "launched": "true",
             “keywords”: [“keyword4”],
+			"bookmark": 45,
+			"length": 596,
 			"hierarchy": [
 			{
 				"id": "__root__",
@@ -371,6 +373,8 @@ Note that not every parameter is available on every platform.
             "thumbnailUrl": "mfly://image/123",
             "launched": "true",
             “keywords”: [“keyword4”],
+			"bookmark": 45,
+			"length": 596,
 			"hierarchy": [
 			{
 				"id": "__root__",
@@ -590,6 +594,8 @@ Mediafly's apps provide real-time, native search as a core part of the functiona
             "thumbnailUrl": "mfly://image/123",
             "launched": "true",
             “keywords”: [“keyword4”],
+			"bookmark": 45,
+			"length": 596,
 			"hierarchy": [
 	        {
 	            "id": "__root__",
@@ -610,6 +616,8 @@ Mediafly's apps provide real-time, native search as a core part of the functiona
             "received": "2012-12-19T16:45:14:00-06:00",
             "thumbnailUrl": "mfly://image/123",
             "launched": "false",
+			"bookmark": 4,
+			"length": 38
 			"hierarchy": [
 	        {
 	            "id": "__root__",
