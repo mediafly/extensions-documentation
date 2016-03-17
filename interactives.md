@@ -534,6 +534,15 @@ Mediafly's apps provide real-time, native search as a core part of the functiona
 *Availability:* iOS, Web Viewer
 
 
+### Get Recently Viewed Content
+You can use this call to get a list of content that was recently viewed by the user. This list is limited to the last 50 items viewed by the user.
+
+*mflyCommands.js:* mflyCommands.getLastViewedContent() <br>
+*Description:* Returns a JSON respresentation of the last 50 items viewed by the user. <br>
+*URL:* mfly://data/lastviewed <br>
+*Availability:* iOS, Web Viewer
+
+
 ### Collections
 	Collections allow users to create a "personal playlist" of items. Oftentimes this is used as a way to organize items for, say, an upcoming meeting with a customer. Collections are pointers to items, not copies of items; updating the original item in Airship will update the item in the Collection as well.
 
