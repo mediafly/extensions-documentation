@@ -602,6 +602,16 @@ Example 2:
 <em>Description:</em> Conduct a search for the given keyword. Return value is a JSON-array of folders and items, similar in format to a call to mfly://folder/[id].<br>
 <em>Availability:</em> iOS, Web Viewer</p>
 
+<h3>Get Recently Created Content</h3>
+
+<p>You can use this call to get a list of content that was recently created for the user.</p>
+
+<p><em>mflyCommands.js:</em> mflyCommands.getRecentlyCreatedContent() <br>
+<em>Description:</em> Returns a JSON respresentation of the recently created content. <br>
+<em>URL:</em> mfly://data/recentlycreated <br>
+<em>Availability:</em> iOS, Web Viewer <br>
+<em>Note:</em> This call is only available when the device is online</p>
+
 <h3>Get Recently Viewed Content</h3>
 
 <p>You can use this call to get a list of content that was recently viewed by the user. This list is limited to the last 50 items viewed by the user.</p>
@@ -609,7 +619,8 @@ Example 2:
 <p><em>mflyCommands.js:</em> mflyCommands.getLastViewedContent() <br>
 <em>Description:</em> Returns a JSON respresentation of the last 50 items viewed by the user. <br>
 <em>URL:</em> mfly://data/lastviewed <br>
-<em>Availability:</em> iOS, Web Viewer</p>
+<em>Availability:</em> iOS, Web Viewer <br>
+<em>Note:</em> This call is only available when the device is online</p>
 
 <h3>Collections</h3>
 

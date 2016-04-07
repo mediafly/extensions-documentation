@@ -534,13 +534,24 @@ Mediafly's apps provide real-time, native search as a core part of the functiona
 *Availability:* iOS, Web Viewer
 
 
+### Get Recently Created Content
+You can use this call to get a list of content that was recently created for the user.
+
+*mflyCommands.js:* mflyCommands.getRecentlyCreatedContent() <br>
+*Description:* Returns a JSON respresentation of the recently created content. <br>
+*URL:* mfly://data/recentlycreated <br>
+*Availability:* iOS, Web Viewer <br>
+*Note:* This call is only available when the device is online
+
+
 ### Get Recently Viewed Content
 You can use this call to get a list of content that was recently viewed by the user. This list is limited to the last 50 items viewed by the user.
 
 *mflyCommands.js:* mflyCommands.getLastViewedContent() <br>
 *Description:* Returns a JSON respresentation of the last 50 items viewed by the user. <br>
 *URL:* mfly://data/lastviewed <br>
-*Availability:* iOS, Web Viewer
+*Availability:* iOS, Web Viewer <br>
+*Note:* This call is only available when the device is online
 
 
 ### Collections
