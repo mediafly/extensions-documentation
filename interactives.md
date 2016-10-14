@@ -460,7 +460,10 @@ Note that not every parameter is available on every platform.
 *Description:* App will take a screenshot and populate the email with that screenshot. <br>
 *Availability:* iOS
 
-
+#### Open URL in a new Window
+*mflyCommands.js:* mflyCommands.openWindow(url) <br>
+*Description:* Web Viewer will use `window.open` call internally. The desktop app will open the URL in a new native window. <br>
+*Availability:* Web Viewer, Desktop
 
 ### Links (Open and Goto)
 
@@ -708,7 +711,17 @@ mfly://data/collections/[collection id]/reorderItemInCollection?id=1&position=0 
 	Example:
 		GET mflyCommands.reorderItemInCollection("collection2id", "item4id", 2);
 
-*Availability:* iOS (?), Android (?), Web Viewer (?) Requires mflyCommands.js ?.?.?+
+*Availability:* iOS, Android, Web Viewer
+
+#### Rename a Collection
+*mflyCommands.js:* mflyCommands.renameCollection(_collection ID_, _name_) <br>
+*URL:* mfly://data/renameCollection/[collection ID]?name=[name] <br>
+*Description:* Changes the name of the collection. If Collection does not exist, response code is 404 with body { "message": "Collection not found." } is returned. If the Position parameter is not valid within the collection, response code 500 with body { "message": "Invalid slug specified" } is returned.
+
+	Example:
+		GET mflyCommands.renameCollection("collection2id", "New Name");
+
+*Availability:* iOS, Android, Web Viewer
 
 ### Share Links
 An Interactive can get a share link for an item.
@@ -1179,13 +1192,14 @@ All dates are specified in ISO 8601 format.
 ----------
 
 
-## Saving and retrieving key/value data
+## Saving and retrieving locally persisted key/value data
 Interactives can save data to and retrieve data from the app with AJAX. This is useful for persisting data within or between Interactives. After saving, you can be sure that your data will be saved if the user restarts the app or device (and, soon, uninstalls/reinstalls the app). You can use any key you wish, which provides a lot of flexibility, but please consider providing a namespace within your keys. Otherwise, two Interactives may find ways to clobber each others’ keys.
 
-For iOS, Android and Windows 8, key/value data is isolated by user, by app. So, two users cannot share keys, and two apps cannot share keys. Furthermore, currently all key/value data is stored on the device. So, uninstalling the app will remove all saved keys (though, there are plans to synchronize key/value data to servers).
+For iOS, Android and Windows 8, key/value data is isolated by user, by app. So, two users cannot share keys, and two apps cannot share keys. Furthermore, currently all key/value data is stored on the device. So, uninstalling the app will remove all saved keys.
 
-For web interactives, key/value data is stored in Local Storage. There is no isolation provided at the moment for the data. It is advised that you prefix your keys if there is a chance that the key will be accessed from multiple environments or users. Once syncronizing of this data to servers is available, prefixing will no longer be necessary.
+For web Interactives, key/value data is stored in Local Storage. There is no isolation provided at the moment for the data. It is advised that you prefix your keys if there is a chance that the key will be accessed from multiple environments or users. Once syncronizing of this data to servers is available, prefixing will no longer be necessary.
 
+If your Interactive needs to persist data on the server, please see the section `Saving and retrieving synchronized key/value data` below.
 
 ### Save data
 To save data to the app container, call mflyCommands.putValue(_key, value_), where _key_ is the key you wish to save, and _value_ is the value for that key.
@@ -1337,6 +1351,152 @@ To delete a key/value pair by key from the app container, use mflyCommands.delet
 	// Assume key 'abc' has been set to value '123'.
 
     mflyCommands.deleteKey('abc')
+        .done(function(data, status) {
+            // Success! Do something.
+            console.log('abc has been deleted');
+        })
+        .fail(function(deferred, status) {
+            // Error! Do something.
+        });
+
+    // Console output: 'abc has been deleted'
+
+*Availability:* iOS (617+), Android (2.24.21), Windows 8 (soon), web viewer (8/20/2015). Requires mflyCommands.js 1.8.0+
+
+
+----------
+
+## Saving and retrieving synchronized key/value data
+Synchronized key/value storage allows Interactives to persist key/value pairs that are saved on Mediafly servers in addition to being stored on devices. This is useful for persisting data within or between Interactives, and between devices. After saving, you can be sure that your data will be saved if the user restarts the app or device, and, uninstalls/reinstalls the app. You can use any key you wish, which provides a lot of flexibility, but please consider providing a namespace within your keys. Otherwise, two Interactives may find ways to clobber each others’ keys.
+
+Key/value data is isolated by user, by app. So, two users cannot share keys, and two apps cannot share keys. Furthermore, all key/value data is stored on the device as well as the server. So, uninstalling and reinstalling the app will still restore all data from the server to the device..
+
+### Save data
+To save data to the app container, call mflyCommands.putSyncedValue(_key, value_), where _key_ is the key you wish to save, and _value_ is the value for that key.
+
+*Example:*<br>
+This example saves key/value data, using mflyCommands.js.
+
+	var key = $('#key').val();
+	var value = { name: ‘abc’, value: ‘def’ };
+
+    mflyCommands.putSyncedValue(key, value)
+        .done(function(data, status) {
+            // Success! Do something.
+        })
+        .fail(function(deferred, status) {
+            // Error! Do something.
+        });
+
+HTTP response codes:
+
+* Response of 200 OK indicates a successful save to an existing key
+* Response of 201 Created indicates a successful save to a new key
+* Response of 400 Bad Request is returned if the value has not been previously saved
+
+*Availability:* iOS, Android, Windows 8, Web Viewer
+
+### Retrieve synchronized data
+
+You can retrieve value information from keys in multiple ways using mflyCommands.js.
+
+Alternatively, you can make the calls directly with AJAX, but we strongly recommend using mflyCommands instead. When making calls directly,
+
+* Response of 200 OK indicates a successful get of an existing key. The body of the response will contain the values indicated below.
+* Response of 404 Not Found indicates that the key does not exist
+
+
+#### Single key ####
+
+To get data for a specific key from the app container, use mflyCommands.getSyncedValue(_key_).
+
+*Example:*
+
+	// Assume key 'abc' has been set to value '123'.
+
+    mflyCommands.getSyncedValue('abc')
+        .done(function(data, status) {
+            // Success! Do something.
+            console.log(data);
+        })
+        .fail(function(deferred, status) {
+            // Error! Do something.
+        });
+
+    // Console output: 123
+
+On successful retrieval, data will contain the value of the key.
+
+
+#### All keys ####
+
+To get data for all keys from the app container, use mflyCommands.getSyncedValues().
+
+*Example:*
+
+	// Assume key 'abc' has been set to value '123', and key 'def' has been set to value '456'.
+
+    mflyCommands.getSyncedValues()
+        .done(function(data, status) {
+            // Success! Do something.
+            console.log(data);
+        })
+        .fail(function(deferred, status) {
+            // Error! Do something.
+        });
+
+    // Console output: { "abc": "123", "def": "456" }
+
+
+On successful retrieval, body will contain a JSON object enumerating all keys and values, as shown above.
+
+
+#### Key prefix ####
+
+To get data for all keys that begin with X, use mflyCommands.getSyncedValues(_prefix_). On successful retrieval, data will contain a JSON object enumerating all keys and values where the keys begin with X.
+
+*Example:*
+
+	// Assume:
+	//   key 'snow' has been set to value 'white',
+	//   key 'snowball' has been set to value 'round',
+	//   key 'fire' has been set to value 'red'
+
+    mflyCommands.getSyncedValues('snow')
+        .done(function(data, status) {
+            // Success! Do something.
+            console.log(data);
+        })
+        .fail(function(deferred, status) {
+            // Error! Do something.
+        });
+
+    // Console output: { "snow": "white", "snowball": "round" }
+
+    mflyCommands.getSyncedValues('abc')
+        .done(function(data, status) {
+            // Success! Do something.
+            console.log(data);
+        })
+        .fail(function(deferred, status) {
+            // Error! Do something.
+        });
+
+    // Console output: {}
+
+
+*Availability:* iOS, Android, Windows 8, Web Viewer
+
+
+### Delete data
+
+To delete a key/value pair by key from the app container, use mflyCommands.deleteSyncedKey(_key_).
+
+*Example:*
+
+	// Assume key 'abc' has been set to value '123'.
+
+    mflyCommands.deleteSyncedKey('abc')
         .done(function(data, status) {
             // Success! Do something.
             console.log('abc has been deleted');
