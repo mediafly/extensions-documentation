@@ -14,9 +14,10 @@ Interactives are all the components that make up a static website:
 * HTML files
 * JavaScript
 * CSS
+* Fonts
 * Images
 
-All of these files are zipped up in a specific way and uploaded to Mediafly Airship.
+All of these files are packaged up in a specific way and uploaded to Mediafly Airship. These packages have the extension of `.interactive`. Note: Packaging Interactives with the `.zip` is now obsolete and Viewer no longer supports this file extension for Interactives.
 
 When the user opens the Interactive, the app loads and renders the Interactive much like it would a traditional web page.
 ![image](http://devdocs.mediafly.com/interactives/images/Interactives%20Overview.png)
@@ -40,24 +41,15 @@ To ensure that the apps work consistently and correctly, the Interactive builder
 
 ## Communication between the App and Interactive ##
 
-Interactives are full-screen, engaging documents. They allow for deep customization of the entire look and feel of the application. Because the apps make use of the entire screen, Mediafly’s apps need to be told how to render control bars and when to close.  The typical approach to this is:
+Interactives are single page applications. They allow for deep customization of the entire look and feel of the application. Because Interactives make use of the entire screen, Mediafly’s apps need to be told when to close the Interactive as well as when to show other content.  The typical approach to this is:
 
 1. The Interactive will provide a Menu or X button in the app.
-	![Interactive showing Menu button](http://devdocs.mediafly.com/interactives/images/Interactives showing Menu button.png)
+2. When the user taps/clicks on the Menu button, notify the app to close the Interactive
+3. The app will close the Interactive and navigate to other content where the user can resume their workflow.
 
-2. When the user taps/clicks on the Menu button, the app toggles the app’s control bars.  The control bars are a part of the app.
-	![Interactive showing control bars](http://devdocs.mediafly.com/interactives/images/Interactives showing control bar.png)
+Interactives can link to other items within the hierarchy.  For example, if a user has access to one Interactive and three other items (video, audio, documents, presentations, even other Interactives), the Interactive can link directly to those items. 
 
-3. When the user taps/clicks on the X button, the app closes the item.
-
-Interactives can link to other items within the hierarchy.  For example, if a user has access to one Interactive and three other items (video, audio, documents, presentations, even other Interactives), the Interactive can link directly to those items.  This is useful for
-
-* Providing a seamless transition between Interactives and other rich media such as video
-* Delegating Interactive creation to multiple people. In this case, one creator may work on the wrapper while another works on a sub-page or presentation.
-
-	![Interactives can link to other items](http://devdocs.mediafly.com/interactives/images/Interactives link to video.png)
-
-Interactives can invoke Search and Collections as well.
+Interactives can invoke capabilities provided by the app such as Search and Collections as well.
 
 
 ----------
@@ -65,87 +57,16 @@ Interactives can invoke Search and Collections as well.
 Building Interactives
 =====================
 
-## Developing on the web
-Developing Interactives can be painful when you need to start integrating the mfly API, as each change requires you push to Airship and test on device. Mediafly built and maintains mflyTestRunner.js, a JavaScript file that emulates portions of what the device applications do. Specifically:
+## Developing and testing an Interactive
+Mediafly provides a CLI (command line interface) utility called `mfly-interactive` to make it easier to test and develop an Interactive. `mfly-interactive` allows an Interactive developer to:
 
-* It simulates the calls that the apps make to initialize the Interactive
-* It can feed test hierarchy in via mflyInit, much like the app would
-* It can be configured with different options, all laid out within the first dozen lines of the file
+1. Rapidly develop Interactives by live-reloading changes from the developer's machine.
+2. Generate the `.interactive` package from static files.
+3. Upload the Interactive into Airship.
 
-You can find mflyTestRunner.js within the [Mediafly Interactives Tools and Examples](https://bitbucket.org/mediafly/mediafly-interactives-tools-and-examples) public repository.
+For more detailed instructions, refer to https://github.com/mediafly/mfly-interactive.
 
-To use:
-
-* Include mflyTestRunner.js script, AFTER mflyCommands.js (if you are also using that):
-
-		<script src="js/mflyTestRunner.js"></script>
-
-* Change the file to test various features. We suggest you adjust, at least, mflyDataInit and mflyInit to pass in your startup information and hierarchy.
-* Run a basic web server from within the root folder of your Interactive. If you have Python, SimpleHTTPServer is a good option:
-
-		python -m SimpleHTTPServer
-
-* Remove the ```<script>``` link to the file in production. Note: if you use the [Interactives Publisher](https://bitbucket.org/mediafly/mediafly-interactivespublisher), this will be taken care of automatically for you.
-
-
-## Packaging and Deploying ##
-
-There are three methods to package and deploy Interactives. From easiest+least efficient to "hardest"/most efficient:
-
-
-<a name="packaging_interactives_1"></a>
-### 1. Windows Explorer/Finder
-
-A. Zip the contents of the containing folder, not the folder itself. For example:
-
-![Do not zip from here](http://devdocs.mediafly.com/interactives/images/packaging/1. Do not zip from here.png) Do not zip from here...
-
-![Zip from here](http://devdocs.mediafly.com/interactives/images/packaging/2. Zip from here.png) ... Zip from here
-
-B. Upload the zip file you created into the Airship content management system:
-
-![image](http://devdocs.mediafly.com/interactives/images/packaging/3. Drag into Airship.png)
-
-C. (Or, if you are replacing an existing existing item, upload it into the Media panel)
-
-![Replace media from the Media panel](http://devdocs.mediafly.com/interactives/images/packaging/3b. Replace item from Media panel.png)
-
-D. Set your Interactive's item permissions
-
-![image](http://devdocs.mediafly.com/interactives/images/packaging/4. Set permissions.png)
-
-E. Load it up on the device (iOS, Android, Windows 8, etc.) and test
-
-
-
-<a name="packaging_interactives_2"></a>
-### 2. Shell command
-
-This method is a slight improvement to [#1](#packaging_interactives_1) above, and is good if you are using a Mac or Linux
-system and are familiar with using Terminal / Shell.
-
-A. Open a Terminal window/Shell into the root of your Interactive
-B. Run the following command:
-
-        rm file.zip; zip -9 -r file.zip . -x *.png *.gif *.jpg; zip -0 -r file.zip . -i *.png *.gif *.jpg
-
-C. Follow steps B through E from [#1](#packaging_interactives_1) above.
-
-
-<a name="packaging_interactives_3"></a>
-### 3. Mediafly Interactives Publisher
-
-If you plan to perform significant development on an Interactive, and are running on a shell that
-supports Python, this is the path for you.
-
-Use the [Mediafly Interactives Publisher](https://bitbucket.org/mediafly/mediafly-interactivespublisher), a command-line, python-based script that will very quickly:
-
-* Allow you to preconfigure needed variables to quickly publish revisions to your Interactive via a JSON document and environment variables
-* Optimally package the Interactive for you
-* Push the package up into the Airship content management system **very quickly**
-
-To learn more, read the [publish.py comments](https://bitbucket.org/mediafly/mediafly-interactivespublisher/src/tip/publish.py?at=default).
-
+Note: You will need the [Node.js](https://nodejs.org/en/download/) runtime (v5 or higher) to use `mfly-interactive`. `mfly-interactive` is currently only supported on Viewer and iOS.
 
 ## Testing on device
 
@@ -161,24 +82,6 @@ Please read the [installation](http://people.apache.org/~pmuellr/weinre-docs/lat
 4. Point your PC/Mac browser to the debug client (e.g. http://10.0.0.111:8080)
 
 You now have access to a relatively full featured web development tool for your Interactives!
-
-#### Let's see it in action
-We completed steps 1 and 2, and instrumented one of our apps, Kitchen Sink, with the ```<script>``` tag from 3. We open the Interactive, and see that it looks the same as without the ```<script>``` tag:
-
-![Kitchen Sink on the device. Looks the same as without the new tag.](http://devdocs.mediafly.com/interactives/images/weinre/1. Kitchen Sink.png)
-
-We now point our PC/Mac browser to http://10.0.0.111:8080/client, and click on the "debug client user interface: http://10.0.0.111:8080/client/#anonymous" link. We see a window that looks like this:
-
-![Weinre debug client home](http://devdocs.mediafly.com/interactives/images/weinre/2. Debug Client Home.png)
-
-We can tap on other tabs and see the tools familiar to web developers building and testing with major browsers. E.g. here is a view from the Elements tab.
-
-![Weinre debug client Elements](http://devdocs.mediafly.com/interactives/images/weinre/3. Debug Client Elements.png)
-
-The Elements, Resources, Network, Timeline, and Console tabs all perform as you would expect from their Chrome/Firefox/IE counterparts.
-
-We've tested across all of our device platforms (iOS, Android, Windows 8), and each performs well.
-
 
 ----------
 
@@ -217,15 +120,14 @@ This section describes all of the APIs available to Interactives developers. For
 
 *Keeping mflyCommands up-to-date:* mflyCommands.js is available on the [bower package manager](http://bower.io/). This is the recommended way of consuming it as a dependency in your interactive. The bower package can be found here: [http://bower.io/search/?q=mfly-commands](http://bower.io/search/?q=mfly-commands)
 
-## Controlling the app
-Controlling the app is done by opening a window to a special URL through JavaScript. The container app will handle this as an instruction to handle.  The list of available URLs, and their appropriate actions, are listed below.
+## Communicating with the app
+Communicating the app is done by calling functions on mflyCommands. The list of available functions, and their appropriate actions, are listed below.
 
-***PLEASE NOTE***: Every Interactive must allow the user to either close the item or show the control bars. Else, the user will be stuck within the Interactive, with no way to exit.
+***PLEASE NOTE***: Every Interactive must allow the user to close the item. Else, the user will be stuck within the Interactive, with no way to exit.
 
 ### Getting baseline information
 *mflyCommands.js:* mflyCommands.getInteractiveInfo() <br>
-*URL:* mfly://data/interactive <br>
-*Description:* Obtains baseline information about this Interactive. Interactives can call this function and receive a JSON Object of initial configuration.  E.g. on iOS, the object params may look like this:
+*Description:* Obtains baseline information about this Interactive. Interactives can call this function and receive an object of initial configuration. Response example:
 
 		{
 		  	"user": "jshah@mediafly.com",
@@ -253,56 +155,46 @@ Controlling the app is done by opening a window to a special URL through JavaScr
 
 Note that not every parameter is available on every platform.
 
-*Availability:* mflyCommands.js (1.4.4), iOS (588), Android (2.23.05), Windows 8 (soon), Web Viewer (1-Apr-2015)
-
+*Availability:* iOS, Android, Web Viewer, Win/Mac
 
 ### Basic controls
 
 #### Close the item
 *mflyCommands.js:* mflyCommands.close() <br>
-*URL:* mfly://control/done <br>
 *Description:* Closes the item and returns the user to where they were before. <br>
-*Availability:* iOS, Android, Windows 8, Web Viewer
+*Availability:* iOS, Android, Web Viewer, Win/Mac
 
 #### Show control bars
 *mflyCommands.js:* mflyCommands.showControlBars() <br>
-*URL:* mfly://control/showControlBars <br>
 *Description:* Shows the control bars. <br>
 *Availability:* iOS, Android
 
-
 #### Hide control bars
 *mflyCommands.js:* mflyCommands.hideControlBars() <br>
-*URL:* mfly://control/hideControlBars <br>
 *Description:* Hides the control bars. <br>
 *Availability:* iOS, Android
 
-#### Browse
+#### Browse (*deprecated*)
 *mflyCommands.js:* mflyCommands.browse() <br>
-*URL:* mfly://control/browse <br>
 *Description:* Multiple Interactives can layer on top of each other, to represent different layers of hierarchy. The developer may wish to allow the user to navigate the hierarchy using the core Mediafly app with the default grid/list view, e.g. if a “More” or “Browse” button is presented.  This URL closes all Interactives in the stack and takes the user to that hierarchy in the core app if called. <br>
 *Availability:* iOS
 
 #### Next
 *mflyCommands.js:* mflyCommands.next() <br>
-*URL:* mfly://control/next <br>
 *Description:* Opens the next Item in the Folder or Collection <br>
-*Availability:* iOS, Android, Windows 8
+*Availability:* iOS, Android, Web Viewer, Win/Mac
 
 #### Previous
 *mflyCommands.js:* mflyCommands.previous() <br>
-*URL:* mfly://control/previous <br>
 *Description:* Opens the previous Item in the Folder or Collection <br>
-*Availability:* iOS, Android, Windows 8
+*Availability:* iOS, Android, Web Viewer, Win/Mac
 
 #### Get information about a folder or item
 *mflyCommands.js:* mflyCommands.getItem(_id_) <br>
-*URL:* mfly://data/item/[id] <br>
 *Description:* Return a JSON representation of a folder or item. To get the contents of the folder, rely on the mflyCommands.getFolder(_id_) <br>
 *Examples:*
 
 	Example 1:
-		GET mfly://data/item/slug1
 		Result:
         {
             "id": "slug1",
@@ -350,16 +242,14 @@ Note that not every parameter is available on every platform.
 				"name": "Root folder"
 			}]
         }
-*Availability:* iOS, Android, Windows 8, Web Viewer
+*Availability:* iOS, Android, Web Viewer, Win/Mac
 
 
 #### Get contents of a folder
 *mflyCommands.js:* mflyCommands.getFolder(_id_) <br>
-*URL:* mfly://data/folder/[id] <br>
 *Description:* Return a JSON representation of the _contents_ of a folder. To get the contents of the top-level folder, use id of \__root__.
 
 	Example:
-		GET mfly://data/folder/slug2
 		Result:
 		[
           {
@@ -408,62 +298,54 @@ Note that not every parameter is available on every platform.
           }
         ]
 
-*Availability:* iOS, Android, Windows 8, Web Viewer
-
+*Availability:* iOS, Android, Web Viewer, Win/Mac
 
 ### App features
 
 #### Show Settings
 *mflyCommands.js:* mflyCommands.showSettings(_x-coord, y-coord, width, height_) <br>
-*URL:* mfly://control/showSettings?x=[x-coord]&y=[y-coord]&w=[width]&h=[height] <br>
 *Description:* Shows the settings dialog at x-coord, y-coord coordinates with the specified width and height. <br>
 *Availability:* iOS, Android
 
 
 #### Show User Management Dialog
 *mflyCommands.js:* mflyCommands.showUserManagement(_x-coord, y-coord, width, height_) <br>
-*URL:* mfly://control/showUserManagement&x=[x-coord]&y=[y-coord]&w=[width]&h=[height] <br>
 *Description:* Shows the User Management dialog, which allows the user to login or manage users. Parameters x-coord, y-coord, width, and height are all optional, and only work with iOS.<br>
 *Availability:* iOS, Android
 
 
 #### Show Second Screen Options dialog
 *mflyCommands.js:* mflyCommands.showSecondScreenOptions() <br>
-*URL:* mfly://control/secondScreenOptions <br>
 *Description:* Shows the Second Screen Options dialog. <br>
 *Availability:* iOS
 
 
 #### Email
 *mflyCommands.js:* mflyCommands.email(_id_) <br>
-*URL:* mfly://control/email/[id] <br>
 *Description:* If the item can be emailed, invoke email from within the app. <br>
 *Availability:* iOS, Android
 
 
 #### Refresh the contents of the app
 *mflyCommands.js:* mflyCommands.refresh() <br>
-*URL:* mfly://control/refresh <br>
 *Description:* Trigger the app to refresh its content. If items have changed, this should trigger mflySync calls appropriately. <br>
 *Availability:* iOS, Android
 
 #### Show Annotations
 *mflyCommands.js:* mflyCommands.showAnnotations() <br>
-*URL:* mfly://control/showAnnotations <br>
 *Description:* If annotations are enabled, show the annotations control bar. <br>
 *Availability:* iOS
 
 
 #### Take and email Screenshot
 *mflyCommands.js:* mflyCommands.takeAndEmailScreenshot() <br>
-*URL:* mfly://control/takeAndEmailScreenshot <br>
 *Description:* App will take a screenshot and populate the email with that screenshot. <br>
 *Availability:* iOS
 
 #### Open URL in a new Window
 *mflyCommands.js:* mflyCommands.openWindow(url) <br>
-*Description:* Web Viewer will use `window.open` call internally. The desktop app will open the URL in a new native window. <br>
-*Availability:* Web Viewer, Desktop
+*Description:* Web Viewer will use open the URL in a new browser tab. Win/Mac app will open the URL in a new native window. <br>
+*Availability:* Web Viewer, Win/Mac. Requires mflyCommands.js 1.13.0+.
 
 ### Links (Open and Goto)
 
@@ -473,22 +355,18 @@ To create either link, simply create a typical `<a href>` link with the source p
 
 #### Open an item
 *mflyCommands.js:* mflyCommands.openItem(_id_) <br>
-*URL:* mfly://item/[id] <br>
 *Description:* Opens the specified item, where [id] is the ID of the item.  As described above, the historical navigational stack is maintained, and the user can return to it. The ID for an item can be found in Airship. Expand the item, and the ID is displayed at the bottom. <br>
-*Availability:* iOS, Android, Windows 8, Web Viewer
+*Availability:* iOS, Android, Web Viewer, Win/Mac
 
 #### Open a folder
 *mflyCommands.js:* mflyCommands.openFolder(_id_) <br>
-*URL:* mfly://folder/[id] <br>
 *Description:* Opens the specified folder, where [id] is the ID of the folder.  As described above, the historical navigational stack is maintained, and the user can return to it. The ID for a folder can be found in Airship. Expand the item, and the ID is displayed at the bottom. <br>
-*Availability:* iOS, Android, Windows 8, Web Viewer
+*Availability:* iOS, Android, Web Viewer, Win/Mac
 
-#### Goto an item or a folder
+#### Goto an item or a folder (*deprecated*)
 *mflyCommands.js:* mflyCommands.goto(_id_) <br>
-*URL:* mfly://control/goto/[id] <br>
 *Description:* Gotos the specified item or folder, where [id] is the ID of the item or folder.  As described above, when the app goes to another item or folder, the navigational stack behind the destination is thrown away, and the user is given the same navigational capabilities as if they opened the destination item directly. The ID for a folder can be found in Airship. Expand the item, and the ID is displayed at the bottom. <br>
 *Availability:* iOS, Android
-
 
 ### Filter
 We often find that developers need to identify folders and items that match a specific set of metadata. Often they want to use custom metadata fields as a way to drive hierarchy and categorization, and not rely on the actual hierarchy for that purpose. It makes sense in some use cases, because the people who will be managing content are often different from how the Interactive should be rendered.
@@ -496,7 +374,6 @@ We often find that developers need to identify folders and items that match a sp
 To support this, use Filter. Filter accepts up to three key=value pairs as JSON parameters, and returns a constrained list of folders and items that match ALL of the key=value pairs provided. The return value is a JSON Array of JSON Objects that match the various folders and items with the specified filter conditions, or an empty JSON Array if none match.
 
 *mflyCommands.js:* mflyCommands.filter(_obj_) <br>
-*URL:* mfly://data/filter?[key1=value1][&keyN=valueN]<br>
 Examples:
 
 	Example 1:
@@ -514,27 +391,23 @@ Examples:
 			// []
 		});
 
-*Availability:* iOS (590), Android (soon), Windows 8 (2.0.0.52), Web Viewer (15-Apr-2015). Requires mflyCommands.js 1.4.5+
-
-
+*Availability:* iOS, Android, Web Viewer, Win/Mac
 
 ### Search
 Mediafly's apps provide real-time, native search as a core part of the functionality. There are two ways to work with Search:
 
 1. Use the native app's core Search UI. In this case, you simply need to open the Search dialog and let the user use that dialog. See "Show Search dialog" below.
-2. Implement your own UI. In this case, you use mflyCommands.search() or mfly:// calls to get search results given terms, and then render the UI as you wish. See "Search by keyword" below.
+2. Implement your own UI. In this case, you use the mflyCommands.search() call to get search results given terms, and then render the UI as you wish. See "Search by keyword" below.
 
-#### Show Search dialog
+#### Show Search dialog (*deprecated*)
 *mflyCommands.js:* mflyCommands.showSearch(_x-coord, y-coord, width, height_) <br>
 *Description:* Shows the search dialog at x-coord, y-coord coordinates with the specified width and height. Parameters x-coord, y-coord, width, and height are all optional, and only work with iOS. <br>
-*URL:* mfly://control/showSearch?x=[x-coord]&y=[y-coord]&w=[width]&h=[height]<br>
 *Availability:* iOS
 
 #### Search by keyword
 *mflyCommands.js:* mflyCommands.search(_term_) <br>
-*URL:* mfly://data/search?term=[term]<br>
-*Description:* Conduct a search for the given keyword. Return value is a JSON-array of folders and items, similar in format to a call to mfly://folder/[id].<br>
-*Availability:* iOS, Web Viewer
+*Description:* Conduct a search for the given keyword. Return value is a JSON-array of folders and items.<br>
+*Availability:* iOS, Android, Web Viewer, Win/Mac
 
 
 ### Get Recently Created Content
@@ -542,8 +415,7 @@ You can use this call to get a list of content that was recently created for the
 
 *mflyCommands.js:* mflyCommands.getRecentlyCreatedContent() <br>
 *Description:* Returns a JSON respresentation of the recently created content. <br>
-*URL:* mfly://data/recentlycreated <br>
-*Availability:* iOS, Web Viewer <br>
+*Availability:* iOS, Android, Web Viewer, Win/Mac <br>
 *Note:* This call is only available when the device is online
 
 
@@ -552,8 +424,7 @@ You can use this call to get a list of content that was recently viewed by the u
 
 *mflyCommands.js:* mflyCommands.getLastViewedContent() <br>
 *Description:* Returns a JSON respresentation of the last 50 items viewed by the user. <br>
-*URL:* mfly://data/lastviewed <br>
-*Availability:* iOS, Web Viewer <br>
+*Availability:* iOS, Android, Web Viewer, Win/Mac <br>
 *Note:* This call is only available when the device is online
 
 
@@ -561,27 +432,23 @@ You can use this call to get a list of content that was recently viewed by the u
 	Collections allow users to create a "personal playlist" of items. Oftentimes this is used as a way to organize items for, say, an upcoming meeting with a customer. Collections are pointers to items, not copies of items; updating the original item in Airship will update the item in the Collection as well.
 
 
-#### Show "Collections"
+#### Show "Collections" (*deprecated*)
 *mflyCommands.js:* mflyCommands.showCollections(_x-coord, y-coord, width, height_) <br>
-*URL:* mfly://control/showCollections?x=[x-coord]&y=[y-coord]&w=[width]&h=[height] <br>
 *Description:* Shows the Collections dialog at x-coord, y-coord coordinates with specified width and height. Parameters x-coord, y-coord, width, and height are all optional, and only work with iOS.<br>
-*Availability:* iOS, Android (2.22.91)
+*Availability:* iOS, Android
 
 
-#### Show "Add to Collection"
+#### Show "Add to Collection" (*deprecated*)
 *mflyCommands.js:* mflyCommands.showAddToCollection(itemId, _x-coord, y-coord, width, height_) <br>
-*URL:* mfly://control/showAddToCollection?id=[itemId]&x=[x-coord]&y=[y-coord]&w=[width]&h=[height] <br>
 *Description:* Shows the Add To Collections dialog at x-coord, y-coord coordinates with specified width and height for the specified item. Parameters x-coord, y-coord, width, and height are all optional, and only work with iOS. <br>
 *Availability:* iOS
 
 
 #### Get the list of Collections
 *mflyCommands.js:* mflyCommands.getCollections() <br>
-*URL:* mfly://data/collections <br>
 *Description:* Return a JSON representation of the list of Collections
 
 	Example:
-		GET mfly://data/collections
 		Result:
 		[
           {
@@ -594,12 +461,11 @@ You can use this call to get a list of content that was recently viewed by the u
           }
         ]
 
-*Availability:* iOS (483), Android (2.22.91), Web Viewer (05-Oct-2015). Requires mflyCommands.js 1.2+
+*Availability:* iOS, Android, Web Viewer, Win/Mac
 
 
 #### Get the contents of a Collection
 *mflyCommands.js:* mflyCommands.getCollection(_collection ID_) <br>
-*URL:* mfly://data/collection/[collection ID] <br>
 *Description:* Return a JSON representation of the contents of a collection, in a similar format to Get Folder.
 
 	Example:
@@ -653,11 +519,10 @@ You can use this call to get a list of content that was recently viewed by the u
           }
         ]
 
-*Availability:* iOS (483), Android (2.22.91), Web Viewer (05-Oct-2015). Requires mflyCommands.js 1.2+
+*Availability:* iOS, Android, Web Viewer, Win/Mac
 
 #### Create a Collection
 *mflyCommands.js:* mflyCommands.createCollection(_collection name_) <br>
-*URL:* mfly://data/createCollection?name=[name] <br>
 *Description:* Creates the collection, and returns a success or failure error code.
 
 	Example:
@@ -668,65 +533,58 @@ You can use this call to get a list of content that was recently viewed by the u
 			"name": "Collection 2"
 		}
 
-*Availability:* iOS (570), Android (2.22.91), Web Viewer (05-Oct-2015). Requires mflyCommands.js 1.3.5+
+*Availability:* iOS, Android, Web Viewer, Win/Mac
 
 
 #### Add item to a Collection
 *mflyCommands.js:* mflyCommands.addItemToCollection(_collection ID_, _item ID_) <br>
-*URL:* mfly://data/addItemToCollection?id=[collection ID]&item=[item ID] <br>
 *Description:* Adds the item to the Collection. If Collection exists and it can be created, response code is 200. If Collection does not exist, response code is 404 with body { "message": "Collection not found." }. If item does not exist, response code is 404 with body "Item not found."
 
 	Example:
 		mflyCommands.addItemToCollection("collection2id", "item4id");
 
-*Availability:* iOS (570), Android (2.22.91), Web Viewer (05-Oct-2015). Requires mflyCommands.js 1.3.5+
+*Availability:* iOS, Android, Web Viewer, Win/Mac
 
 #### Remove item from a Collection
 *mflyCommands.js:* mflyCommands.removeItemFromCollection(_collection ID_, _item ID_) <br>
-*URL:* mfly://data/removeItemFromCollection?id=[collection ID]&item=[item ID] <br>
 *Description:* Removes the item from the Collection. If Collection does not exist, response code is 404 with body { "message": "Collection not found." }. If item does not exist, response code is 404 with body "Item not found."
 
 	Example:
 		mflyCommands.removeItemFromCollection("collection2id", "item4id");
 
-*Availability:* iOS (623), Android (2.25.15), Web Viewer (10/05/2015) Requires mflyCommands.js 1.9.0+
+*Availability:*  iOS, Android, Web Viewer, Win/Mac
 
 #### Delete a Collection
 *mflyCommands.js:* mflyCommands.deleteCollection(_collection ID_, _shared_) <br>
-*URL:* mfly://data/deleteCollection/[collection ID]?shared=[true|false] <br>
 *Description:* Deletes the Collection. If Collection does not exist, response code is 404 with body { "message": "Collection not found." }.
 
 	Example:
 		GET mflyCommands.deleteCollection("collection2id", false);
 
-*Availability:* iOS (?), Android (?), Web Viewer (?) Requires mflyCommands.js ?.?.?+
+*Availability:*  iOS, Android, Web Viewer, Win/Mac
 
 #### Reorder an item in a Collection
 *mflyCommands.js:* mflyCommands.reorderItemInCollection(_collection ID_, _item ID_, _position_) <br>
-*URL:* mfly://data/reorderItemInCollection/[collection ID]?id=[item ID]&position=[position] <br>
 *Description:* Changes the order of an item in the Collection. If Collection does not exist, response code is 404 with body { "message": "Collection not found." } is returned. If the Position parameter is not valid within the collection, response code 500 with body { "message": "Invalid position specified" } is returned.
-(Note: The position parameter is a zero-based numerical value that indicates the desired position of the item in the collection. For example:
-mfly://data/collections/[collection id]/reorderItemInCollection?id=1&position=0 would move the item to the top of the collection.)
+(Note: The position parameter is a zero-based numerical value that indicates the desired position of the item in the collection. 
 
 	Example:
-		GET mflyCommands.reorderItemInCollection("collection2id", "item4id", 2);
+		GET mflyCommands.reorderItemInCollection("collection2id", "item4id", 0);
 
-*Availability:* iOS, Android, Web Viewer
+*Availability:*  iOS, Android, Web Viewer, Win/Mac
 
 #### Rename a Collection
 *mflyCommands.js:* mflyCommands.renameCollection(_collection ID_, _name_) <br>
-*URL:* mfly://data/renameCollection/[collection ID]?name=[name] <br>
 *Description:* Changes the name of the collection. If Collection does not exist, response code is 404 with body { "message": "Collection not found." } is returned. If the Position parameter is not valid within the collection, response code 500 with body { "message": "Invalid slug specified" } is returned.
 
 	Example:
 		GET mflyCommands.renameCollection("collection2id", "New Name");
 
-*Availability:* iOS, Android, Web Viewer
+*Availability:*  iOS, Android, Web Viewer, Win/Mac
 
 ### Share Links
 An Interactive can get a share link for an item.
 *mflyCommands.js:* mflyCommands.getShare(_item ID_) <br>
-*URL:* mfly://data/share/[item ID] <br>
 *Description:* Returns an object that indicates whether the item is shareable or not. If the item is shareable, the share link is also provided.
 
 	Example:
@@ -736,30 +594,28 @@ An Interactive can get a share link for an item.
 			"shareable": true,
 			"url": "https://assets.mediafly.com/shares/v?e=4hGCVQ2MYt7uO4%2fJbY67EC%2fcjC%2f1TZRiY2gKZV0HKdBON2%2fX8BL4qWJcNCAdwShBDf225NKtucVOuQ0OmMR4O4%2fZNe31JPtAI8OBBHV0kVk%3d"
 		}
-*Availability:* iOS (589), Android (2.24.04), Web Viewer (?)
+*Availability:*  iOS, Android, Web Viewer, Win/Mac
 
-#### Show "Collections"
+#### Show "Collections" (*deprecated*)
 *mflyCommands.js:* mflyCommands.showCollections(_x-coord, y-coord, width, height_) <br>
-*URL:* mfly://control/showCollections?x=[x-coord]&y=[y-coord]&w=[width]&h=[height] <br>
 *Description:* Shows the Collections dialog at x-coord, y-coord coordinates with specified width and height. Parameters x-coord, y-coord, width, and height are all optional, and only work with iOS.<br>
-*Availability:* iOS, Android (2.22.91)
+*Availability:* iOS, Android
 
 ### Downloader
-Mediafly's apps have been optimized for very advanced synchronization and download use cases. We offer a set of Interactives calls to obtain information about downloads and control the app.
+Mediafly's apps have been optimized for very advanced synchronization and download use cases. We offer a set of Interactives calls to obtain information about downloads and control the app. 
 
-#### Show Downloader
+*Note*: Downloading capability does not exist on Web Viewer.
+
+#### Show Downloader (*deprecated*)
 *mflyCommands.js:* mflyCommands.showDownloader(_x-coord, y-coord, width, height_) <br>
-*URL:* mfly://control/showDownloader?x=[x-coord]&y=[y-coord]&w=[width]&h=[height] <br>
 *Description:* Shows the Downloader dialog at x-coord, y-coord coordinates with specified width and height. Parameters x-coord, y-coord, width, and height are all optional, and only work with iOS. <br>
-*Availability:* iOS, Android
+*Availability:* iOS, Android, Win/Mac
 
 #### Get total download progress
 *mflyCommands.js:* mflyCommands.getDownloadStatus() <br>
-*URL:* mfly://data/download/status <br>
 *Description:* Get total download progress, as a range between 0 (no downloads started) and 1 (all downloads complete), number of failed downloads, and number of downloads for whom storage has been exceeded. <br>
 
 	Example:
-		GET mfly://data/download/status
 		Result:
         {
           "progress":0.12,
@@ -767,61 +623,41 @@ Mediafly's apps have been optimized for very advanced synchronization and downlo
           "storageExceeded": 3
         }
 
-*Availability:* iOS (586+ for storageExceeded), Android (2.22.98+)
+*Availability:* iOS, Android, Win/Mac
 
 #### Get download progress for a single item
 *mflyCommands.js:* mflyCommands.getDownloadStatus(_id_) <br>
-*URL:* mfly://data/download/status/[id] <br>
 *Description:* Get download status for a single item. The attribute may be "progress" (download is progressing normally), "error" (download is in an error state), "cellularExceeded" (download won't proceed because the cellular limit set for the app has been exceeded; iOS only), or "storageExceeded" (download won't proceed because there is no more available storage on this device). <br>
 
 	Example:
-		GET mfly://data/download/status/[id]
 		Result:
         { "progress": 0.34 }
 
 	Example:
-		GET mfly://data/download/status/[id]
 		Result:
         { "error": 0.34 }
 
 	Example:
-		GET mfly://data/download/status/[id]
 		Result:
         { "cellularExceeded": 0.34 }
 
 	Example:
-		GET mfly://data/download/status/[id]
 		Result:
         { "storageExceeded": true }
 
-*Availability:* iOS (586+ for storageExceeded), Android (2.22.98+)
-
+*Availability:* iOS, Android, Win/Mac
 
 
 #### Add to Downloader
 *mflyCommands.js:* mflyCommands.addToDownloader(_id_) <br>
-*URL:* mfly://data/addToDownloader/[id]<br>
 *Description:* Instruct the app to add an item to the Downloader. Response code 200 = item was added to the Downloader. Response code 404 if id is not found.<br>
-*Availability:* iOS, Android, Windows 8
+*Availability:* iOS, Android, Win/Mac
 
 
 #### Remove from Downloader
 *mflyCommands.js:* mflyCommands.removeFromDownloader(_id_) <br>
-*URL:* mfly://data/removeFromDownloader/[id]<br>
 *Description:* Instruct the app to remove the item from the Downloader. Response code 200 = item was removed from the Downloader. Response code 404 if id is not found.<br>
-*Availability:* iOS (575), Android (2.22.76), Windows 8 (2.0.0.50)
-
-
-#### mflyDownloadStatus
-Interactives can listen for changes to total download status with mflyDownloadStatus. This function is called approximately once per second while a download is being conducted. The Interactive simply needs to implement this function and take some (short-running) action. The parameter is a JSON object that indicates progress percentage as a decimal from 0 to 1, fail count as an integer, and number of items for whom storage has been exceeded.
-
-	Example:
-	    function mflyDownloadStatus(obj) {
-			// obj = { 'progress': 0.12, 'fails': 1, 'storageExceeded': 3 }
-			// Handle download status object
-		}
-
-*Availability:* iOS (586+ for storageExceeded), Android (2.22.98+)
+*Availability:* iOS, Android, Win/Mac
 
 
 ### Notifications
@@ -830,7 +666,6 @@ When notifications are enabled for an app, users can subscribe or unsubscribe to
 
 #### Get notification status for a folder
 *mflyCommands.js:* mflyCommands.getNotificationStatus(_id_) <br>
-*URL:* mfly://data/getNotificationStatus/[id]<br>
 *Description:* Get the notification status for a folder. If the folder is valid, response code is 200 and body is a JSON object similar to this:<br>
 
 	Example:
@@ -838,116 +673,97 @@ When notifications are enabled for an app, users can subscribe or unsubscribe to
 			"notification":"[status]" // [status] is email|none
 		}
 
-*Availability:* iOS
+*Availability:* iOS, Android, Win/Mac
 
 #### Add a folder to notifications
 *mflyCommands.js:* mflyCommands.addNotification(_id_) <br>
-*URL:* mfly://data/addNotification/[id]<br>
 *Description:* Instruct the app to subscribe the folder for notifications. Response code 200 if successful, 304 if folder was already subscribed, and 500 if an error occurred.<br>
-*Availability:* iOS
+*Availability:* iOS, Android, Win/Mac
 
 #### Remove a folder from notifications
 *mflyCommands.js:* mflyCommands.removeNotification(_id_) <br>
-*URL:* mfly://data/removeNotification/[id]<br>
 *Description:* Instruct the app to unsubscribe the folder from notifications. Response code 200 if successful, 304 if folder was not already subscribed, and 500 if an error occurred.<br>
-*Availability:* iOS
+*Availability:* iOS, Android, Win/Mac
 
 #### Show the notifications manager
 *mflyCommands.js:* mflyCommands.showNotificationsManager(_x-coord, y-coord, width, height_) <br>
-*URL:* mfly://control/showNotificationsManager<br>
 *Description:* Display the notifications manager. Parameters x-coord, y-coord, width, and height are all optional, and only work with iOS. <br>
-*Availability:* iOS
-
-#### Listen for when notifications are changed
-Interactives can listen for when notification status changes in the app by implementing mflyNotificationsChanged. The Interactive simply needs to implement this function and take some (short-running) action. The parameter is a JSON object that passes in the state of all notifications in the app.
-
-	Example:
-	    function mfyNotificationsChanged(notifications) {
-		}
-
-where notifications = JSON Object of all notifications, where key=id and value=JSON Object of new notification. E.g. notifications may be something like:
-
-
-	notifications = {
-    	"id1": { "notification": "email" },
-	    "id2": { "notification": "none" }
-	}
-
-*Availability:* iOS
-
-
+*Availability:* iOS, Android, Win/Mac
 
 ### GPS
 
 #### Request latitude/longitude ####
 *mflyCommands.js:* mflyCommands.getGpsCoordinates() <br>
-*URL:* mfly://data/gps<br>
 *Description:* Interactives can request latitude and longitude from the app. This is useful for apps that connect to external services to report lat/lon, or use the Haversine (Big Earth) formula to calculate rough distances.<br>
 
 	Example:
-		GET mfly://data/gps
 		Response:
 		{
 		  latitude: 41.851231,
 		  longitude: -87.652345
 		}
-*Availability:* iOS, Android, Windows 8
+*Availability:* iOS, Android
 
 
 ### Get Sync Status
 
 #### Get the current sync status ####
 *mflyCommands.js:* mflyCommands.getSyncStatus() <br>
-*URL:* mfly://data/getSyncStatus<br>
 *event:* document.mflySyncStatus<br>
 *Description:* Interactives can get the current sync status from the app. This information can be retrieved by calling the URL or listening to the event published by the app. Interactives can leverage information about content being snced and wait to load certain parts of the UI. Interactives can also display progress indicators and spinners based on the syncStatus.  <br>
 
 	Example:
-		GET mfly://data/getSyncStatus
 		Response:
 		{
 		  complete: 26,
 		  total: 28,
 		  isrunning: true
 		}
-*Availability:* iOS
-
+*Availability:* iOS, Android, Win/Mac
 
 ### Log out
 
 #### Instruct the app to log out ####
 *mflyCommands.js:* mflyCommands.logout() <br>
-*URL:* mfly://data/logout<br>
 *Description:* When an Interactive makes this call, the app will log the current user out by de-authenticating them. The calling Interactive will be closed and the app will leave the user bound (user can enter their PIN to log back in). The app will navigate to the log in screen. If the customer environment does not support PIN, you may receive a 500 error.<br>
 
-*Availability:* iOS (613), Android (2.24.15), web viewer (8/20/2015). Requires mflyCommands.js 1.6.0+
+*Availability:* iOS, Android, Web Viewer, Win/Mac
 
 
 ### Get Online Status
 
 *mflyCommands.js:* mflyCommands.getOnlineStatus() <br>
-*URL:* mfly://data/onlineStatus<br>
 
 *Description:* Check whether the device is online<br>
 Example:
 
-	GET mfly://data/onlineStatus
 	Response:
 	{
 	  "status": "online"
 	}
 Respnose when the device is offline:
 
-	GET mfly://data/onlineStatus
 	{
 	  "status": "offline"
 	}
 
-*Availability:* iOS (540), Android (2.21.62).
+*Availability:* iOS, Android, Win/Mac
 
+### Posting Arbitrary Events
+
+Interactives can post arbitrary events that are recorded by the Mediafly backend for analytics purposes. An event is identified by a key which is a string. Optinally, you can submit additional information about the items as the properties parameter.
+
+*mflyCommands.js:* mflyCommands.postEvent(key, properties) <br>
+
+*Description:* Post an event to the app<br>
+Example:
+	
+	mflyCommands.postEvent('myEvent', { eventInfo: 'user performed action' })
+	Response: null
+
+*Availability:* iOS, Android, Viewer, Win/Mac
 
 ----------
-
 
 ## Being controlled by the app
 Mediafly's apps send many kinds of events into the Interactive. These events can be listened to by the Interactive reactively, and the Interactive can then take action. These capabilities are only availble to the native apps, not to web Viewer.
@@ -960,10 +776,9 @@ There are two methods in which this happens:
 Each feature listed below indicates which method it uses.
 
 
+### mflyDataInit (*deprecated*)
 
-### mflyDataInit
-
-<b>PLEASE NOTE:</b> We plan to deprecate mflyDataInit in favor of mflyCommands.getInteractiveInfo in the near future. Please migrate to using mflyCommands.getInteractiveInfo where possible.
+<b>PLEASE NOTE:</b> Use mflyCommands.getInteractiveInfo where possible.
 
 This function has two uses:
 
@@ -1088,9 +903,9 @@ where the JSON object's attributes have the following meaning:
 
 
 
-### mflyInit (DEPRECATED)
+### mflyInit (*deprecated*)
 
-<b>PLEASE NOTE</b>: mflyInit is deprecated. We have discovered that, as content libraries become incredibly large, mflyInit consumes an excessive amount of memory. As a result, we strongly suggest using mfly://data/folder and mfly://data/item to selectively construct the hierarchy that is needed at that time.
+<b>PLEASE NOTE</b>: mflyInit is deprecated. We have discovered that, as content libraries become incredibly large, mflyInit consumes an excessive amount of memory. As a result, we strongly suggest using mflyCommands.getFolder() and mflyCommands.getItem() to selectively construct the hierarchy that is needed at that time.
 
 The app calls this function when the app launches an Interactive.  The parameter is a dictionary of JSON objects that represent a flattened version of the full hierarchy of folders and items available to the user. The key of each entry is the item/folder slug. Each entry for folders contains a JSON Array called “items”, which contains an array of slugs that are children of this folder.
 
@@ -1218,8 +1033,6 @@ This example saves key/value data, using mflyCommands.js.
             // Error! Do something.
         });
 
-Alternatively, you can make the calls directly with AJAX, but we strongly recommend using mflyCommands instead. To make an AJAX GET to ```mfly://data/info/[key]?method=PUT&value=[value]```, where [key] is the key you wish to use, and [value] is the value for that key.
-
 HTTP response codes:
 
 * Response of 200 OK indicates a successful save to an existing key
@@ -1248,7 +1061,7 @@ This example saves key/value data, using jQuery.
 		}
 	});
 
-*Availability:* iOS, Android, Windows 8, Web Viewer
+*Availability:* iOS, Android, Web Viewer, Win/Mac
 
 ### Retrieve data
 
@@ -1339,7 +1152,7 @@ To get data for all keys that begin with X, use mflyCommands.getValues(_prefix_)
     // Console output: {}
 
 
-*Availability:* iOS, Android, Windows 8, Web Viewer
+*Availability:* iOS, Android, Web Viewer, Win/Mac
 
 
 ### Delete data
@@ -1361,7 +1174,7 @@ To delete a key/value pair by key from the app container, use mflyCommands.delet
 
     // Console output: 'abc has been deleted'
 
-*Availability:* iOS (617+), Android (2.24.21), Windows 8 (soon), web viewer (8/20/2015). Requires mflyCommands.js 1.8.0+
+*Availability:* iOS, Android, Web Viewer, Win/Mac
 
 
 ----------
@@ -1394,7 +1207,7 @@ HTTP response codes:
 * Response of 201 Created indicates a successful save to a new key
 * Response of 400 Bad Request is returned if the value has not been previously saved
 
-*Availability:* iOS, Android, Windows 8, Web Viewer
+*Availability:* iOS, Android, Web Viewer, Win/Mac
 
 ### Retrieve synchronized data
 
@@ -1485,7 +1298,7 @@ To get data for all keys that begin with X, use mflyCommands.getSyncedValues(_pr
     // Console output: {}
 
 
-*Availability:* iOS, Android, Windows 8, Web Viewer
+*Availability:* iOS, Android, Web Viewer, Win/Mac
 
 
 ### Delete data
@@ -1507,12 +1320,41 @@ To delete a key/value pair by key from the app container, use mflyCommands.delet
 
     // Console output: 'abc has been deleted'
 
-*Availability:* iOS (617+), Android (2.24.21), Windows 8 (soon), web viewer (8/20/2015). Requires mflyCommands.js 1.8.0+
+*Availability:* iOS, Android, Web Viewer, Win/Mac
 
 
 ----------
 
-## Embedding, images, other Interactives, or pages
+## Emailing content from Interactives
+
+### Overview
+Interactives can have Mediafly's backend send emails with attachments. Attachments are Base64 encoded URLs.
+Even though emails are sent from Mediafly's servers, they have "Reply-To" field populated with the curent logged in user's email address.
+
+*Example*
+
+    mflyCommands.sendEmail({
+    	to: '[to email address]',
+    	subject: '[email subject]',
+    	body: '[email body]',
+    	attachments: [{
+    		filename: "[name of the attachment. for example: Presentation.pdf]",
+    		dataUrl: "[Base64 encoded URL]"
+    	}]
+    }).done(function(data, status) {
+        // Success! Do something.
+        console.log('email has been sent successfully');
+    })
+    .fail(function(deferred, status) {
+        // Error! Do something.
+        console.log('error sending email');
+    });
+
+*Availability*: iOS (654), Android (2.29.07), Web Viewer, Win/Mac (1.0.92)
+
+----------
+
+## Embedding images, other Interactives, or pages of documents
 
 ### Overview
 Interactives have the ability to embed items that exist in the app into it.  This is used for four primary purposes:
@@ -1557,7 +1399,7 @@ Please note that asking too many times may put the Downloader into a race condit
 
 As you can see, embedding requires care. You cannot assume that the embedded item is available yet, because it may be behind some longer items in the Downloader. Instead, you have to try to fetch the content and monitor response codes. This is why we suggest using mflyCommands.js as shown in the example above.
 
-*Availability:* iOS, Android, Windows 8, Web Viewer
+*Availability:* iOS, Android, Web Viewer, Win/Mac
 
 ### Reporting when embedding pages
 
@@ -1566,9 +1408,8 @@ Our Reporting system automatically captures who viewed what, when, and where, wh
 To inform our Reporting system of a page view, post a page view after the page has been shown to the user:
 
 *mflyCommands.js:* mflyCommands.postPageView(_item ID_, _page number_) <br>
-*URL:* mfly://data/postaction/[item ID]?page=[page number] <br>
 *Description:* Posts the page view to the Mediafly Reporting system. Item ID is the id of the item, as seen in Airship. Page number is the page that was displayed (starting at page 1).
-*Availability:* iOS (575). Requires mflyCommands.js 1.3.6+
+*Availability:* iOS
 
 ### Reporting
 
@@ -1577,13 +1418,12 @@ When building an interactive that implements its own navigation instead of relyi
 To inform our Reporting system of various actions:
 
 *mflyCommands.js:* mflyCommands.postAction(options) <br>
-*URL:* mfly://data/actions?type=[action type]&slug=[item id]&term=[search term] <br>
 *Description:* Posts the action to the Mediafly Reporting system. Options object supplied contains:
   - type (required): Type can one of the following: "collection", "document", "navigation" or "search"
   - id (required when type is not "search"): Item ID is the id of the item, as seen in Airship
   - term (required when type is "search"): search term used to perform a search
 
-*Availability:* iOS (631), Android (v.2.25.81), Windows 8, Web Viewer. Requires mflyCommands.js 1.9.10+
+*Availability:* iOS, Android, Web Viewer, Win/Mac
 
 
 -----
@@ -1743,7 +1583,7 @@ The following changes need to be made to your existing Interactives to support I
 
 4. *** Don't include a file at the root of your Interactive called mflyManifest.json***. We doubt you would, but if you do, it is likely to be overwritten by one of your apps as a part of the initialization process.
 
-5. **Adjust mflyCommands.getFolder(id) call signature change**. The call signature for mflyCommands.getFolder(id) (which maps to mfly://data/folder/[id]) has changed. Previously, if any of its items were also folders, it would return the items within the folders as an array of IDs. This has changed, and those subfolders no longer includes the items key at all. A separate mflyCommands.getFolder(id) call will have to be made on those children folders.
+5. **Adjust mflyCommands.getFolder(id) call signature change**. The call signature for mflyCommands.getFolder(id) has changed. Previously, if any of its items were also folders, it would return the items within the folders as an array of IDs. This has changed, and those subfolders no longer includes the items key at all. A separate mflyCommands.getFolder(id) call will have to be made on those children folders.
 
 6. **Each URL should be able to establish its own state**. Don't pass around variables like you would in a traditional application. This breaks on websites, and it will break on web Interactives.
 
