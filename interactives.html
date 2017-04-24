@@ -1723,6 +1723,25 @@ function mflyWideScreen(isWidescreen) {
 
 <hr />
 
+<h2 id="gettingtemporarycredentialstocommunicatewithlaunchpadandaccountsapis">Getting temporary credentials to communicate with Launchpad and Accounts APIs</h2>
+
+<p>Launchpad API allows abilities such as uploading files, and updating items in Airship. If an Interactives wishes to leverage these capabilities, it need to be authenticated. Interactives can call <code>mflyCommands.getCredentials()</code> function to retrive the necessary credentials to access these APIs. The response from <code>getCredentials</code> contains a short lived access token. It is the Interactive's responsibility to get a new token when the existing token expires (If an API endpoint returns a <code>401</code> HTTP response code, a new token should be retrieved). In addition to the token, <code>environmentId</code> is also returned which is necessary to make calls to the Launchpad API.</p>
+
+<p><em>Example</em></p>
+
+<pre><code>mflyCommands.getCredentials();
+
+Result:
+{
+    "accessToken": "token",
+    "environmentId": "environmentId",
+}
+</code></pre>
+
+<p><em>Availability</em>: iOS (678), Android (2.29.47), Web Viewer, Win/Mac (1.0.101)</p>
+
+<hr />
+
 <h2 id="otherusefulinformation">Other useful information</h2>
 
 <h3 id="stoppingrubberbandeffects">Stopping rubber band effects</h3>

@@ -1525,6 +1525,25 @@ To account for this, we suggest tagging the <body> element with a class that den
 
 -----
 
+## Getting temporary credentials to communicate with Launchpad and Accounts APIs
+
+Launchpad API allows abilities such as uploading files, and updating items in Airship. If an Interactives wishes to leverage these capabilities, it need to be authenticated. Interactives can call `mflyCommands.getCredentials()` function to retrive the necessary credentials to access these APIs. The response from `getCredentials` contains a short lived access token. It is the Interactive's responsibility to get a new token when the existing token expires (If an API endpoint returns a `401` HTTP response code, a new token should be retrieved). In addition to the token, `environmentId` is also returned which is necessary to make calls to the Launchpad API.
+
+
+*Example*
+
+	mflyCommands.getCredentials();
+	
+	Result:
+	{
+		"accessToken": "token",
+		"environmentId": "environmentId",
+	}
+
+*Availability*: iOS (678), Android (2.29.47), Web Viewer, Win/Mac (1.0.101)
+
+-----
+
 ## Other useful information
 
 ### Stopping rubber band effects
