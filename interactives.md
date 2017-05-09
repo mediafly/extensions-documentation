@@ -1,3 +1,5 @@
+![image](./images/interactives-API-logo.png)
+
 Overview
 ========
 
