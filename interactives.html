@@ -1,3 +1,5 @@
+<p><img src="./images/interactives-API-logo.png" alt="image" /></p>
+
 <h1 id="overview">Overview</h1>
 
 <p>Customers often wish to create rich, engaging content that include advanced UI effects, form entry, dynamic content, and more features that extend well beyond the limitations of PowerPoint or PDFs. With Mediafly Interactives and the Mediafly Platform, customers can create, release and control these packages.  This document serves as documentation for how a customer can create an Interactive and what best practices exist in their creation and maintenance.</p>
@@ -1757,6 +1759,17 @@ Result:
 <p>By default, iOS scrolling in the UIWebView is exactly controlled by your finger. You can drag the web view down and up, but you cannot "throw" the page in a direction. Furthermore, if you have a lot of large images on the page, scrolling can become choppy.</p>
 
 <p>To alleviate this, consider implementing <code>-webkit-overflow-scrolling: touch</code> on your DOM nodes that handle scrolling. When set to touch, UIWebView uses native-style scrolling on your node.</p>
+
+<h3 id="invokinganinteractivewithparametersios">Invoking an Interactive with parameters (iOS)</h3>
+
+<p>iOS support invocation URLS. An item can be linked to using these URLs.</p>
+
+<p>Example: <a href="onmediafly://9cf282320e6340ee8b830e5376d54531product265958?param1=1&amp;param2=">onmediafly://9cf282320e6340ee8b830e5376d54531product265958?param1=1&amp;param2=2</a></p>
+
+<p>This URL has the following format: [mcode]://[id]?[params...]</p>
+
+<p>The iOS app will pass all supplied params to the Interactive and the Interactive can
+retrieve them using JavaScript <code>window.location.search</code>.</p>
 
 <hr />
 

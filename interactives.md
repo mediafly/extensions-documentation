@@ -1560,6 +1560,15 @@ By default, iOS scrolling in the UIWebView is exactly controlled by your finger.
 
 To alleviate this, consider implementing ```-webkit-overflow-scrolling: touch``` on your DOM nodes that handle scrolling. When set to touch, UIWebView uses native-style scrolling on your node.
 
+### Invoking an Interactive with parameters (iOS)
+iOS support invocation URLS. An item can be linked to using these URLs.
+
+Example: [onmediafly://9cf282320e6340ee8b830e5376d54531product265958?param1=1&param2=2](onmediafly://9cf282320e6340ee8b830e5376d54531product265958?param1=1&param2=)
+
+This URL has the following format: [mcode]://[id]?[params...]
+
+The iOS app will pass all supplied params to the Interactive and the Interactive can
+retrieve them using JavaScript `window.location.search`.
 
 ----------
 
