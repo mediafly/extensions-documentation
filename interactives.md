@@ -430,6 +430,28 @@ You can use this call to get a list of content that was recently viewed by the u
 *Note:* This call is only available when the device is online
 
 
+### Copy Item
+You can use this call to copy an item to the desired folder in the hierarchy and optionally provide a new name for the copied item.
+
+*mflyCommands.js:* mflyCommands.copy(folderId, id, newName) <br>
+*Description:* Copies an item. <br>
+*Availability:* iOS, Android, Web Viewer, Win/Mac <br>
+*Note:* This call is only available when the device is online
+
+
+### Update Item Metadata
+You can use this call to update metadata fields of an item.
+
+*mflyCommands.js:* mflyCommands.updateItemMetadata(id, metadataJson) <br>
+*Description:* Update metadata fields of an item. <br>
+*Example:*
+
+	mflyCommands.updateItemMetadata('123', { field1: 'value1' })
+
+*Availability:* iOS, Android, Web Viewer, Win/Mac <br>
+*Note:* This call is only available when the device is online
+
+
 ### Collections
 	Collections allow users to create a "personal playlist" of items. Oftentimes this is used as a way to organize items for, say, an upcoming meeting with a customer. Collections are pointers to items, not copies of items; updating the original item in Airship will update the item in the Collection as well.
 

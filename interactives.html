@@ -491,6 +491,29 @@ Example 2:
 <em>Availability:</em> iOS, Android, Web Viewer, Win/Mac <br>
 <em>Note:</em> This call is only available when the device is online</p>
 
+<h3 id="copyitem">Copy Item</h3>
+
+<p>You can use this call to copy an item to the desired folder in the hierarchy and optionally provide a new name for the copied item.</p>
+
+<p><em>mflyCommands.js:</em> mflyCommands.copy(folderId, id, newName) <br>
+<em>Description:</em> Copies an item. <br>
+<em>Availability:</em> iOS, Android, Web Viewer, Win/Mac <br>
+<em>Note:</em> This call is only available when the device is online</p>
+
+<h3 id="updateitemmetadata">Update Item Metadata</h3>
+
+<p>You can use this call to update metadata fields of an item.</p>
+
+<p><em>mflyCommands.js:</em> mflyCommands.updateItemMetadata(id, metadataJson) <br>
+<em>Description:</em> Update metadata fields of an item. <br>
+<em>Example:</em></p>
+
+<pre><code>mflyCommands.updateItemMetadata('123', { field1: 'value1' })
+</code></pre>
+
+<p><em>Availability:</em> iOS, Android, Web Viewer, Win/Mac <br>
+<em>Note:</em> This call is only available when the device is online</p>
+
 <h3 id="collections">Collections</h3>
 
 <pre><code>Collections allow users to create a "personal playlist" of items. Oftentimes this is used as a way to organize items for, say, an upcoming meeting with a customer. Collections are pointers to items, not copies of items; updating the original item in Airship will update the item in the Collection as well.
