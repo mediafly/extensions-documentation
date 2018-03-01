@@ -19,7 +19,7 @@ Extensions are all the components that make up a static website:
 * Fonts
 * Images
 
-All of these files are packaged up in a specific way and uploaded to Mediafly Airship. These packages have the extension of `.extension`. Note: Packaging Extensions with the `.zip` is now obsolete and Viewer no longer supports this file extension for Extensions.
+All of these files are packaged up in a specific way and uploaded to Mediafly Airship. These packages have the extension of `.mext`. Note: Packaging Extensions with the `.zip` is now obsolete and Viewer no longer supports this file extension for Extensions.
 
 When the user opens the Extension, the app loads and renders the Extension much like it would a traditional web page.
 ![image](http://devdocs.mediafly.com/extensions/images/Interactives%20Overview.png)
@@ -63,7 +63,7 @@ Building Extensions
 Mediafly provides a CLI (command line interface) utility called `mfly-interactive` to make it easier to test and develop an Extension. `mfly-interactive` allows an Extension developer to:
 
 1. Rapidly develop Extensions by live-reloading changes from the developer's machine.
-2. Generate the `.extension` package from static files.
+2. Generate the `.mext` package from static files.
 3. Upload the Extension into Airship.
 
 For more detailed instructions, refer to https://github.com/mediafly/mfly-interactive.
@@ -97,12 +97,12 @@ Please see the [Mediafly Extensions Tools and Examples](https://bitbucket.org/me
 
 To see the examples in action on your device:
 
-1. Download Whitebox for [iOS](https://itunes.apple.com/us/app/whitebox/id399107683?mt=8), [Android](https://play.google.com/store/apps/details?id=com.mediafly.android.video.onmediafly&hl=en) or [Windows 8](http://apps.microsoft.com/windows/en-us/app/39a96812-56fa-4583-82eb-4d787fda0d4c)
+1. Download Whitebox for [iOS](https://itunes.apple.com/us/app/whitebox/id399107683?mt=8), [Android](https://play.google.com/store/apps/details?id=com.mediafly.android.video.onmediafly&hl=en), [Windows](http://downloads.mediafly.com.s3.amazonaws.com/desktopviewer/mediafly-desktop-viewer-prod-latest.exe) or [Mac](http://downloads.mediafly.com.s3.amazonaws.com/desktopviewer/mediafly-desktop-viewer-prod-latest.dmg)
 2. When asked for Company Code or Company Login Name, enter "extensions"
 3. Each example will be contained within a folder that describes the example
 
 ### Google Group
-Please [join our Google Group](https://groups.google.com/forum/?hl=en#!forum/mediafly-interactives) to keep up with the latest information, udates and news. As well, learn from and get help from other Extensions builders and customers.
+Please [join our Google Group](https://groups.google.com/forum/?hl=en#!forum/mediafly-extensions) to keep up with the latest information, updates and news. As well, learn from and get help from other Extensions builders and customers.
 
 ### Changelog
 Please see the [repository](https://bitbucket.org/mediafly/mediafly-interactives-documentation/commits/all) of this document for a changelog.
