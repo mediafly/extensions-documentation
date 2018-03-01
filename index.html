@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Mediafly Interactives</title>
+    <title>Mediafly Extensions</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/styles.css" rel="stylesheet">
@@ -14,7 +14,7 @@
             hash = window.location.hash || '';
             hash = hash.replace("#",'');
             $(function(){
-                $("#includedContent").load("interactives.html", function() {
+                $("#includedContent").load("extensions.html", function() {
                     $("img").addClass("img-responsive");
                     var $toc = $("#nav_toc");
                     $(":header").each(function(i, h) {
@@ -61,7 +61,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#">Mediafly Interactives</a>
+            <a class="navbar-brand" href="#">Mediafly Extensions</a>
         </div>
         <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav navbar-right">

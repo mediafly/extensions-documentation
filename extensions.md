@@ -3,15 +3,15 @@
 Overview
 ========
 
-Customers often wish to create rich, engaging content that include advanced UI effects, form entry, dynamic content, and more features that extend well beyond the limitations of PowerPoint or PDFs. With Mediafly Interactives and the Mediafly Platform, customers can create, release and control these packages.  This document serves as documentation for how a customer can create an Interactive and what best practices exist in their creation and maintenance.
+Customers often wish to create rich, engaging content that include advanced UI effects, form entry, dynamic content, and more features that extend well beyond the limitations of PowerPoint or PDFs. With Mediafly Extensions and the Mediafly Platform, customers can create, release and control these packages.  This document serves as documentation for how a customer can create an Extension and what best practices exist in their creation and maintenance.
 
 
 ----------
 
 
-## What are Interactives? ##
+## What are Extensions? ##
 
-Interactives are all the components that make up a static website:
+Extensions are all the components that make up a static website:
 
 * HTML files
 * JavaScript
@@ -19,12 +19,12 @@ Interactives are all the components that make up a static website:
 * Fonts
 * Images
 
-All of these files are packaged up in a specific way and uploaded to Mediafly Airship. These packages have the extension of `.interactive`. Note: Packaging Interactives with the `.zip` is now obsolete and Viewer no longer supports this file extension for Interactives.
+All of these files are packaged up in a specific way and uploaded to Mediafly Airship. These packages have the extension of `.extension`. Note: Packaging Extensions with the `.zip` is now obsolete and Viewer no longer supports this file extension for Extensions.
 
-When the user opens the Interactive, the app loads and renders the Interactive much like it would a traditional web page.
+When the user opens the Extension, the app loads and renders the Extension much like it would a traditional web page.
 ![image](http://devdocs.mediafly.com/interactives/images/Interactives%20Overview.png)
 
-To ensure that the apps work consistently and correctly, the Interactive builder needs to follow a few rules:
+To ensure that the apps work consistently and correctly, the Extension developer needs to follow a few rules:
 
 * The starting page must be named index.html .  This is the common starting point from which any package can launch.  Sub-pages are acceptable, as long as they are navigable from index.html.
 * Apps that reference third-party libraries (e.g. jQuery, jQuery Mobile, Reveal.js, Angular.JS) should relatively reference those files from the pages.  To be able to function while offline (for iOS and Android) no files should be absolutely referenced to a site on the web.  For example, an index.html file that contains the following is acceptable, because the files are relatively referenced:
@@ -41,30 +41,30 @@ To ensure that the apps work consistently and correctly, the Interactive builder
 ----------
 
 
-## Communication between the App and Interactive ##
+## Communication between the App and Extension ##
 
-Interactives are single page applications. They allow for deep customization of the entire look and feel of the application. Because Interactives make use of the entire screen, Mediafly’s apps need to be told when to close the Interactive as well as when to show other content.  The typical approach to this is:
+Extensions are single page applications. They allow for deep customization of the entire look and feel of the application. Because Extensions make use of the entire screen, Mediafly’s apps need to be told when to close the Extension as well as when to show other content.  The typical approach to this is:
 
-1. The Interactive will provide a Menu or X button in the app.
-2. When the user taps/clicks on the Menu button, notify the app to close the Interactive
-3. The app will close the Interactive and navigate to other content where the user can resume their workflow.
+1. The Extension will provide a Menu or X button in the app.
+2. When the user taps/clicks on the Menu button, notify the app to close the Extension
+3. The app will close the Extension and navigate to other content where the user can resume their workflow.
 
-Interactives can link to other items within the hierarchy.  For example, if a user has access to one Interactive and three other items (video, audio, documents, presentations, even other Interactives), the Interactive can link directly to those items. 
+Extensions can link to other items within the hierarchy.  For example, if a user has access to one Extension and three other items (video, audio, documents, presentations, even other Extensions), the Extension can link directly to those items. 
 
-Interactives can invoke capabilities provided by the app such as Search and Collections as well.
+Extensions can invoke capabilities provided by the app such as Search and Collections as well.
 
 
 ----------
 
-Building Interactives
+Building Extensions
 =====================
 
-## Developing and testing an Interactive
-Mediafly provides a CLI (command line interface) utility called `mfly-interactive` to make it easier to test and develop an Interactive. `mfly-interactive` allows an Interactive developer to:
+## Developing and testing an Extension
+Mediafly provides a CLI (command line interface) utility called `mfly-interactive` to make it easier to test and develop an Extension. `mfly-interactive` allows an Extension developer to:
 
-1. Rapidly develop Interactives by live-reloading changes from the developer's machine.
-2. Generate the `.interactive` package from static files.
-3. Upload the Interactive into Airship.
+1. Rapidly develop Extensions by live-reloading changes from the developer's machine.
+2. Generate the `.extension` package from static files.
+3. Upload the Extension into Airship.
 
 For more detailed instructions, refer to https://github.com/mediafly/mfly-interactive.
 
@@ -80,10 +80,10 @@ Please read the [installation](http://people.apache.org/~pmuellr/weinre-docs/lat
 
 1. Install the tool via npm, (e.g. npm -g install weinre)
 2. Run the debug server locally (e.g. weinre —boundHost 10.0.0.111)
-3. Update the Interactive with a ```<script>``` tag to point to the debug server, and publish the new Interactive in Airship (e.g. ```<script src="http://10.0.0.111:8080/target/target-script-min.js"></script>```). Open the Interactive on your app
+3. Update the Extension with a ```<script>``` tag to point to the debug server, and publish the new Extension in Airship (e.g. ```<script src="http://10.0.0.111:8080/target/target-script-min.js"></script>```). Open the Extension on your app
 4. Point your PC/Mac browser to the debug client (e.g. http://10.0.0.111:8080)
 
-You now have access to a relatively full featured web development tool for your Interactives!
+You now have access to a relatively full featured web development tool for your Extensions!
 
 ----------
 
@@ -91,18 +91,18 @@ You now have access to a relatively full featured web development tool for your 
 
 ### Examples
 
-Mediafly creates and maintains a detailed list of examples. These examples illustrate many of the features of Interactives and can serve as QA for client app developers.
+Mediafly creates and maintains a detailed list of examples. These examples illustrate many of the features of Extensions and can serve as QA for client app developers.
 
-Please see the [Mediafly Interactives Tools and Examples](https://bitbucket.org/mediafly/mediafly-interactives-tools-and-examples) BitBucket repository for more information.
+Please see the [Mediafly Extensions Tools and Examples](https://bitbucket.org/mediafly/mediafly-interactives-tools-and-examples) BitBucket repository for more information.
 
 To see the examples in action on your device:
 
 1. Download Whitebox for [iOS](https://itunes.apple.com/us/app/whitebox/id399107683?mt=8), [Android](https://play.google.com/store/apps/details?id=com.mediafly.android.video.onmediafly&hl=en) or [Windows 8](http://apps.microsoft.com/windows/en-us/app/39a96812-56fa-4583-82eb-4d787fda0d4c)
-2. When asked for Company Code or Company Login Name, enter "interactives"
+2. When asked for Company Code or Company Login Name, enter "extensions"
 3. Each example will be contained within a folder that describes the example
 
 ### Google Group
-Please [join our Google Group](https://groups.google.com/forum/?hl=en#!forum/mediafly-interactives) to keep up with the latest information, udates and news. As well, learn from and get help from other Interactives builders and customers.
+Please [join our Google Group](https://groups.google.com/forum/?hl=en#!forum/mediafly-interactives) to keep up with the latest information, udates and news. As well, learn from and get help from other Extensions builders and customers.
 
 ### Changelog
 Please see the [repository](https://bitbucket.org/mediafly/mediafly-interactives-documentation/commits/all) of this document for a changelog.
@@ -116,25 +116,25 @@ See an area of confusion? Please [contact us](mailto:support@mediafly.com?Subjec
 API and Howtos
 ===============
 
-This section describes all of the APIs available to Interactives developers. For each call, we list the mflyCommands.js call as well as the base URL. Please use the mflyCommands.js call where possible.
+This section describes all of the APIs available to Extensions developers. For each call, we list the mflyCommands.js call as well as the base URL. Please use the mflyCommands.js call where possible.
 
-*A note on 'Availability':* You will see many API calls have no version numbers within the Availability column. In these cases, the calls have been in existence for a sufficiently long period of time that Interactives developers no longer need to worry about whether their clients' apps support those calls anymore.
+*A note on 'Availability':* You will see many API calls have no version numbers within the Availability column. In these cases, the calls have been in existence for a sufficiently long period of time that Extensions developers no longer need to worry about whether their clients' apps support those calls anymore.
 
-*Keeping mflyCommands up-to-date:* mflyCommands.js is available on the [bower package manager](http://bower.io/). This is the recommended way of consuming it as a dependency in your interactive. The bower package can be found here: [http://bower.io/search/?q=mfly-commands](http://bower.io/search/?q=mfly-commands)
+*Keeping mflyCommands up-to-date:* mflyCommands.js is available on the [bower package manager](http://bower.io/). This is the recommended way of consuming it as a dependency in your Extension. The bower package can be found here: [http://bower.io/search/?q=mfly-commands](http://bower.io/search/?q=mfly-commands)
 
 ## Communicating with the app
 Communicating the app is done by calling functions on mflyCommands. The list of available functions, and their appropriate actions, are listed below.
 
-***PLEASE NOTE***: Every Interactive must allow the user to close the item. Else, the user will be stuck within the Interactive, with no way to exit.
+***PLEASE NOTE***: Every Extension must allow the user to close the item. Else, the user will be stuck within the Extension, with no way to exit.
 
 ### Getting baseline information
 *mflyCommands.js:* mflyCommands.getInteractiveInfo() <br>
-*Description:* Obtains baseline information about this Interactive. Interactives can call this function and receive an object of initial configuration. Response example:
+*Description:* Obtains baseline information about this Extension. Extensions can call this function and receive an object of initial configuration. Response example:
 
 		{
 		  	"user": "jshah@mediafly.com",
 			"displayName": "John Doe",
-			"item": "Custom Dynamic Interactive 1.2",
+			"item": "Custom Dynamic Extension 1.2",
 			“id”: “29342938241238product234234”,
 			"osType": "iOS",
 			"osVersion": "6.1.2",
@@ -147,13 +147,13 @@ Communicating the app is done by calling functions on mflyCommands. The list of 
 
 * user: The system's username, if any
 * displayName: display name. Can be email, first+last, or something similar. May be blank in the case of content libraries that don't require logging in
-* item: title of this Interactive
-* id: the slug (unique id) of this Interactive within Airship
+* item: title of this Extension
+* id: the slug (unique id) of this Extension within Airship
 * osType: which OS (iOS, Android, Windows 8)
 * osVersion: which version of the OS
 * appVersion: which version of the app
 * deviceId: the unique device ID for this device
-* lastUpdated: the lasted updated time. This is good for debugging purposes, to help you identify which version of the Interactive you are looking at on the device
+* lastUpdated: the lasted updated time. This is good for debugging purposes, to help you identify which version of the Extension you are looking at on the device
 
 Note that not every parameter is available on every platform.
 
@@ -178,7 +178,7 @@ Note that not every parameter is available on every platform.
 
 #### Browse (*deprecated*)
 *mflyCommands.js:* mflyCommands.browse() <br>
-*Description:* Multiple Interactives can layer on top of each other, to represent different layers of hierarchy. The developer may wish to allow the user to navigate the hierarchy using the core Mediafly app with the default grid/list view, e.g. if a “More” or “Browse” button is presented.  This URL closes all Interactives in the stack and takes the user to that hierarchy in the core app if called. <br>
+*Description:* Multiple Extensions can layer on top of each other, to represent different layers of hierarchy. The developer may wish to allow the user to navigate the hierarchy using the core Mediafly app with the default grid/list view, e.g. if a “More” or “Browse” button is presented.  This URL closes all Extensions in the stack and takes the user to that hierarchy in the core app if called. <br>
 *Availability:* iOS
 
 #### Next
@@ -351,7 +351,7 @@ Note that not every parameter is available on every platform.
 
 ### Links (Open and Goto)
 
-Two types of links exist within Interactives: Open and Goto. When an Interactive "opens" an item, the item appears on top of the navigational stack, and the user is only given a single option to escape the item, by tapping Done/Close.  When an Interactive "gotos" an item, the app opens that item and throws away the navigational stack behind it. The user is given the same navigational capabilities as if they opened the destination item directly.
+Two types of links exist within Extensions: Open and Goto. When an Extension "opens" an item, the item appears on top of the navigational stack, and the user is only given a single option to escape the item, by tapping Done/Close.  When an Extension "gotos" an item, the app opens that item and throws away the navigational stack behind it. The user is given the same navigational capabilities as if they opened the destination item directly.
 
 To create either link, simply create a typical `<a href>` link with the source pointing to an mfly URL as specified below.
 
@@ -371,7 +371,7 @@ To create either link, simply create a typical `<a href>` link with the source p
 *Availability:* iOS, Android
 
 ### Filter
-We often find that developers need to identify folders and items that match a specific set of metadata. Often they want to use custom metadata fields as a way to drive hierarchy and categorization, and not rely on the actual hierarchy for that purpose. It makes sense in some use cases, because the people who will be managing content are often different from how the Interactive should be rendered.
+We often find that developers need to identify folders and items that match a specific set of metadata. Often they want to use custom metadata fields as a way to drive hierarchy and categorization, and not rely on the actual hierarchy for that purpose. It makes sense in some use cases, because the people who will be managing content are often different from how the Extension should be rendered.
 
 To support this, use Filter. Filter accepts up to three key=value pairs as JSON parameters, and returns a constrained list of folders and items that match ALL of the key=value pairs provided. The return value is a JSON Array of JSON Objects that match the various folders and items with the specified filter conditions, or an empty JSON Array if none match.
 
@@ -607,7 +607,7 @@ You can use this call to update metadata fields of an item.
 *Availability:*  iOS, Android, Web Viewer, Win/Mac
 
 ### Share Links
-An Interactive can get a share link for an item.
+An Extension can get a share link for an item.
 *mflyCommands.js:* mflyCommands.getShare(_item ID_) <br>
 *Description:* Returns an object that indicates whether the item is shareable or not. If the item is shareable, the share link is also provided.
 
@@ -626,7 +626,7 @@ An Interactive can get a share link for an item.
 *Availability:* iOS, Android
 
 ### Downloader
-Mediafly's apps have been optimized for very advanced synchronization and download use cases. We offer a set of Interactives calls to obtain information about downloads and control the app. 
+Mediafly's apps have been optimized for very advanced synchronization and download use cases. We offer a set of Extensions calls to obtain information about downloads and control the app. 
 
 *Note*: Downloading capability does not exist on Web Viewer.
 
@@ -686,7 +686,7 @@ Mediafly's apps have been optimized for very advanced synchronization and downlo
 
 ### Notifications
 
-When notifications are enabled for an app, users can subscribe or unsubscribe to/from emails on any folder. When new content appears in the folder, the system will email the user either instantly or at the end of the day in a digest of the availability of the new content. Interactives can control notifications with the following commands.
+When notifications are enabled for an app, users can subscribe or unsubscribe to/from emails on any folder. When new content appears in the folder, the system will email the user either instantly or at the end of the day in a digest of the availability of the new content. Extensions can control notifications with the following commands.
 
 #### Get notification status for a folder
 *mflyCommands.js:* mflyCommands.getNotificationStatus(_id_) <br>
@@ -718,7 +718,7 @@ When notifications are enabled for an app, users can subscribe or unsubscribe to
 
 #### Request latitude/longitude ####
 *mflyCommands.js:* mflyCommands.getGpsCoordinates() <br>
-*Description:* Interactives can request latitude and longitude from the app. This is useful for apps that connect to external services to report lat/lon, or use the Haversine (Big Earth) formula to calculate rough distances.<br>
+*Description:* Extensions can request latitude and longitude from the app. This is useful for apps that connect to external services to report lat/lon, or use the Haversine (Big Earth) formula to calculate rough distances.<br>
 
 	Example:
 		Response:
@@ -734,7 +734,7 @@ When notifications are enabled for an app, users can subscribe or unsubscribe to
 #### Get the current sync status ####
 *mflyCommands.js:* mflyCommands.getSyncStatus() <br>
 *event:* document.mflySyncStatus<br>
-*Description:* Interactives can get the current sync status from the app. This information can be retrieved by calling the URL or listening to the event published by the app. Interactives can leverage information about content being snced and wait to load certain parts of the UI. Interactives can also display progress indicators and spinners based on the syncStatus.  <br>
+*Description:* Extensions can get the current sync status from the app. This information can be retrieved by calling the URL or listening to the event published by the app. Extensions can leverage information about content being snced and wait to load certain parts of the UI. Extensions can also display progress indicators and spinners based on the syncStatus.  <br>
 
 	Example:
 		Response:
@@ -749,7 +749,7 @@ When notifications are enabled for an app, users can subscribe or unsubscribe to
 
 #### Instruct the app to log out ####
 *mflyCommands.js:* mflyCommands.logout() <br>
-*Description:* When an Interactive makes this call, the app will log the current user out by de-authenticating them. The calling Interactive will be closed and the app will leave the user bound (user can enter their PIN to log back in). The app will navigate to the log in screen. If the customer environment does not support PIN, you may receive a 500 error.<br>
+*Description:* When an Extension makes this call, the app will log the current user out by de-authenticating them. The calling Extension will be closed and the app will leave the user bound (user can enter their PIN to log back in). The app will navigate to the log in screen. If the customer environment does not support PIN, you may receive a 500 error.<br>
 
 *Availability:* iOS, Android, Web Viewer, Win/Mac
 
@@ -775,7 +775,7 @@ Respnose when the device is offline:
 
 ### Posting Arbitrary Events
 
-Interactives can post arbitrary events that are recorded by the Mediafly backend for analytics purposes. An event is identified by a key which is a string. Optinally, you can submit additional information about the items as the properties parameter.
+Extensions can post arbitrary events that are recorded by the Mediafly backend for analytics purposes. An event is identified by a key which is a string. Optinally, you can submit additional information about the items as the properties parameter.
 
 *mflyCommands.js:* mflyCommands.postEvent(key, properties) <br>
 
@@ -790,12 +790,12 @@ Example:
 ----------
 
 ## Being controlled by the app
-Mediafly's apps send many kinds of events into the Interactive. These events can be listened to by the Interactive reactively, and the Interactive can then take action. These capabilities are only availble to the native apps, not to web Viewer.
+Mediafly's apps send many kinds of events into the Extension. These events can be listened to by the Extension reactively, and the Extension can then take action. These capabilities are only availble to the native apps, not to web Viewer.
 
 There are two methods in which this happens:
 
-1. The old way. If an appropriately named JavaScript function is defined, they will be called by the app at the appropriate time, and the Interactive can take action. If the function does not exist, the console log will show a "function not defined" error and the Interactive will continue execution.
-2. The new way. Recently created features will make use of JavaScript events in the DOM's document object. This better matches how other JavaScript frameworks similar to Interactives are structured.
+1. The old way. If an appropriately named JavaScript function is defined, they will be called by the app at the appropriate time, and the Extension can take action. If the function does not exist, the console log will show a "function not defined" error and the Extension will continue execution.
+2. The new way. Recently created features will make use of JavaScript events in the DOM's document object. This better matches how other JavaScript frameworks similar to Extensions are structured.
 
 Each feature listed below indicates which method it uses.
 
@@ -810,7 +810,7 @@ This function has two uses:
 2. Send configuration parameters to the app
 
 #### Use 1: Receive configuration information from the app
-Interactives can implement mflyDataInit, using method 1.
+Extensions can implement mflyDataInit, using method 1.
 
 		function mflyDataInit(obj) {
 			// obj = JSON object that contains initial configuration
@@ -822,7 +822,7 @@ mflyDataInit will be called with a JSON object that contains initial configurati
 			"mflyInitVersionMaximum": "2",
 		  	"user": "jshah@mediafly.com",
 			"displayName": "Jason Shah",
-			"item": "Custom Dynamic Interactive 1.2",
+			"item": "Custom Dynamic Extension 1.2",
 			“id”: “29342938241238product234234”,
 			"osType": "iOS",
 			"osVersion": "6.1.2",
@@ -836,17 +836,17 @@ mflyDataInit will be called with a JSON object that contains initial configurati
 * mflyInitVersionMaximum: indicates how many possible values mflyInitVersion can have in the return value (see below).
 * user: user_context (essentially, system-known username)
 * displayName: display name. Can be email, first+last, or something similar
-* item: title of this Interactive
-* id: the slug (unique id) of this Interactive within Airship
+* item: title of this Extension
+* id: the slug (unique id) of this Extension within Airship
 * osType: which OS (iOS, Android, Windows 8)
 * osVersion: which version of the OS
 * appVersion: which version of the app
 * deviceId: the unique device ID for this device
-* lastUpdated: the lasted updated time. This is good for debugging purposes, to help you identify which version of the Interactive you are looking at on the device
+* lastUpdated: the lasted updated time. This is good for debugging purposes, to help you identify which version of the Extension you are looking at on the device
 
 
 #### Use 2: Send configuration parameters to the app
-Optionally, Interactives can then return a JSON Object with specifics on how the app should behave.  E.g. on iOS, return value may be a JSON Object such as this:
+Optionally, Extensions can then return a JSON Object with specifics on how the app should behave.  E.g. on iOS, return value may be a JSON Object such as this:
 
 		{
 		  “mflyInitVersion”: “4”,
@@ -860,7 +860,7 @@ Optionally, Interactives can then return a JSON Object with specifics on how the
 	* "3": On iOS, sharing status is represented by canShare, canAccessAssetOffline, and canDownloadAsset. Supported on Android, iOS, and Windows8.
 	* "4": No longer sends down mflyInit. mflyInit is deprecated and causes undo burden when content libraries are large, and we plan to deprecate it in the future. Supported on Android, iOS and Windows 8.
 
-* mflyWideScreenSupport: if true, this makes the app aware that the Interactive can handle widescreen second screens (HDMI, Apple TV).  This is specifically for the case where the Interactive has been designed to be a presentation-worthy UI for second screens. Only available on iOS.
+* mflyWideScreenSupport: if true, this makes the app aware that the Extension can handle widescreen second screens (HDMI, Apple TV).  This is specifically for the case where the Extension has been designed to be a presentation-worthy UI for second screens. Only available on iOS.
 
 *Example:*<br>
 
@@ -873,7 +873,7 @@ Optionally, Interactives can then return a JSON Object with specifics on how the
 
 
 ### mflyResume
-The app calls this function when the app opens and shows the Interactive.  If you need to start animation or take other action when the Interactive shows, this is the place to do it.
+The app calls this function when the app opens and shows the Extension.  If you need to start animation or take other action when the Extension shows, this is the place to do it.
 
 *Example:*<br>
 
@@ -885,7 +885,7 @@ The app calls this function when the app opens and shows the Interactive.  If yo
 
 
 ### mflyPause
-The app calls this function when the user hides the Interactive. If you need to stop animation, submit a form, or take other action when the Interactive hides, this is the place to do it.
+The app calls this function when the user hides the Extension. If you need to stop animation, submit a form, or take other action when the Extension hides, this is the place to do it.
 
 *Example:*<br>
 
@@ -897,7 +897,7 @@ The app calls this function when the user hides the Interactive. If you need to 
 
 
 ### Sync Status
-Our apps are built to automatically sync all folders on launch and at regular intervals. Sometimes, the Interactive needs to know about the status of sync to ensure that sufficient content is loaded before rendering the Interactive. To receive information about the status of sync, apps can listen to events injected into the DOM's document object, and react to those events.
+Our apps are built to automatically sync all folders on launch and at regular intervals. Sometimes, the Extension needs to know about the status of sync to ensure that sufficient content is loaded before rendering the Extension. To receive information about the status of sync, apps can listen to events injected into the DOM's document object, and react to those events.
 
 *Example:*<br>
 
@@ -931,7 +931,7 @@ where the JSON object's attributes have the following meaning:
 
 <b>PLEASE NOTE</b>: mflyInit is deprecated. We have discovered that, as content libraries become incredibly large, mflyInit consumes an excessive amount of memory. As a result, we strongly suggest using mflyCommands.getFolder() and mflyCommands.getItem() to selectively construct the hierarchy that is needed at that time.
 
-The app calls this function when the app launches an Interactive.  The parameter is a dictionary of JSON objects that represent a flattened version of the full hierarchy of folders and items available to the user. The key of each entry is the item/folder slug. Each entry for folders contains a JSON Array called “items”, which contains an array of slugs that are children of this folder.
+The app calls this function when the app launches an Extension.  The parameter is a dictionary of JSON objects that represent a flattened version of the full hierarchy of folders and items available to the user. The key of each entry is the item/folder slug. Each entry for folders contains a JSON Array called “items”, which contains an array of slugs that are children of this folder.
 
 For example, if a user has the following hierarchy:
 
@@ -999,9 +999,9 @@ then the object may look like this:
     }
 
 
-This function and mflyResume exist in harmony.  mflyInit is called on launch of the Interactive. mflyResume is called on both launch and resume of the Interactive.
+This function and mflyResume exist in harmony.  mflyInit is called on launch of the Extension. mflyResume is called on both launch and resume of the Extension.
 
-Expect mflyInit to be called many times for large hierarchies, as often as every 2-3 seconds. Consider processing the results of the mflyInit object in parallel. Imagine in the worst case an mflyInit object with 10,000 items, called every 2-3 seconds. If processing that object occurred synchronously, the Interactive would grind to a halt or crash with out of memory errors.
+Expect mflyInit to be called many times for large hierarchies, as often as every 2-3 seconds. Consider processing the results of the mflyInit object in parallel. Imagine in the worst case an mflyInit object with 10,000 items, called every 2-3 seconds. If processing that object occurred synchronously, the Extension would grind to a halt or crash with out of memory errors.
 
 Parameter definitions:
 
@@ -1032,13 +1032,13 @@ All dates are specified in ISO 8601 format.
 
 
 ## Saving and retrieving locally persisted key/value data
-Interactives can save data to and retrieve data from the app with AJAX. This is useful for persisting data within or between Interactives. After saving, you can be sure that your data will be saved if the user restarts the app or device (and, soon, uninstalls/reinstalls the app). You can use any key you wish, which provides a lot of flexibility, but please consider providing a namespace within your keys. Otherwise, two Interactives may find ways to clobber each others’ keys.
+Extensions can save data to and retrieve data from the app with AJAX. This is useful for persisting data within or between Extensions. After saving, you can be sure that your data will be saved if the user restarts the app or device (and, soon, uninstalls/reinstalls the app). You can use any key you wish, which provides a lot of flexibility, but please consider providing a namespace within your keys. Otherwise, two Extensions may find ways to clobber each others’ keys.
 
 For iOS, Android and Windows 8, key/value data is isolated by user, by app. So, two users cannot share keys, and two apps cannot share keys. Furthermore, currently all key/value data is stored on the device. So, uninstalling the app will remove all saved keys.
 
-For web Interactives, key/value data is stored in Local Storage. There is no isolation provided at the moment for the data. It is advised that you prefix your keys if there is a chance that the key will be accessed from multiple environments or users. Once syncronizing of this data to servers is available, prefixing will no longer be necessary.
+For web Extensions, key/value data is stored in Local Storage. There is no isolation provided at the moment for the data. It is advised that you prefix your keys if there is a chance that the key will be accessed from multiple environments or users. Once syncronizing of this data to servers is available, prefixing will no longer be necessary.
 
-If your Interactive needs to persist data on the server, please see the section `Saving and retrieving synchronized key/value data` below.
+If your Extension needs to persist data on the server, please see the section `Saving and retrieving synchronized key/value data` below.
 
 ### Save data
 To save data to the app container, call mflyCommands.putValue(_key, value_), where _key_ is the key you wish to save, and _value_ is the value for that key.
@@ -1204,7 +1204,7 @@ To delete a key/value pair by key from the app container, use mflyCommands.delet
 ----------
 
 ## Saving and retrieving synchronized key/value data
-Synchronized key/value storage allows Interactives to persist key/value pairs that are saved on Mediafly servers in addition to being stored on devices. This is useful for persisting data within or between Interactives, and between devices. After saving, you can be sure that your data will be saved if the user restarts the app or device, and, uninstalls/reinstalls the app. You can use any key you wish, which provides a lot of flexibility, but please consider providing a namespace within your keys. Otherwise, two Interactives may find ways to clobber each others’ keys.
+Synchronized key/value storage allows Extensions to persist key/value pairs that are saved on Mediafly servers in addition to being stored on devices. This is useful for persisting data within or between Extensions, and between devices. After saving, you can be sure that your data will be saved if the user restarts the app or device, and, uninstalls/reinstalls the app. You can use any key you wish, which provides a lot of flexibility, but please consider providing a namespace within your keys. Otherwise, two Extensions may find ways to clobber each others’ keys.
 
 Key/value data is isolated by user, by app. So, two users cannot share keys, and two apps cannot share keys. Furthermore, all key/value data is stored on the device as well as the server. So, uninstalling and reinstalling the app will still restore all data from the server to the device..
 
@@ -1349,10 +1349,10 @@ To delete a key/value pair by key from the app container, use mflyCommands.delet
 
 ----------
 
-## Emailing content from Interactives
+## Emailing content from Extensions
 
 ### Overview
-Interactives can have Mediafly's backend send emails with attachments. Attachments are Base64 encoded URLs.
+Extensions can have Mediafly's backend send emails with attachments. Attachments are Base64 encoded URLs.
 Even though emails are sent from Mediafly's servers, they have "Reply-To" field populated with the curent logged in user's email address.
 
 *Example*
@@ -1378,17 +1378,17 @@ Even though emails are sent from Mediafly's servers, they have "Reply-To" field 
 
 ----------
 
-## Embedding images, other Interactives, or pages of documents
+## Embedding images, other Extensions, or pages of documents
 
 ### Overview
-Interactives have the ability to embed items that exist in the app into it.  This is used for four primary purposes:
+Extensions have the ability to embed items that exist in the app into it.  This is used for four primary purposes:
 
 * Retrieve an item that contains structured data (JSON, XML, CSV)
-* Embed an item that is an image and render it as an image in this Interactive
-* Embed another Interactive into an iframe on this Interactive
+* Embed an item that is an image and render it as an image in this Extension
+* Embed another Extension into an iframe on this Extension
 * Embed a page from a PowerPoint, PDF, or Word document
 
-Embedding other types (audio, video, URLs) will have unexpected results. The best user experience will be provided to the user only if embedding is limited to data, images, documents and Interactives.
+Embedding other types (audio, video, URLs) will have unexpected results. The best user experience will be provided to the user only if embedding is limited to data, images, documents and Extensions.
 
 * To retrieve a data item, use ```mflyCommands.getData(id)```, where _id_ is the ID of the data item you wish to obtain.
 * To embed an image, create an ```<img>``` that refers to a loading image. In JavaScript, call ```mflyCommands.embed($element, id)```, where _$element_ is a jQuery reference to the img element, and _id_ is the Airship id of the image item.
@@ -1399,14 +1399,14 @@ Embedding other types (audio, video, URLs) will have unexpected results. The bes
 		* _maxWidth_ (number): Maximum width of the image
 		* _maxHeight_ (number): Maximum height of the image
 		* _rotate_ (number): Degree of rotation to apply to the image. Values of 0, 90, 180, 270, or 360 are acceptable.
-* To embed another Interactive, construct an ```<iframe>```. In JavaScript, call ```mflyCommands.embed($element, id)```, where _$element_ is a jQuery reference to the iframe element, and _id_ is the Airship id of the other Interactive.
+* To embed another Extension, construct an ```<iframe>```. In JavaScript, call ```mflyCommands.embed($element, id)```, where _$element_ is a jQuery reference to the iframe element, and _id_ is the Airship id of the other Extension.
 * To embed the page from a document as an image, create an ```<img>``` that refers to a loading image. In JavaScript, call ```mflyCommands.embed($element, id, page)```, where _$element_ is a jQuery reference to the img element, _id_ is the Airship id of the image item, and _page_ is the page number that you wish to embed.
 * Please note: if you are embedding an image asset for the web Viewer, please consider directly accessing the ```resourceUrl``` attribute instead of using ```mflyCommands.embed```. This will improve loading speed, caching, and reduce network requests. See the [optional changes](#optional_changes) section below.
 
 
 ### Example
 
-See our [open-source 'Embed and Data Items' Interactive](https://bitbucket.org/mediafly/mediafly-interactives-tools-and-examples/src/tip/examples/Embed%20and%20Data%20Items/Containing%20Interactive/?at=default) for an excellent working example of all four types of Embed described above.
+See our [open-source 'Embed and Data Items' Extension](https://bitbucket.org/mediafly/mediafly-interactives-tools-and-examples/src/tip/examples/Embed%20and%20Data%20Items/Containing%20Interactive/?at=default) for an excellent working example of all four types of Embed described above.
 
 ### Technical details
 
@@ -1415,7 +1415,7 @@ Here are the HTTP response codes by platform. Unfortunately, these are not all t
 State | iOS | Android
 ------------ | ------------- | ------------
 Item downloaded and ready | HTTP response code 301 (Redirect). Browser should automatically redirect to correct URL. Body contains retrieved data.  | HTTP response code 200. Body contains retrieved data.
-Item not already downloaded | HTTP response code 202 (Accepted), with Retry-After header set to number of seconds the Interactive should wait before trying again. If not set, default to a reasonable value, like 5. | HTTP response code 200, with an empty body. Interactive should retry after a reasonable number of seconds, like 5.
+Item not already downloaded | HTTP response code 202 (Accepted), with Retry-After header set to number of seconds the Extension should wait before trying again. If not set, default to a reasonable value, like 5. | HTTP response code 200, with an empty body. Extension should retry after a reasonable number of seconds, like 5.
 Item not found | HTTP response code 404 (Not found) | HTTP response code 404 (Not found)
 
 
@@ -1427,7 +1427,7 @@ As you can see, embedding requires care. You cannot assume that the embedded ite
 
 ### Reporting when embedding pages
 
-Our Reporting system automatically captures who viewed what, when, and where, when using the native app that sits underneath the Interactive. However, when you embed pages, the app loses that information and is unable to tell our systems about view data.
+Our Reporting system automatically captures who viewed what, when, and where, when using the native app that sits underneath the Extension. However, when you embed pages, the app loses that information and is unable to tell our systems about view data.
 
 To inform our Reporting system of a page view, post a page view after the page has been shown to the user:
 
@@ -1437,7 +1437,7 @@ To inform our Reporting system of a page view, post a page view after the page h
 
 ### Reporting
 
-When building an interactive that implements its own navigation instead of relying on the, the interactive is responsible for notifying Mediafly's Reporting system.
+When building an Extension that implements its own navigation instead of relying on the, the Extension is responsible for notifying Mediafly's Reporting system.
 
 To inform our Reporting system of various actions:
 
@@ -1460,7 +1460,7 @@ When a user plugs into an HDMI dongle or connects via AirPlay, they can change t
 
 TODO: Add screenshots of what this looks like
 
-To support this mode in an Interactive, the Interactive must do a few things.
+To support this mode in an Extension, the Extension must do a few things.
 
 1. On the app call to mflyDataInit, the object returned must have mflyWideScreenSupport set:
 
@@ -1471,7 +1471,7 @@ To support this mode in an Interactive, the Interactive must do a few things.
 
 	Other parameters may exist in this JSON object, of course, but mflyWideScreenSupport is the key to initiate proper app support for widescreen.
 
-2. If the app has sent mflyWideScreenSupport=true in mflyDataInit, the Interactive should expect to receive a call from the app to mflyWideScreen(useWideScreen), where useWidescreen is either true or false.
+2. If the app has sent mflyWideScreenSupport=true in mflyDataInit, the Extension should expect to receive a call from the app to mflyWideScreen(useWideScreen), where useWidescreen is either true or false.
 
 
 *Example:*<br>
@@ -1488,7 +1488,7 @@ To support this mode in an Interactive, the Interactive must do a few things.
             }
         </script>
 
-3. (Optional) Create a button that the user taps to bring up the Second Screen Options dialog. This button in the Interactive would mimic the button in the native app that allows the user to switch between iOS, Mirroring, and Second Screen. When tapped, the Interactive should invoke:
+3. (Optional) Create a button that the user taps to bring up the Second Screen Options dialog. This button in the Extension would mimic the button in the native app that allows the user to switch between iOS, Mirroring, and Second Screen. When tapped, the Extension should invoke:
 
 		mflyCommands.showSecondScreenOptions();
 
@@ -1510,7 +1510,7 @@ To support this mode in an Interactive, the Interactive must do a few things.
 
 ### UIWebKit Resolution
 
-When the iPad is displaying an Interactive only on its canvas, the WebKit container is 1024 x 568.  When the iPad is projecting to Second Screen, the WebKit container shrinks to 960 x 540. This allows for the browser to efficiently scale up when connected to 720p and 1080p TVs.
+When the iPad is displaying an Extension only on its canvas, the WebKit container is 1024 x 568.  When the iPad is projecting to Second Screen, the WebKit container shrinks to 960 x 540. This allows for the browser to efficiently scale up when connected to 720p and 1080p TVs.
 
 To account for this, we suggest tagging the <body> element with a class that denotes either "ipad" or "widescreen", and adjusting your layout and images based on this.  
 
@@ -1551,7 +1551,7 @@ To account for this, we suggest tagging the <body> element with a class that den
 
 ## Getting temporary credentials to communicate with Launchpad and Accounts APIs
 
-Launchpad API allows abilities such as uploading files, and updating items in Airship. If an Interactives wishes to leverage these capabilities, it need to be authenticated. Interactives can call `mflyCommands.getCredentials()` function to retrive the necessary credentials to access these APIs. The response from `getCredentials` contains a short lived access token. It is the Interactive's responsibility to get a new token when the existing token expires (If an API endpoint returns a `401` HTTP response code, a new token should be retrieved). In addition to the token, `environmentId` is also returned which is necessary to make calls to the Launchpad API.
+Launchpad API allows abilities such as uploading files, and updating items in Airship. If an Extensions wishes to leverage these capabilities, it need to be authenticated. Extensions can call `mflyCommands.getCredentials()` function to retrive the necessary credentials to access these APIs. The response from `getCredentials` contains a short lived access token. It is the Extension's responsibility to get a new token when the existing token expires (If an API endpoint returns a `401` HTTP response code, a new token should be retrieved). In addition to the token, `environmentId` is also returned which is necessary to make calls to the Launchpad API.
 
 
 *Example*
@@ -1571,25 +1571,25 @@ Launchpad API allows abilities such as uploading files, and updating items in Ai
 ## Other useful information
 
 ### Stopping rubber band effects
-Since Interactives are embedded web pages, on some (particularly iOS) devices they tend to have a “rubber band” effect.  E.g. if touch-and-hold a part of the Interactive, then drag it, the entire screen will follow your finger, then "snap back" after you let go.  This does not feel appropriate for an Interactive, as users want the look and feel to be more native.
+Since Extensions are embedded web pages, on some (particularly iOS) devices they tend to have a “rubber band” effect.  E.g. if touch-and-hold a part of the Extension, then drag it, the entire screen will follow your finger, then "snap back" after you let go.  This does not feel appropriate for an Extension, as users want the look and feel to be more native.
 
 To address this, we recommend using [Hammer.js](http://eightmedia.github.io/hammer.js/), a mobile-focused touch gesture library.
 
-We have created a detailed example within Mediafly Interactives Tools and Examples that demonstrates this, [here](https://bitbucket.org/mediafly/mediafly-interactives-tools-and-examples/src/tip/examples/Swipe/app/?at=default).
+We have created a detailed example within Mediafly Extensions Tools and Examples that demonstrates this, [here](https://bitbucket.org/mediafly/mediafly-interactives-tools-and-examples/src/tip/examples/Swipe/app/?at=default).
 
 ### Smoother scrolling
 By default, iOS scrolling in the UIWebView is exactly controlled by your finger. You can drag the web view down and up, but you cannot "throw" the page in a direction. Furthermore, if you have a lot of large images on the page, scrolling can become choppy.
 
 To alleviate this, consider implementing ```-webkit-overflow-scrolling: touch``` on your DOM nodes that handle scrolling. When set to touch, UIWebView uses native-style scrolling on your node.
 
-### Invoking an Interactive with parameters (iOS)
+### Invoking an Extension with parameters (iOS)
 iOS support invocation URLS. An item can be linked to using these URLs.
 
 Example: [onmediafly://9cf282320e6340ee8b830e5376d54531product265958?param1=1&param2=2](onmediafly://9cf282320e6340ee8b830e5376d54531product265958?param1=1&param2=)
 
 This URL has the following format: [mcode]://[id]?[params...]
 
-The iOS app will pass all supplied params to the Interactive and the Interactive can
+The iOS app will pass all supplied params to the Extension and the Extension can
 retrieve them using JavaScript `window.location.search`.
 
 ----------
@@ -1601,49 +1601,47 @@ Appendix
 Additional information that doesn't fit very well elsewhere.
 
 
-## Supporting Interactives for the Web
-We will release support for Interactives for the Web Viewer in Q2 2015. Like other platforms, this support will be rolled out slowly over time, as specific customers demand specific features.
-
-With Web Interactives, developers can now also support all major browsers and all major mobile platforms easily and cleanly.
+## Supporting Extensions for the Web, Windows and Mac
+With Web Extensions, developers can now also support all major browsers and all major mobile platforms easily and cleanly.
 
 ### How does it work?
-Web Interactives will be able to make use of the same delivery mechanism and API as Interactives available on iOS, Android and Windows 8 today. When the user opens an Interactive in the Web Viewer, the web server will:
+Web Extensions will be able to make use of the same delivery mechanism and API as Extensions available on iOS and Android today. When the user opens an Extension in the Web Viewer, the web server will:
 
-* Unzip the Interactive zip file
+* Unzip the Extension zip file
 * Point to index.html
-* Proxy requests to the Interactives API to the correct URL
+* Proxy requests to the Extensions API to the correct URL
 
-Provided that you are using mflyCommands.js, the API will remain largely unchanged. Only a few minor issues need to be addressed for you to take full advantage of Interactives on the Web.
+Provided that you are using mflyCommands.js, the API will remain largely unchanged. Only a few minor issues need to be addressed for you to take full advantage of Extensions on the Web.
 
 
 ### Required changes
-The following changes need to be made to your existing Interactives to support Interactives on the Web:
+The following changes need to be made to your existing Extensions to support Extensions on the Web:
 
 1. **Use mflyCommands.js, and keep it up to date**. This should be your primary way to access our API. Don't make mfly:// calls to the API directly, as those simply will not work in web browsers.
 
-2. **Don't assume a specific browser or size**. The luxurious days of assuming latest Safari (iOS) or Google Chrome (Android 4.4+) are over. Build your Interactive like you would a standard website, because, it can be opened on any browser like a standard website.
+2. **Don't assume a specific browser or size**. The luxurious days of assuming latest Safari (iOS) or Google Chrome (Android 4.4+) are over. Build your Extension like you would a standard website, because, it can be opened on any browser like a standard website.
 
-3. **Don't rely on mflyDataInit, rely on mflyCommands.getInteractiveInfo() **. Web Interactives will not call "into" the Interactive. This means that mflyDataInit, mflySync, mflyResume, mflyPause, and mflyInit are not supported. Instead, make a new call once the document has been initialized: ```mflyCommands.getInteractiveInfo()```. This asynchronous function will obtain the same information that mflyDataInit used to be called with, like so:
+3. **Don't rely on mflyDataInit, rely on mflyCommands.getInteractiveInfo() **. Web Extensions will not call "into" the Extension. This means that mflyDataInit, mflySync, mflyResume, mflyPause, and mflyInit are not supported. Instead, make a new call once the document has been initialized: ```mflyCommands.getInteractiveInfo()```. This asynchronous function will obtain the same information that mflyDataInit used to be called with, like so:
 
 		mflyCommands.getInteractiveInfo()
 			.done(function(data) {
 				// data contains a JSON object with information
-				// about this app, user and Interactive
+				// about this app, user and Extension
 			}).fail(function() {
 				// handle failure
 			});
 
-4. *** Don't include a file at the root of your Interactive called mflyManifest.json***. We doubt you would, but if you do, it is likely to be overwritten by one of your apps as a part of the initialization process.
+4. *** Don't include a file at the root of your Extension called mflyManifest.json***. We doubt you would, but if you do, it is likely to be overwritten by one of your apps as a part of the initialization process.
 
 5. **Adjust mflyCommands.getFolder(id) call signature change**. The call signature for mflyCommands.getFolder(id) has changed. Previously, if any of its items were also folders, it would return the items within the folders as an array of IDs. This has changed, and those subfolders no longer includes the items key at all. A separate mflyCommands.getFolder(id) call will have to be made on those children folders.
 
-6. **Each URL should be able to establish its own state**. Don't pass around variables like you would in a traditional application. This breaks on websites, and it will break on web Interactives.
+6. **Each URL should be able to establish its own state**. Don't pass around variables like you would in a traditional application. This breaks on websites, and it will break on web Extensions.
 
 7. **All resources must be accessed in a relative way**. Don't try to construct absolute URLs to assets within your .zip file, as that path will undoutedly differ on other platforms.
 
 
 ### Optional changes
-The following changes will help improve performance for your Interactives when opened in the Web Viewer.
+The following changes will help improve performance for your Extensions when opened in the Web Viewer.
 
 1. **To render images, consider using the ```resourceUrl``` attribute and not mflyCommands.embed**. The resourceUrl attribute can be found on mflyCommands.[getFolder, getItem, filter], and other calls that return full item models. The benefits are many:
 
