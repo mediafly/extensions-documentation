@@ -1,4 +1,4 @@
-![image](./images/interactives-API-logo.png)
+![image](./images/ExtensionsAPI-logo.png)
 
 Overview
 ========
