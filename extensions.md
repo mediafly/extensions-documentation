@@ -22,7 +22,7 @@ Extensions are all the components that make up a static website:
 All of these files are packaged up in a specific way and uploaded to Mediafly Airship. These packages have the extension of `.extension`. Note: Packaging Extensions with the `.zip` is now obsolete and Viewer no longer supports this file extension for Extensions.
 
 When the user opens the Extension, the app loads and renders the Extension much like it would a traditional web page.
-![image](http://devdocs.mediafly.com/interactives/images/Interactives%20Overview.png)
+![image](http://devdocs.mediafly.com/extensions/images/Interactives%20Overview.png)
 
 To ensure that the apps work consistently and correctly, the Extension developer needs to follow a few rules:
 
