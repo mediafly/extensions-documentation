@@ -22,7 +22,7 @@ Extensions are all the components that make up a static website:
 All of these files are packaged up in a specific way and uploaded to Mediafly Airship. These packages have the extension of `.mext`. Note: Packaging Extensions with the `.zip` is now obsolete and Viewer no longer supports this file extension for Extensions.
 
 When the user opens the Extension, the app loads and renders the Extension much like it would a traditional web page.
-![image](http://devdocs.mediafly.com/extensions/images/Interactives%20Overview.png)
+![image](http://devdocs.mediafly.com/extensions/images/Extensions%20Overview.png)
 
 To ensure that the apps work consistently and correctly, the Extension developer needs to follow a few rules:
 
@@ -60,15 +60,15 @@ Building Extensions
 =====================
 
 ## Developing and testing an Extension
-Mediafly provides a CLI (command line interface) utility called `mfly-interactive` to make it easier to test and develop an Extension. `mfly-interactive` allows an Extension developer to:
+Mediafly provides a CLI (command line interface) utility called `extension-cli` to make it easier to test and develop an Extension. `extension-cli` allows an Extension developer to:
 
 1. Rapidly develop Extensions by live-reloading changes from the developer's machine.
 2. Generate the `.mext` package from static files.
 3. Upload the Extension into Airship.
 
-For more detailed instructions, refer to https://github.com/mediafly/mfly-interactive.
+For more detailed instructions, refer to https://www.npmjs.com/package/@mediafly/extension-cli.
 
-Note: You will need the [Node.js](https://nodejs.org/en/download/) runtime (v5 or higher) to use `mfly-interactive`. `mfly-interactive` is currently only supported on Viewer and iOS.
+Note: You will need the [Node.js](https://nodejs.org/en/download/) runtime (v5 or higher) to use `extension-cli`. `extension-cli` is currently only supported on Viewer and iOS.
 
 ## Testing on device
 
@@ -108,7 +108,7 @@ Please [join our Google Group](https://groups.google.com/forum/?hl=en#!forum/med
 Please see the [repository](https://bitbucket.org/mediafly/mediafly-interactives-documentation/commits/all) of this document for a changelog.
 
 ### Feedback
-See an area of confusion? Please [contact us](mailto:support@mediafly.com?Subject=Interactives%20Documentation%20Feedback).
+See an area of confusion? Please [contact us](mailto:support@mediafly.com?Subject=Extensions%20Documentation%20Feedback).
 
 ----------
 
