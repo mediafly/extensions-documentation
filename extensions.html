@@ -116,13 +116,20 @@
 
 <p>Please see the <a href="https://bitbucket.org/mediafly/mediafly-interactives-tools-and-examples">Mediafly Extensions Tools and Examples</a> BitBucket repository for more information.</p>
 
-<p>To see the examples in action on your device:</p>
+<p>To see the examples in action on your device on a browser:</p>
 
-<ol>
+<ul>
+<li>Navigate to <a href="https://viewer.mediafly.com/interactives">https://viewer.mediafly.com/interactives</a>. Note: you will need a username and password; please contact <a href="https://support.mediafly.com/support-center/contact/">Mediafly Support</a> to request one.</li>
+</ul>
+
+<p>To see the examples on a device app:</p>
+
+<ul>
 <li>Download Whitebox for <a href="https://itunes.apple.com/us/app/whitebox/id399107683?mt=8">iOS</a>, <a href="https://play.google.com/store/apps/details?id=com.mediafly.android.video.onmediafly&amp;hl=en">Android</a>, <a href="http://downloads.mediafly.com.s3.amazonaws.com/desktopviewer/mediafly-desktop-viewer-prod-latest.exe">Windows</a> or <a href="http://downloads.mediafly.com.s3.amazonaws.com/desktopviewer/mediafly-desktop-viewer-prod-latest.dmg">Mac</a></li>
-<li>When asked for Company Code or Company Login Name, enter &quot;extensions&quot;</li>
+<li>When asked for Company Code or Company Login Name, enter &quot;interactives&quot;</li>
+<li>Log in. You will need a username and password; please contact <a href="https://support.mediafly.com/support-center/contact/">Mediafly Support</a> to request one.</li>
 <li>Each example will be contained within a folder that describes the example</li>
-</ol>
+</ul>
 
 <h3 id="toc_10">Google Group</h3>
 
@@ -176,16 +183,17 @@
 <li>displayName: display name. Can be email, first+last, or something similar. May be blank in the case of content libraries that don&#39;t require logging in</li>
 <li>item: title of this Extension</li>
 <li>id: the slug (unique id) of this Extension within Airship</li>
-<li>osType: which OS (iOS, Android, Windows 8)</li>
-<li>osVersion: which version of the OS</li>
-<li>appVersion: which version of the app</li>
-<li>deviceId: the unique device ID for this device</li>
+<li>parentId: the slug (unique id) of the parent of this Extension in Airship</li>
+<li>osType: which OS (<code>iOS</code>, <code>Android</code>, <code>web</code>, <code>desktop</code> for Windows or Mac)</li>
+<li>osVersion: which version of the OS. Only works on iOS and Android.</li>
+<li>appVersion: which version of the app. Only works on iOS and Android.</li>
+<li>deviceId: the unique device ID for this device. Only works on iOS and Android.</li>
 <li>lastUpdated: the lasted updated time. This is good for debugging purposes, to help you identify which version of the Extension you are looking at on the device</li>
 </ul>
 
 <p>Note that not every parameter is available on every platform.</p>
 
-<p><em>Availability:</em> iOS, Android, Web Viewer, Win/Mac</p>
+<p><em>Availability:</em> iOS, Android, Web Viewer, Windows/Mac</p>
 
 <h3 id="toc_16">Basic controls</h3>
 
@@ -193,7 +201,7 @@
 
 <p><em>mflyCommands.js:</em> mflyCommands.close() <br>
 <em>Description:</em> Closes the item and returns the user to where they were before. <br>
-<em>Availability:</em> iOS, Android, Web Viewer, Win/Mac</p>
+<em>Availability:</em> iOS, Android, Web Viewer, Windows/Mac</p>
 
 <h4 id="toc_18">Show control bars</h4>
 
@@ -911,7 +919,7 @@ Response: null</code></pre></div>
 <li>displayName: display name. Can be email, first+last, or something similar</li>
 <li>item: title of this Extension</li>
 <li>id: the slug (unique id) of this Extension within Airship</li>
-<li>osType: which OS (iOS, Android, Windows 8)</li>
+<li>osType: which OS (iOS, Android, Windows, Mac)</li>
 <li>osVersion: which version of the OS</li>
 <li>appVersion: which version of the app</li>
 <li>deviceId: the unique device ID for this device</li>

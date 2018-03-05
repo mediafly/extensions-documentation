@@ -95,11 +95,16 @@ Mediafly creates and maintains a detailed list of examples. These examples illus
 
 Please see the [Mediafly Extensions Tools and Examples](https://bitbucket.org/mediafly/mediafly-interactives-tools-and-examples) BitBucket repository for more information.
 
-To see the examples in action on your device:
+To see the examples in action on your device on a browser:
 
-1. Download Whitebox for [iOS](https://itunes.apple.com/us/app/whitebox/id399107683?mt=8), [Android](https://play.google.com/store/apps/details?id=com.mediafly.android.video.onmediafly&hl=en), [Windows](http://downloads.mediafly.com.s3.amazonaws.com/desktopviewer/mediafly-desktop-viewer-prod-latest.exe) or [Mac](http://downloads.mediafly.com.s3.amazonaws.com/desktopviewer/mediafly-desktop-viewer-prod-latest.dmg)
-2. When asked for Company Code or Company Login Name, enter "extensions"
-3. Each example will be contained within a folder that describes the example
+* Navigate to [https://viewer.mediafly.com/interactives](https://viewer.mediafly.com/interactives). Note: you will need a username and password; please contact [Mediafly Support](https://support.mediafly.com/support-center/contact/) to request one.
+
+To see the examples on a device app:
+
+* Download Whitebox for [iOS](https://itunes.apple.com/us/app/whitebox/id399107683?mt=8), [Android](https://play.google.com/store/apps/details?id=com.mediafly.android.video.onmediafly&hl=en), [Windows](http://downloads.mediafly.com.s3.amazonaws.com/desktopviewer/mediafly-desktop-viewer-prod-latest.exe) or [Mac](http://downloads.mediafly.com.s3.amazonaws.com/desktopviewer/mediafly-desktop-viewer-prod-latest.dmg)
+* When asked for Company Code or Company Login Name, enter "interactives"
+* Log in. You will need a username and password; please contact [Mediafly Support](https://support.mediafly.com/support-center/contact/) to request one.
+* Each example will be contained within a folder that describes the example
 
 ### Google Group
 Please [join our Google Group](https://groups.google.com/forum/?hl=en#!forum/mediafly-extensions) to keep up with the latest information, updates and news. As well, learn from and get help from other Extensions builders and customers.
@@ -149,22 +154,23 @@ Communicating the app is done by calling functions on mflyCommands. The list of 
 * displayName: display name. Can be email, first+last, or something similar. May be blank in the case of content libraries that don't require logging in
 * item: title of this Extension
 * id: the slug (unique id) of this Extension within Airship
-* osType: which OS (iOS, Android, Windows 8)
-* osVersion: which version of the OS
-* appVersion: which version of the app
-* deviceId: the unique device ID for this device
+* parentId: the slug (unique id) of the parent of this Extension in Airship
+* osType: which OS (`iOS`, `Android`, `web`, `desktop` for Windows or Mac)
+* osVersion: which version of the OS. Only works on iOS and Android.
+* appVersion: which version of the app. Only works on iOS and Android.
+* deviceId: the unique device ID for this device. Only works on iOS and Android.
 * lastUpdated: the lasted updated time. This is good for debugging purposes, to help you identify which version of the Extension you are looking at on the device
 
 Note that not every parameter is available on every platform.
 
-*Availability:* iOS, Android, Web Viewer, Win/Mac
+*Availability:* iOS, Android, Web Viewer, Windows/Mac
 
 ### Basic controls
 
 #### Close the item
 *mflyCommands.js:* mflyCommands.close() <br>
 *Description:* Closes the item and returns the user to where they were before. <br>
-*Availability:* iOS, Android, Web Viewer, Win/Mac
+*Availability:* iOS, Android, Web Viewer, Windows/Mac
 
 #### Show control bars
 *mflyCommands.js:* mflyCommands.showControlBars() <br>
@@ -838,7 +844,7 @@ mflyDataInit will be called with a JSON object that contains initial configurati
 * displayName: display name. Can be email, first+last, or something similar
 * item: title of this Extension
 * id: the slug (unique id) of this Extension within Airship
-* osType: which OS (iOS, Android, Windows 8)
+* osType: which OS (iOS, Android, Windows, Mac)
 * osVersion: which version of the OS
 * appVersion: which version of the app
 * deviceId: the unique device ID for this device
