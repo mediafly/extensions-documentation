@@ -864,20 +864,675 @@ Response: null</code></pre></div>
 
 <hr>
 
-<h2 id="toc_78">Being controlled by the app</h2>
+<h2 id="toc_78">Saving and retrieving key/value data</h2>
 
-<p>Mediafly&#39;s apps send many kinds of events into the Extension. These events can be listened to by the Extension reactively, and the Extension can then take action. These capabilities are only availble to the native apps, not to web Viewer.</p>
+<p>Extensions can save data to and retrieve data from the app with AJAX. This is useful for persisting data within or between Extensions. After saving, you can be sure that your data will be saved if the user restarts the app or device. You can use any key you wish, which provides a lot of flexibility, but please consider providing a namespace within your keys. Otherwise, two Extensions may find ways to clobber each others’ keys.</p>
 
-<p>There are two methods in which this happens:</p>
+<p>On iOS, Android, Windows and Mac, key/value data is isolated by user and by app. So, two users cannot share keys, and two apps cannot share keys.</p>
+
+<p>For web Extensions, key/value data is stored in local storage. There is no isolation provided between key/value data between users or environments. We advise you to prefix your keys if there is a chance that the key will be accessed from multiple environments or users.</p>
+
+<p>There are two approaches to reading and writing data:</p>
+
+<ul>
+<li>Synced: this method stores data locally and also synchronizes the data to Mediafly&#39;s servers. If a user saves key=value on Device A, then loads the Extension on Device B, Device B will pull down key=value onto Device B as the Extension loads.</li>
+<li>Local: this method stores data locally and does not synchronize with our servers. If a user uninstalls the app (iOS, Android, Windows, Mac) clears their cookies (web), or uses a private/incognito window (web) the keys will be erased and cannot be retrieved.</li>
+</ul>
+
+<p>Each of these approaches has different mflyCommands calls, as detailed below. Generally, most developers will want to use the Synced approach.</p>
+
+<h3 id="toc_79">Save data (synced)</h3>
+
+<p>To save data to the app container, call mflyCommands.putSyncedValue(<em>key, value</em>), where <em>key</em> is the key you wish to save, and <em>value</em> is the value for that key.</p>
+
+<p><em>Example:</em><br>
+This example saves key/value data, using mflyCommands.js.</p>
+
+<div><pre><code class="language-none">var key = $(&#39;#key&#39;).val();
+var value = { name: ‘abc’, value: ‘def’ };
+
+mflyCommands.putSyncedValue(key, value)
+    .done(function(data, status) {
+        // Success! Do something.
+    })
+    .fail(function(deferred, status) {
+        // Error! Do something.
+    });</code></pre></div>
+
+<p>HTTP response codes:</p>
+
+<ul>
+<li>Response of 200 OK indicates a successful save to an existing key</li>
+<li>Response of 201 Created indicates a successful save to a new key</li>
+<li>Response of 400 Bad Request is returned if the value has not been previously saved</li>
+</ul>
+
+<p><em>Availability:</em> iOS, Android, Web Viewer, Win/Mac</p>
+
+<h3 id="toc_80">Retrieve data (synced)</h3>
+
+<p>You can retrieve value information from keys in multiple ways using mflyCommands.js.</p>
+
+<p>Alternatively, you can make the calls directly with AJAX, but we strongly recommend using mflyCommands instead. When making calls directly,</p>
+
+<ul>
+<li>Response of 200 OK indicates a successful get of an existing key. The body of the response will contain the values indicated below.</li>
+<li>Response of 404 Not Found indicates that the key does not exist</li>
+</ul>
+
+<h4 id="toc_81">Single key</h4>
+
+<p>To get data for a specific key from the app container, use mflyCommands.getSyncedValue(<em>key</em>).</p>
+
+<p><em>Example:</em></p>
+
+<div><pre><code class="language-none">// Assume key &#39;abc&#39; has been set to value &#39;123&#39;.
+
+mflyCommands.getSyncedValue(&#39;abc&#39;)
+    .done(function(data, status) {
+        // Success! Do something.
+        console.log(data);
+    })
+    .fail(function(deferred, status) {
+        // Error! Do something.
+    });
+
+// Console output: 123</code></pre></div>
+
+<p>On successful retrieval, data will contain the value of the key.</p>
+
+<h4 id="toc_82">All keys</h4>
+
+<p>To get data for all keys from the app container, use mflyCommands.getSyncedValues().</p>
+
+<p><em>Example:</em></p>
+
+<div><pre><code class="language-none">// Assume key &#39;abc&#39; has been set to value &#39;123&#39;, and key &#39;def&#39; has been set to value &#39;456&#39;.
+
+mflyCommands.getSyncedValues()
+    .done(function(data, status) {
+        // Success! Do something.
+        console.log(data);
+    })
+    .fail(function(deferred, status) {
+        // Error! Do something.
+    });
+
+// Console output: { &quot;abc&quot;: &quot;123&quot;, &quot;def&quot;: &quot;456&quot; }</code></pre></div>
+
+<p>On successful retrieval, body will contain a JSON object enumerating all keys and values, as shown above.</p>
+
+<h4 id="toc_83">Key prefix</h4>
+
+<p>To get data for all keys that begin with X, use mflyCommands.getSyncedValues(<em>prefix</em>). On successful retrieval, data will contain a JSON object enumerating all keys and values where the keys begin with X.</p>
+
+<p><em>Example:</em></p>
+
+<div><pre><code class="language-none">// Assume:
+//   key &#39;snow&#39; has been set to value &#39;white&#39;,
+//   key &#39;snowball&#39; has been set to value &#39;round&#39;,
+//   key &#39;fire&#39; has been set to value &#39;red&#39;
+
+mflyCommands.getSyncedValues(&#39;snow&#39;)
+    .done(function(data, status) {
+        // Success! Do something.
+        console.log(data);
+    })
+    .fail(function(deferred, status) {
+        // Error! Do something.
+    });
+
+// Console output: { &quot;snow&quot;: &quot;white&quot;, &quot;snowball&quot;: &quot;round&quot; }
+
+mflyCommands.getSyncedValues(&#39;abc&#39;)
+    .done(function(data, status) {
+        // Success! Do something.
+        console.log(data);
+    })
+    .fail(function(deferred, status) {
+        // Error! Do something.
+    });
+
+// Console output: {}</code></pre></div>
+
+<p><em>Availability:</em> iOS, Android, Web Viewer, Win/Mac</p>
+
+<h3 id="toc_84">Delete data (synced)</h3>
+
+<p>To delete a key/value pair by key from the app container, use mflyCommands.deleteSyncedKey(<em>key</em>).</p>
+
+<p><em>Example:</em></p>
+
+<div><pre><code class="language-none">// Assume key &#39;abc&#39; has been set to value &#39;123&#39;.
+
+mflyCommands.deleteSyncedKey(&#39;abc&#39;)
+    .done(function(data, status) {
+        // Success! Do something.
+        console.log(&#39;abc has been deleted&#39;);
+    })
+    .fail(function(deferred, status) {
+        // Error! Do something.
+    });
+
+// Console output: &#39;abc has been deleted&#39;</code></pre></div>
+
+<p><em>Availability:</em> iOS, Android, Web Viewer, Win/Mac</p>
+
+<h3 id="toc_85">Save data (local)</h3>
+
+<p>To save data to the app container, call mflyCommands.putValue(<em>key, value</em>), where <em>key</em> is the key you wish to save, and <em>value</em> is the value for that key.</p>
+
+<p><em>Example:</em><br>
+This example saves key/value data, using mflyCommands.js.</p>
+
+<div><pre><code class="language-none">var key = $(&#39;#key&#39;).val();
+var value = { name: ‘abc’, value: ‘def’ };
+
+mflyCommands.putValue(key, value)
+    .done(function(data, status) {
+        // Success! Do something.
+    })
+    .fail(function(deferred, status) {
+        // Error! Do something.
+    });</code></pre></div>
+
+<p>HTTP response codes:</p>
+
+<ul>
+<li>Response of 200 OK indicates a successful save to an existing key</li>
+<li>Response of 201 Created indicates a successful save to a new key</li>
+<li>Response of 400 Bad Request is returned if the value has not been previously saved</li>
+</ul>
+
+<p>(Note: attempts were made to use HTTP PUT verbs, but iOS seems to strip out the body of the PUT, so we migrated to use GET instead).</p>
+
+<p><em>Example:</em><br>
+This example saves key/value data, using jQuery.</p>
+
+<div><pre><code class="language-none">var key = $(&#39;#key&#39;).val();
+var value = { name: ‘abc’, value: ‘def’ };
+
+$.ajax({
+    type: &quot;GET&quot;,
+    url: &quot;mfly://data/info/&quot; + key,
+    contentType: &quot;text/plain; charset=utf-8&quot;,
+    data: &quot;value=&quot; + encodeURIComponent(JSON.stringify(value)) + &quot;&amp;method=PUT&quot;,
+    dataType: &quot;text&quot;,
+    success: function(result, status, xhr) {
+        // Success! Do something.
+    },
+    error: function(xhr) {
+        // Error! Do something.
+    }
+});</code></pre></div>
+
+<p><em>Availability:</em> iOS, Android, Web Viewer, Win/Mac</p>
+
+<h3 id="toc_86">Retrieve data (local)</h3>
+
+<p>You can retrieve value information from keys in multiple ways using mflyCommands.js.</p>
+
+<p>Alternatively, you can make the calls directly with AJAX, but we strongly recommend using mflyCommands instead. When making calls directly,</p>
+
+<ul>
+<li>Response of 200 OK indicates a successful get of an existing key. The body of the response will contain the values indicated below.</li>
+<li>Response of 404 Not Found indicates that the key does not exist</li>
+</ul>
+
+<h4 id="toc_87">Single key</h4>
+
+<p>To get data for a specific key from the app container, use mflyCommands.getValue(<em>key</em>).</p>
+
+<p><em>Example:</em></p>
+
+<div><pre><code class="language-none">// Assume key &#39;abc&#39; has been set to value &#39;123&#39;.
+
+mflyCommands.getValue(&#39;abc&#39;)
+    .done(function(data, status) {
+        // Success! Do something.
+        console.log(data);
+    })
+    .fail(function(deferred, status) {
+        // Error! Do something.
+    });
+
+// Console output: 123</code></pre></div>
+
+<p>On successful retrieval, data will contain the value of the key.</p>
+
+<h4 id="toc_88">All keys</h4>
+
+<p>To get data for all keys from the app container, use mflyCommands.getValues().</p>
+
+<p><em>Example:</em></p>
+
+<div><pre><code class="language-none">// Assume key &#39;abc&#39; has been set to value &#39;123&#39;, and key &#39;def&#39; has been set to value &#39;456&#39;.
+
+mflyCommands.getValues()
+    .done(function(data, status) {
+        // Success! Do something.
+        console.log(data);
+    })
+    .fail(function(deferred, status) {
+        // Error! Do something.
+    });
+
+// Console output: { &quot;abc&quot;: &quot;123&quot;, &quot;def&quot;: &quot;456&quot; }</code></pre></div>
+
+<p>On successful retrieval, body will contain a JSON object enumerating all keys and values, as shown above.</p>
+
+<h4 id="toc_89">Key prefix</h4>
+
+<p>To get data for all keys that begin with X, use mflyCommands.getValues(<em>prefix</em>). On successful retrieval, data will contain a JSON object enumerating all keys and values where the keys begin with X.</p>
+
+<p><em>Example:</em></p>
+
+<div><pre><code class="language-none">// Assume:
+//   key &#39;snow&#39; has been set to value &#39;white&#39;,
+//   key &#39;snowball&#39; has been set to value &#39;round&#39;,
+//   key &#39;fire&#39; has been set to value &#39;red&#39;
+
+mflyCommands.getValues(&#39;snow&#39;)
+    .done(function(data, status) {
+        // Success! Do something.
+        console.log(data);
+    })
+    .fail(function(deferred, status) {
+        // Error! Do something.
+    });
+
+// Console output: { &quot;snow&quot;: &quot;white&quot;, &quot;snowball&quot;: &quot;round&quot; }
+
+mflyCommands.getValues(&#39;abc&#39;)
+    .done(function(data, status) {
+        // Success! Do something.
+        console.log(data);
+    })
+    .fail(function(deferred, status) {
+        // Error! Do something.
+    });
+
+// Console output: {}</code></pre></div>
+
+<p><em>Availability:</em> iOS, Android, Web Viewer, Win/Mac</p>
+
+<h3 id="toc_90">Delete data (local)</h3>
+
+<p>To delete a key/value pair by key from the app container, use mflyCommands.deleteKey(<em>key</em>).</p>
+
+<p><em>Example:</em></p>
+
+<div><pre><code class="language-none">// Assume key &#39;abc&#39; has been set to value &#39;123&#39;.
+
+mflyCommands.deleteKey(&#39;abc&#39;)
+    .done(function(data, status) {
+        // Success! Do something.
+        console.log(&#39;abc has been deleted&#39;);
+    })
+    .fail(function(deferred, status) {
+        // Error! Do something.
+    });
+
+// Console output: &#39;abc has been deleted&#39;</code></pre></div>
+
+<p><em>Availability:</em> iOS, Android, Web Viewer, Win/Mac</p>
+
+<hr>
+
+<h2 id="toc_91">Emailing content from Extensions</h2>
+
+<h3 id="toc_92">Overview</h3>
+
+<p>Extensions can have Mediafly&#39;s backend send emails with attachments. Attachments are Base64 encoded URLs.
+Even though emails are sent from Mediafly&#39;s servers, they have &quot;Reply-To&quot; field populated with the curent logged in user&#39;s email address.</p>
+
+<p><em>Example</em></p>
+
+<div><pre><code class="language-none">mflyCommands.sendEmail({
+    to: &#39;[to email address]&#39;,
+    subject: &#39;[email subject]&#39;,
+    body: &#39;[email body]&#39;,
+    attachments: [{
+        filename: &quot;[name of the attachment. for example: Presentation.pdf]&quot;,
+        dataUrl: &quot;[Base64 encoded URL]&quot;
+    }]
+}).done(function(data, status) {
+    // Success! Do something.
+    console.log(&#39;email has been sent successfully&#39;);
+})
+.fail(function(deferred, status) {
+    // Error! Do something.
+    console.log(&#39;error sending email&#39;);
+});</code></pre></div>
+
+<p><em>Availability</em>: iOS (654), Android (2.29.07), Web Viewer, Win/Mac (1.0.92)</p>
+
+<hr>
+
+<h2 id="toc_93">Embedding images, other Extensions, or pages of documents</h2>
+
+<h3 id="toc_94">Overview</h3>
+
+<p>Extensions have the ability to embed items that exist in the app into it.  This is used for four primary purposes:</p>
+
+<ul>
+<li>Retrieve an item that contains structured data (JSON, XML, CSV)</li>
+<li>Embed an item that is an image and render it as an image in this Extension</li>
+<li>Embed another Extension into an iframe on this Extension</li>
+<li>Embed a page from a PowerPoint, PDF, or Word document</li>
+</ul>
+
+<p>Embedding other types (audio, video, URLs) will have unexpected results. The best user experience will be provided to the user only if embedding is limited to data, images, documents and Extensions.</p>
+
+<ul>
+<li>To retrieve a data item, use <code>mflyCommands.getData(id)</code>, where <em>id</em> is the ID of the data item you wish to obtain.</li>
+<li>To embed an image, create an <code>&lt;img&gt;</code> that refers to a loading image. In JavaScript, call <code>mflyCommands.embed($element, id)</code>, where <em>$element</em> is a jQuery reference to the img element, and <em>id</em> is the Airship id of the image item.
+
+<ul>
+<li>You can also use <code>mflyCommands.embedImage($element, id, options)</code> and supply dimensions for the image to be embedded (only supported on Web Viewer and requires mflyCommands.js version 1.4.10). This can be particularly helpful to scale down high resolution images to so browsers can load them quicker. <em>options</em> are defined as:
+
+<ul>
+<li><em>size</em> (string):   format is WxH (e.g. &quot;200x200&quot;)</li>
+<li><em>width</em> (number): Width of the image</li>
+<li><em>height</em> (number): Height of the image</li>
+<li><em>maxWidth</em> (number): Maximum width of the image</li>
+<li><em>maxHeight</em> (number): Maximum height of the image</li>
+<li><em>rotate</em> (number): Degree of rotation to apply to the image. Values of 0, 90, 180, 270, or 360 are acceptable.</li>
+</ul></li>
+</ul></li>
+<li>To embed another Extension, construct an <code>&lt;iframe&gt;</code>. In JavaScript, call <code>mflyCommands.embed($element, id)</code>, where <em>$element</em> is a jQuery reference to the iframe element, and <em>id</em> is the Airship id of the other Extension.</li>
+<li>To embed the page from a document as an image, create an <code>&lt;img&gt;</code> that refers to a loading image. In JavaScript, call <code>mflyCommands.embed($element, id, page)</code>, where <em>$element</em> is a jQuery reference to the img element, <em>id</em> is the Airship id of the image item, and <em>page</em> is the page number that you wish to embed.</li>
+<li>Please note: if you are embedding an image asset for the web Viewer, please consider directly accessing the <code>resourceUrl</code> attribute instead of using <code>mflyCommands.embed</code>. This will improve loading speed, caching, and reduce network requests. See the <a href="#optional_changes">optional changes</a> section below.</li>
+</ul>
+
+<h3 id="toc_95">Example</h3>
+
+<p>See our <a href="https://bitbucket.org/mediafly/mediafly-interactives-tools-and-examples/src/tip/examples/Embed%20and%20Data%20Items/Containing%20Interactive/?at=default">open-source &#39;Embed and Data Items&#39; Extension</a> for an excellent working example of all four types of Embed described above.</p>
+
+<h3 id="toc_96">Technical details</h3>
+
+<p>Here are the HTTP response codes by platform. Unfortunately, these are not all the same because of differing security limitations across platforms.</p>
+
+<table>
+<thead>
+<tr>
+<th>State</th>
+<th>iOS</th>
+<th>Android</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>Item downloaded and ready</td>
+<td>HTTP response code 301 (Redirect). Browser should automatically redirect to correct URL. Body contains retrieved data.</td>
+<td>HTTP response code 200. Body contains retrieved data.</td>
+</tr>
+<tr>
+<td>Item not already downloaded</td>
+<td>HTTP response code 202 (Accepted), with Retry-After header set to number of seconds the Extension should wait before trying again. If not set, default to a reasonable value, like 5.</td>
+<td>HTTP response code 200, with an empty body. Extension should retry after a reasonable number of seconds, like 5.</td>
+</tr>
+<tr>
+<td>Item not found</td>
+<td>HTTP response code 404 (Not found)</td>
+<td>HTTP response code 404 (Not found)</td>
+</tr>
+</tbody>
+</table>
+
+<p>Please note that asking too many times may put the Downloader into a race condition, as each request will trigger the Downloader to poll and possibly start downloading again.  So, please be considerate and retry no more than once every few seconds.</p>
+
+<p>As you can see, embedding requires care. You cannot assume that the embedded item is available yet, because it may be behind some longer items in the Downloader. Instead, you have to try to fetch the content and monitor response codes. This is why we suggest using mflyCommands.js as shown in the example above.</p>
+
+<p><em>Availability:</em> iOS, Android, Web Viewer, Win/Mac</p>
+
+<h3 id="toc_97">Reporting when embedding pages</h3>
+
+<p>Our Reporting system automatically captures who viewed what, when, and where, when using the native app that sits underneath the Extension. However, when you embed pages, the app loses that information and is unable to tell our systems about view data.</p>
+
+<p>To inform our Reporting system of a page view, post a page view after the page has been shown to the user:</p>
+
+<p><em>mflyCommands.js:</em> mflyCommands.postPageView(<em>item ID</em>, <em>page number</em>) <br>
+<em>Description:</em> Posts the page view to the Mediafly Reporting system. Item ID is the id of the item, as seen in Airship. Page number is the page that was displayed (starting at page 1).
+<em>Availability:</em> iOS</p>
+
+<h3 id="toc_98">Reporting</h3>
+
+<p>When building an Extension that implements its own navigation instead of relying on the, the Extension is responsible for notifying Mediafly&#39;s Reporting system.</p>
+
+<p>To inform our Reporting system of various actions:</p>
+
+<p><em>mflyCommands.js:</em> mflyCommands.postAction(options) <br>
+<em>Description:</em> Posts the action to the Mediafly Reporting system. Options object supplied contains:
+  - type (required): Type can one of the following: &quot;collection&quot;, &quot;document&quot;, &quot;navigation&quot; or &quot;search&quot;
+  - id (required when type is not &quot;search&quot;): Item ID is the id of the item, as seen in Airship
+  - term (required when type is &quot;search&quot;): search term used to perform a search</p>
+
+<p><em>Availability:</em> iOS, Android, Web Viewer, Win/Mac</p>
+
+<hr>
+
+<h2 id="toc_99">Support widescreen on iOS</h2>
+
+<h3 id="toc_100">Control</h3>
+
+<p>When a user plugs into an HDMI dongle or connects via AirPlay, they can change the app to run in Second Screen mode.  When in this mode, the app can paint a canvas that uses the entire screen resolution (whereas, Mirroring mode restricts the TV/projector to a 4x3 output and adds black bars on the left and right).</p>
+
+<p>TODO: Add screenshots of what this looks like</p>
+
+<p>To support this mode in an Extension, the Extension must do a few things.</p>
 
 <ol>
-<li>The old way. If an appropriately named JavaScript function is defined, they will be called by the app at the appropriate time, and the Extension can take action. If the function does not exist, the console log will show a &quot;function not defined&quot; error and the Extension will continue execution.</li>
-<li>The new way. Recently created features will make use of JavaScript events in the DOM&#39;s document object. This better matches how other JavaScript frameworks similar to Extensions are structured.</li>
+<li><p>On the app call to mflyDataInit, the object returned must have mflyWideScreenSupport set:</p>
+
+<div><pre><code class="language-none">{
+  “mflyWideScreenSupport”: true
+  ...
+}</code></pre></div>
+
+<p>Other parameters may exist in this JSON object, of course, but mflyWideScreenSupport is the key to initiate proper app support for widescreen.</p></li>
+<li><p>If the app has sent mflyWideScreenSupport=true in mflyDataInit, the Extension should expect to receive a call from the app to mflyWideScreen(useWideScreen), where useWidescreen is either true or false.</p></li>
 </ol>
 
-<p>Each feature listed below indicates which method it uses.</p>
+<p><em>Example:</em><br></p>
 
-<h3 id="toc_79">mflyDataInit (<em>deprecated</em>)</h3>
+<div><pre><code class="language-none">    &lt;script&gt;
+        function mflyWideScreen(useWideScreen) {
+            if (useWideScreen) {
+                // Refresh the UI to show in 16x9 mode,
+                // probably by adjusting CSS. On the iPad, black bars will
+                // appear above and below the content.
+            } else {
+                // Refresh the UI to show in 4x3 mode on iPad only
+            }
+        }
+    &lt;/script&gt;</code></pre></div>
+
+<ol>
+<li><p>(Optional) Create a button that the user taps to bring up the Second Screen Options dialog. This button in the Extension would mimic the button in the native app that allows the user to switch between iOS, Mirroring, and Second Screen. When tapped, the Extension should invoke:</p>
+
+<div><pre><code class="language-none">mflyCommands.showSecondScreenOptions();</code></pre></div></li>
+<li><p>(Optional) The app can be notified when the user flips second-screen mode on or off. When the user changes to/from second-screen mode, the app will call mflySecondScreenAvailable(bool), where bool is true or false. Apps can react to this call to render a button to invoke the Second Screen Options dialog.</p></li>
+</ol>
+
+<p><em>Example:</em><br></p>
+
+<div><pre><code class="language-none">    function mflySecondScreenAvailable(isAvailable) {
+        if (isAvailable) {
+            // Second screen is now on/available.
+            $(&quot;#secondScreenOptionsBtn&quot;).show();
+        } else {
+            // Second screen is no longer available.
+            $(&quot;#secondScreenOptionsBtn&quot;).hide();
+        }
+    }</code></pre></div>
+
+<h3 id="toc_101">UIWebKit Resolution</h3>
+
+<p>When the iPad is displaying an Extension only on its canvas, the WebKit container is 1024 x 568.  When the iPad is projecting to Second Screen, the WebKit container shrinks to 960 x 540. This allows for the browser to efficiently scale up when connected to 720p and 1080p TVs.</p>
+
+<p>To account for this, we suggest tagging the <body> element with a class that denotes either &quot;ipad&quot; or &quot;widescreen&quot;, and adjusting your layout and images based on this.  </p>
+
+<p><em>Example:</em><br></p>
+
+<ol>
+<li><p>You may tag specific images or image types based on whether they are in second screen or not:</p>
+
+<div><pre><code class="language-none">&lt;style&gt;
+.ipad .carousel_image       { width: 1024px; height: 378px;
+    background:url(&#39;image.png&#39;); background-size: 1024px 378px; }
+.widescreen .carousel_image { width: 960px; height: 354px;
+    background:url(&#39;&#39;image.png&#39;); background-size: 960px 354px; }
+&lt;/style&gt;</code></pre></div></li>
+<li><p>The body tag is initially decorated to be iPad-focused:</p>
+
+<div><pre><code class="language-none">&lt;body class=&quot;ipad&quot;&gt;
+...
+&lt;/body&gt;</code></pre></div></li>
+<li><p>When the user switches between Second Screen and Disabled, the <body> tag changes its class:</p>
+
+<div><pre><code class="language-none">&lt;script&gt;
+function mflyWideScreen(isWidescreen) {
+    if (isWidescreen) {
+        $(&quot;body&quot;).removeClass(&quot;ipad&quot;).addClass(&quot;widescreen&quot;);
+    } else {
+        $(&quot;body&quot;).removeClass(&quot;widescreen&quot;).addClass(&quot;ipad&quot;);
+    }
+}
+&lt;/script&gt;</code></pre></div></li>
+</ol>
+
+<p><em>Note</em>: You will likely have to fix the container to 960x540 when in Widescreen. We have seen cases where, if the container is left to auto width/height, and the user invokes the keyboard on the iPad (say, a search field), a giant black space where that keyboard was appears on the second screen. We have seen this on iOS 7.0.x; it may have been corrected in iOS 7.1+ and may no longer be relevant.</p>
+
+<p><em>Availability:</em> iOS</p>
+
+<hr>
+
+<h2 id="toc_102">Getting temporary credentials to communicate with Launchpad and Accounts APIs</h2>
+
+<p>Launchpad API allows abilities such as uploading files, and updating items in Airship. If an Extensions wishes to leverage these capabilities, it need to be authenticated. Extensions can call <code>mflyCommands.getCredentials()</code> function to retrive the necessary credentials to access these APIs. The response from <code>getCredentials</code> contains a short lived access token. It is the Extension&#39;s responsibility to get a new token when the existing token expires (If an API endpoint returns a <code>401</code> HTTP response code, a new token should be retrieved). In addition to the token, <code>environmentId</code> is also returned which is necessary to make calls to the Launchpad API.</p>
+
+<p><em>Example</em></p>
+
+<div><pre><code class="language-none">mflyCommands.getCredentials();
+
+Result:
+{
+    &quot;accessToken&quot;: &quot;token&quot;,
+    &quot;environmentId&quot;: &quot;environmentId&quot;,
+}</code></pre></div>
+
+<p><em>Availability</em>: iOS (678), Android (2.29.47), Web Viewer, Win/Mac (1.0.101)</p>
+
+<hr>
+
+<h2 id="toc_103">Other useful information</h2>
+
+<h3 id="toc_104">Stopping rubber band effects</h3>
+
+<p>Since Extensions are embedded web pages, on some (particularly iOS) devices they tend to have a “rubber band” effect.  E.g. if touch-and-hold a part of the Extension, then drag it, the entire screen will follow your finger, then &quot;snap back&quot; after you let go.  This does not feel appropriate for an Extension, as users want the look and feel to be more native.</p>
+
+<p>To address this, we recommend using <a href="http://eightmedia.github.io/hammer.js/">Hammer.js</a>, a mobile-focused touch gesture library.</p>
+
+<p>We have created a detailed example within Mediafly Extensions Tools and Examples that demonstrates this, <a href="https://bitbucket.org/mediafly/mediafly-interactives-tools-and-examples/src/tip/examples/Swipe/app/?at=default">here</a>.</p>
+
+<h3 id="toc_105">Smoother scrolling</h3>
+
+<p>By default, iOS scrolling in the UIWebView is exactly controlled by your finger. You can drag the web view down and up, but you cannot &quot;throw&quot; the page in a direction. Furthermore, if you have a lot of large images on the page, scrolling can become choppy.</p>
+
+<p>To alleviate this, consider implementing <code>-webkit-overflow-scrolling: touch</code> on your DOM nodes that handle scrolling. When set to touch, UIWebView uses native-style scrolling on your node.</p>
+
+<h3 id="toc_106">Invoking an Extension with parameters (iOS)</h3>
+
+<p>iOS support invocation URLS. An item can be linked to using these URLs.</p>
+
+<p>Example: <a href="onmediafly://9cf282320e6340ee8b830e5376d54531product265958?param1=1&amp;param2=">onmediafly://9cf282320e6340ee8b830e5376d54531product265958?param1=1&amp;param2=2</a></p>
+
+<p>This URL has the following format: [mcode]://[id]?[params...]</p>
+
+<p>The iOS app will pass all supplied params to the Extension and the Extension can
+retrieve them using JavaScript <code>window.location.search</code>.</p>
+
+<hr>
+
+<h1 id="toc_107">Appendix</h1>
+
+<p>Additional information that doesn&#39;t fit very well elsewhere.</p>
+
+<h2 id="toc_108">Supporting Extensions for the Web, Windows and Mac</h2>
+
+<p>With Web Extensions, developers can now also support all major browsers and all major mobile platforms easily and cleanly.</p>
+
+<h3 id="toc_109">How does it work?</h3>
+
+<p>Web Extensions will be able to make use of the same delivery mechanism and API as Extensions available on iOS and Android today. When the user opens an Extension in the Web Viewer, the web server will:</p>
+
+<ul>
+<li>Unzip the Extension zip file</li>
+<li>Point to index.html</li>
+<li>Proxy requests to the Extensions API to the correct URL</li>
+</ul>
+
+<p>Provided that you are using mflyCommands.js, the API will remain largely unchanged. Only a few minor issues need to be addressed for you to take full advantage of Extensions on the Web.</p>
+
+<h3 id="toc_110">Required changes</h3>
+
+<p>The following changes need to be made to your existing Extensions to support Extensions on the Web:</p>
+
+<ol>
+<li><p><strong>Use mflyCommands.js, and keep it up to date</strong>. This should be your primary way to access our API. Don&#39;t make mfly:// calls to the API directly, as those simply will not work in web browsers.</p></li>
+<li><p><strong>Don&#39;t assume a specific browser or size</strong>. The luxurious days of assuming latest Safari (iOS) or Google Chrome (Android 4.4+) are over. Build your Extension like you would a standard website, because, it can be opened on any browser like a standard website.</p></li>
+<li><p>**Don&#39;t rely on mflyDataInit, rely on mflyCommands.getInteractiveInfo() **. Web Extensions will not call &quot;into&quot; the Extension. This means that mflyDataInit, mflySync, mflyResume, mflyPause, and mflyInit are not supported. Instead, make a new call once the document has been initialized: <code>mflyCommands.getInteractiveInfo()</code>. This asynchronous function will obtain the same information that mflyDataInit used to be called with, like so:</p>
+
+<div><pre><code class="language-none">mflyCommands.getInteractiveInfo()
+    .done(function(data) {
+        // data contains a JSON object with information
+        // about this app, user and Extension
+    }).fail(function() {
+        // handle failure
+    });</code></pre></div></li>
+<li><p>*** Don&#39;t include a file at the root of your Extension called mflyManifest.json***. We doubt you would, but if you do, it is likely to be overwritten by one of your apps as a part of the initialization process.</p></li>
+<li><p><strong>Adjust mflyCommands.getFolder(id) call signature change</strong>. The call signature for mflyCommands.getFolder(id) has changed. Previously, if any of its items were also folders, it would return the items within the folders as an array of IDs. This has changed, and those subfolders no longer includes the items key at all. A separate mflyCommands.getFolder(id) call will have to be made on those children folders.</p></li>
+<li><p><strong>Each URL should be able to establish its own state</strong>. Don&#39;t pass around variables like you would in a traditional application. This breaks on websites, and it will break on web Extensions.</p></li>
+<li><p><strong>All resources must be accessed in a relative way</strong>. Don&#39;t try to construct absolute URLs to assets within your .zip file, as that path will undoutedly differ on other platforms.</p></li>
+</ol>
+
+<h3 id="toc_111">Optional changes</h3>
+
+<p>The following changes will help improve performance for your Extensions when opened in the Web Viewer.</p>
+
+<ol>
+<li><p><strong>To render images, consider using the <code>resourceUrl</code> attribute and not mflyCommands.embed</strong>. The resourceUrl attribute can be found on mflyCommands.[getFolder, getItem, filter], and other calls that return full item models. The benefits are many:</p>
+
+<ul>
+<li>resourceUrl requests are more easily cached by browsers</li>
+<li>resourceUrl requests return the original image in its original format (jpg, png, gif), with no transcoding</li>
+<li>resourceUrl requests require one less redirect, which means faster load times</li>
+</ul>
+
+<p>There are downsides to using resourceUrl as well, however.</p>
+
+<ul>
+<li>Because resourceUrl (currently) only exists on the web Viewer, you will need to separate your approach of laying in images between our web Viewer and our mobile platforms.</li>
+<li>If you need to ask Mediafly&#39;s servers to resize images, you will need to use mflyCommands.embed to do so, as resourceUrl returns the image as-is.</li>
+</ul></li>
+</ol>
+
+<h2 id="toc_112">Constants</h2>
+
+<p>The following constants can be used across customer environments or within an environment:</p>
+
+<ul>
+<li><code>__root__</code>: This is the ID of the top-level folder. It is consistent across all environments and all device platforms.</li>
+<li><code>[environment ID]productmyitems</code>: This is the ID of the &quot;My Items&quot; folder. &quot;My Items&quot; is a folder that, when enabled, gives users a personal space to upload and manage their own content within the customer environment. In this case, <code>[environment ID]</code> is a unique 32-character string that is specific to that environment. Please contact Mediafly to obtain the string for your customers; or, simply use Get Folder on the <code>__root__</code> and look for My Items as the last folder in the response. In order to access My Items, the user must be logged in.</li>
+</ul>
+
+<h2 id="toc_113">Deprecated</h2>
+
+<p>These are calls that you may encounter, but have been deprecated. They remain here historical purposes. They will be deleted from our apps and this documentation in the near future.</p>
+
+<h3 id="toc_114">mflyDataInit (<em>deprecated</em>)</h3>
 
 <p><b>PLEASE NOTE:</b> Use mflyCommands.getInteractiveInfo where possible.</p>
 
@@ -888,7 +1543,7 @@ Response: null</code></pre></div>
 <li>Send configuration parameters to the app</li>
 </ol>
 
-<h4 id="toc_80">Use 1: Receive configuration information from the app</h4>
+<h4 id="toc_115">Use 1: Receive configuration information from the app</h4>
 
 <p>Extensions can implement mflyDataInit, using method 1.</p>
 
@@ -926,7 +1581,7 @@ Response: null</code></pre></div>
 <li>lastUpdated: the lasted updated time. This is good for debugging purposes, to help you identify which version of the Extension you are looking at on the device</li>
 </ul>
 
-<h4 id="toc_81">Use 2: Send configuration parameters to the app</h4>
+<h4 id="toc_116">Use 2: Send configuration parameters to the app</h4>
 
 <p>Optionally, Extensions can then return a JSON Object with specifics on how the app should behave.  E.g. on iOS, return value may be a JSON Object such as this:</p>
 
@@ -938,12 +1593,12 @@ Response: null</code></pre></div>
 <p><em>Supported parameters:</em><br></p>
 
 <ul>
-<li><p>mflyInitVersion: indicates which version of mflyInit should be called by the app. Android supports versions 3, 4, and 5 of mflyInitVersion. Windows 8 supports only version 3 and 4 of mflyInit. If ignored, defaults to &quot;4&quot;.</p>
+<li><p>mflyInitVersion: indicates which version of mflyInit should be called by the app. Android supports versions 3, 4, and 5 of mflyInitVersion. If ignored, defaults to &quot;4&quot;.</p>
 
 <ul>
 <li>&quot;2&quot;: default version reflected in this documentation. Supported on iOS.</li>
 <li>&quot;3&quot;: On iOS, sharing status is represented by canShare, canAccessAssetOffline, and canDownloadAsset. Supported on Android, iOS, and Windows8.</li>
-<li>&quot;4&quot;: No longer sends down mflyInit. mflyInit is deprecated and causes undo burden when content libraries are large, and we plan to deprecate it in the future. Supported on Android, iOS and Windows 8.</li>
+<li>&quot;4&quot;: No longer sends down mflyInit. mflyInit is deprecated and causes undo burden when content libraries are large, and we plan to deprecate it in the future. Supported on Android and iOS.</li>
 </ul></li>
 <li><p>mflyWideScreenSupport: if true, this makes the app aware that the Extension can handle widescreen second screens (HDMI, Apple TV).  This is specifically for the case where the Extension has been designed to be a presentation-worthy UI for second screens. Only available on iOS.</p></li>
 </ul>
@@ -955,9 +1610,9 @@ Response: null</code></pre></div>
     return &#39;{ &quot;mflyInitVersion&quot; : &quot;4&quot; }&#39;;
 }</code></pre></div>
 
-<p><em>Availability:</em> iOS, Android, Windows 8. Not all parameters will be available on Android or Windows 8.</p>
+<p><em>Availability:</em> iOS and Android. Not all parameters will be available on Android.</p>
 
-<h3 id="toc_82">mflyResume</h3>
+<h3 id="toc_117">mflyResume (<em>deprecated</em>)</h3>
 
 <p>The app calls this function when the app opens and shows the Extension.  If you need to start animation or take other action when the Extension shows, this is the place to do it.</p>
 
@@ -969,7 +1624,7 @@ Response: null</code></pre></div>
 
 <p><em>Availability:</em> iOS, Android</p>
 
-<h3 id="toc_83">mflyPause</h3>
+<h3 id="toc_118">mflyPause (<em>deprecated</em>)</h3>
 
 <p>The app calls this function when the user hides the Extension. If you need to stop animation, submit a form, or take other action when the Extension hides, this is the place to do it.</p>
 
@@ -981,7 +1636,7 @@ Response: null</code></pre></div>
 
 <p><em>Availability:</em> iOS, Android</p>
 
-<h3 id="toc_84">Sync Status</h3>
+<h3 id="toc_119">Sync Status (<em>deprecated</em>)</h3>
 
 <p>Our apps are built to automatically sync all folders on launch and at regular intervals. Sometimes, the Extension needs to know about the status of sync to ensure that sufficient content is loaded before rendering the Extension. To receive information about the status of sync, apps can listen to events injected into the DOM&#39;s document object, and react to those events.</p>
 
@@ -1012,7 +1667,7 @@ Response: null</code></pre></div>
 
 <p><em>Availability:</em> iOS (604), Android (2.23.59)</p>
 
-<h3 id="toc_85">mflyInit (<em>deprecated</em>)</h3>
+<h3 id="toc_120">mflyInit (<em>deprecated</em>)</h3>
 
 <p><b>PLEASE NOTE</b>: mflyInit is deprecated. We have discovered that, as content libraries become incredibly large, mflyInit consumes an excessive amount of memory. As a result, we strongly suggest using mflyCommands.getFolder() and mflyCommands.getItem() to selectively construct the hierarchy that is needed at that time.</p>
 
@@ -1111,674 +1766,7 @@ Response: null</code></pre></div>
     // Handle mflyInit object
 }</code></pre></div>
 
-<p><em>Availability:</em> iOS, Android, Windows 8</p>
-
-<hr>
-
-<h2 id="toc_86">Saving and retrieving locally persisted key/value data</h2>
-
-<p>Extensions can save data to and retrieve data from the app with AJAX. This is useful for persisting data within or between Extensions. After saving, you can be sure that your data will be saved if the user restarts the app or device (and, soon, uninstalls/reinstalls the app). You can use any key you wish, which provides a lot of flexibility, but please consider providing a namespace within your keys. Otherwise, two Extensions may find ways to clobber each others’ keys.</p>
-
-<p>For iOS, Android and Windows 8, key/value data is isolated by user, by app. So, two users cannot share keys, and two apps cannot share keys. Furthermore, currently all key/value data is stored on the device. So, uninstalling the app will remove all saved keys.</p>
-
-<p>For web Extensions, key/value data is stored in Local Storage. There is no isolation provided at the moment for the data. It is advised that you prefix your keys if there is a chance that the key will be accessed from multiple environments or users. Once syncronizing of this data to servers is available, prefixing will no longer be necessary.</p>
-
-<p>If your Extension needs to persist data on the server, please see the section <code>Saving and retrieving synchronized key/value data</code> below.</p>
-
-<h3 id="toc_87">Save data</h3>
-
-<p>To save data to the app container, call mflyCommands.putValue(<em>key, value</em>), where <em>key</em> is the key you wish to save, and <em>value</em> is the value for that key.</p>
-
-<p><em>Example:</em><br>
-This example saves key/value data, using mflyCommands.js.</p>
-
-<div><pre><code class="language-none">var key = $(&#39;#key&#39;).val();
-var value = { name: ‘abc’, value: ‘def’ };
-
-mflyCommands.putValue(key, value)
-    .done(function(data, status) {
-        // Success! Do something.
-    })
-    .fail(function(deferred, status) {
-        // Error! Do something.
-    });</code></pre></div>
-
-<p>HTTP response codes:</p>
-
-<ul>
-<li>Response of 200 OK indicates a successful save to an existing key</li>
-<li>Response of 201 Created indicates a successful save to a new key</li>
-<li>Response of 400 Bad Request is returned if the value has not been previously saved</li>
-</ul>
-
-<p>(Note: attempts were made to use HTTP PUT verbs, but iOS seems to strip out the body of the PUT, so we migrated to use GET instead).</p>
-
-<p><em>Example:</em><br>
-This example saves key/value data, using jQuery.</p>
-
-<div><pre><code class="language-none">var key = $(&#39;#key&#39;).val();
-var value = { name: ‘abc’, value: ‘def’ };
-
-$.ajax({
-    type: &quot;GET&quot;,
-    url: &quot;mfly://data/info/&quot; + key,
-    contentType: &quot;text/plain; charset=utf-8&quot;,
-    data: &quot;value=&quot; + encodeURIComponent(JSON.stringify(value)) + &quot;&amp;method=PUT&quot;,
-    dataType: &quot;text&quot;,
-    success: function(result, status, xhr) {
-        // Success! Do something.
-    },
-    error: function(xhr) {
-        // Error! Do something.
-    }
-});</code></pre></div>
-
-<p><em>Availability:</em> iOS, Android, Web Viewer, Win/Mac</p>
-
-<h3 id="toc_88">Retrieve data</h3>
-
-<p>You can retrieve value information from keys in multiple ways using mflyCommands.js.</p>
-
-<p>Alternatively, you can make the calls directly with AJAX, but we strongly recommend using mflyCommands instead. When making calls directly,</p>
-
-<ul>
-<li>Response of 200 OK indicates a successful get of an existing key. The body of the response will contain the values indicated below.</li>
-<li>Response of 404 Not Found indicates that the key does not exist</li>
-</ul>
-
-<h4 id="toc_89">Single key</h4>
-
-<p>To get data for a specific key from the app container, use mflyCommands.getValue(<em>key</em>).</p>
-
-<p><em>Example:</em></p>
-
-<div><pre><code class="language-none">// Assume key &#39;abc&#39; has been set to value &#39;123&#39;.
-
-mflyCommands.getValue(&#39;abc&#39;)
-    .done(function(data, status) {
-        // Success! Do something.
-        console.log(data);
-    })
-    .fail(function(deferred, status) {
-        // Error! Do something.
-    });
-
-// Console output: 123</code></pre></div>
-
-<p>On successful retrieval, data will contain the value of the key.</p>
-
-<h4 id="toc_90">All keys</h4>
-
-<p>To get data for all keys from the app container, use mflyCommands.getValues().</p>
-
-<p><em>Example:</em></p>
-
-<div><pre><code class="language-none">// Assume key &#39;abc&#39; has been set to value &#39;123&#39;, and key &#39;def&#39; has been set to value &#39;456&#39;.
-
-mflyCommands.getValues()
-    .done(function(data, status) {
-        // Success! Do something.
-        console.log(data);
-    })
-    .fail(function(deferred, status) {
-        // Error! Do something.
-    });
-
-// Console output: { &quot;abc&quot;: &quot;123&quot;, &quot;def&quot;: &quot;456&quot; }</code></pre></div>
-
-<p>On successful retrieval, body will contain a JSON object enumerating all keys and values, as shown above.</p>
-
-<h4 id="toc_91">Key prefix</h4>
-
-<p>To get data for all keys that begin with X, use mflyCommands.getValues(<em>prefix</em>). On successful retrieval, data will contain a JSON object enumerating all keys and values where the keys begin with X.</p>
-
-<p><em>Example:</em></p>
-
-<div><pre><code class="language-none">// Assume:
-//   key &#39;snow&#39; has been set to value &#39;white&#39;,
-//   key &#39;snowball&#39; has been set to value &#39;round&#39;,
-//   key &#39;fire&#39; has been set to value &#39;red&#39;
-
-mflyCommands.getValues(&#39;snow&#39;)
-    .done(function(data, status) {
-        // Success! Do something.
-        console.log(data);
-    })
-    .fail(function(deferred, status) {
-        // Error! Do something.
-    });
-
-// Console output: { &quot;snow&quot;: &quot;white&quot;, &quot;snowball&quot;: &quot;round&quot; }
-
-mflyCommands.getValues(&#39;abc&#39;)
-    .done(function(data, status) {
-        // Success! Do something.
-        console.log(data);
-    })
-    .fail(function(deferred, status) {
-        // Error! Do something.
-    });
-
-// Console output: {}</code></pre></div>
-
-<p><em>Availability:</em> iOS, Android, Web Viewer, Win/Mac</p>
-
-<h3 id="toc_92">Delete data</h3>
-
-<p>To delete a key/value pair by key from the app container, use mflyCommands.deleteKey(<em>key</em>).</p>
-
-<p><em>Example:</em></p>
-
-<div><pre><code class="language-none">// Assume key &#39;abc&#39; has been set to value &#39;123&#39;.
-
-mflyCommands.deleteKey(&#39;abc&#39;)
-    .done(function(data, status) {
-        // Success! Do something.
-        console.log(&#39;abc has been deleted&#39;);
-    })
-    .fail(function(deferred, status) {
-        // Error! Do something.
-    });
-
-// Console output: &#39;abc has been deleted&#39;</code></pre></div>
-
-<p><em>Availability:</em> iOS, Android, Web Viewer, Win/Mac</p>
-
-<hr>
-
-<h2 id="toc_93">Saving and retrieving synchronized key/value data</h2>
-
-<p>Synchronized key/value storage allows Extensions to persist key/value pairs that are saved on Mediafly servers in addition to being stored on devices. This is useful for persisting data within or between Extensions, and between devices. After saving, you can be sure that your data will be saved if the user restarts the app or device, and, uninstalls/reinstalls the app. You can use any key you wish, which provides a lot of flexibility, but please consider providing a namespace within your keys. Otherwise, two Extensions may find ways to clobber each others’ keys.</p>
-
-<p>Key/value data is isolated by user, by app. So, two users cannot share keys, and two apps cannot share keys. Furthermore, all key/value data is stored on the device as well as the server. So, uninstalling and reinstalling the app will still restore all data from the server to the device..</p>
-
-<h3 id="toc_94">Save data</h3>
-
-<p>To save data to the app container, call mflyCommands.putSyncedValue(<em>key, value</em>), where <em>key</em> is the key you wish to save, and <em>value</em> is the value for that key.</p>
-
-<p><em>Example:</em><br>
-This example saves key/value data, using mflyCommands.js.</p>
-
-<div><pre><code class="language-none">var key = $(&#39;#key&#39;).val();
-var value = { name: ‘abc’, value: ‘def’ };
-
-mflyCommands.putSyncedValue(key, value)
-    .done(function(data, status) {
-        // Success! Do something.
-    })
-    .fail(function(deferred, status) {
-        // Error! Do something.
-    });</code></pre></div>
-
-<p>HTTP response codes:</p>
-
-<ul>
-<li>Response of 200 OK indicates a successful save to an existing key</li>
-<li>Response of 201 Created indicates a successful save to a new key</li>
-<li>Response of 400 Bad Request is returned if the value has not been previously saved</li>
-</ul>
-
-<p><em>Availability:</em> iOS, Android, Web Viewer, Win/Mac</p>
-
-<h3 id="toc_95">Retrieve synchronized data</h3>
-
-<p>You can retrieve value information from keys in multiple ways using mflyCommands.js.</p>
-
-<p>Alternatively, you can make the calls directly with AJAX, but we strongly recommend using mflyCommands instead. When making calls directly,</p>
-
-<ul>
-<li>Response of 200 OK indicates a successful get of an existing key. The body of the response will contain the values indicated below.</li>
-<li>Response of 404 Not Found indicates that the key does not exist</li>
-</ul>
-
-<h4 id="toc_96">Single key</h4>
-
-<p>To get data for a specific key from the app container, use mflyCommands.getSyncedValue(<em>key</em>).</p>
-
-<p><em>Example:</em></p>
-
-<div><pre><code class="language-none">// Assume key &#39;abc&#39; has been set to value &#39;123&#39;.
-
-mflyCommands.getSyncedValue(&#39;abc&#39;)
-    .done(function(data, status) {
-        // Success! Do something.
-        console.log(data);
-    })
-    .fail(function(deferred, status) {
-        // Error! Do something.
-    });
-
-// Console output: 123</code></pre></div>
-
-<p>On successful retrieval, data will contain the value of the key.</p>
-
-<h4 id="toc_97">All keys</h4>
-
-<p>To get data for all keys from the app container, use mflyCommands.getSyncedValues().</p>
-
-<p><em>Example:</em></p>
-
-<div><pre><code class="language-none">// Assume key &#39;abc&#39; has been set to value &#39;123&#39;, and key &#39;def&#39; has been set to value &#39;456&#39;.
-
-mflyCommands.getSyncedValues()
-    .done(function(data, status) {
-        // Success! Do something.
-        console.log(data);
-    })
-    .fail(function(deferred, status) {
-        // Error! Do something.
-    });
-
-// Console output: { &quot;abc&quot;: &quot;123&quot;, &quot;def&quot;: &quot;456&quot; }</code></pre></div>
-
-<p>On successful retrieval, body will contain a JSON object enumerating all keys and values, as shown above.</p>
-
-<h4 id="toc_98">Key prefix</h4>
-
-<p>To get data for all keys that begin with X, use mflyCommands.getSyncedValues(<em>prefix</em>). On successful retrieval, data will contain a JSON object enumerating all keys and values where the keys begin with X.</p>
-
-<p><em>Example:</em></p>
-
-<div><pre><code class="language-none">// Assume:
-//   key &#39;snow&#39; has been set to value &#39;white&#39;,
-//   key &#39;snowball&#39; has been set to value &#39;round&#39;,
-//   key &#39;fire&#39; has been set to value &#39;red&#39;
-
-mflyCommands.getSyncedValues(&#39;snow&#39;)
-    .done(function(data, status) {
-        // Success! Do something.
-        console.log(data);
-    })
-    .fail(function(deferred, status) {
-        // Error! Do something.
-    });
-
-// Console output: { &quot;snow&quot;: &quot;white&quot;, &quot;snowball&quot;: &quot;round&quot; }
-
-mflyCommands.getSyncedValues(&#39;abc&#39;)
-    .done(function(data, status) {
-        // Success! Do something.
-        console.log(data);
-    })
-    .fail(function(deferred, status) {
-        // Error! Do something.
-    });
-
-// Console output: {}</code></pre></div>
-
-<p><em>Availability:</em> iOS, Android, Web Viewer, Win/Mac</p>
-
-<h3 id="toc_99">Delete data</h3>
-
-<p>To delete a key/value pair by key from the app container, use mflyCommands.deleteSyncedKey(<em>key</em>).</p>
-
-<p><em>Example:</em></p>
-
-<div><pre><code class="language-none">// Assume key &#39;abc&#39; has been set to value &#39;123&#39;.
-
-mflyCommands.deleteSyncedKey(&#39;abc&#39;)
-    .done(function(data, status) {
-        // Success! Do something.
-        console.log(&#39;abc has been deleted&#39;);
-    })
-    .fail(function(deferred, status) {
-        // Error! Do something.
-    });
-
-// Console output: &#39;abc has been deleted&#39;</code></pre></div>
-
-<p><em>Availability:</em> iOS, Android, Web Viewer, Win/Mac</p>
-
-<hr>
-
-<h2 id="toc_100">Emailing content from Extensions</h2>
-
-<h3 id="toc_101">Overview</h3>
-
-<p>Extensions can have Mediafly&#39;s backend send emails with attachments. Attachments are Base64 encoded URLs.
-Even though emails are sent from Mediafly&#39;s servers, they have &quot;Reply-To&quot; field populated with the curent logged in user&#39;s email address.</p>
-
-<p><em>Example</em></p>
-
-<div><pre><code class="language-none">mflyCommands.sendEmail({
-    to: &#39;[to email address]&#39;,
-    subject: &#39;[email subject]&#39;,
-    body: &#39;[email body]&#39;,
-    attachments: [{
-        filename: &quot;[name of the attachment. for example: Presentation.pdf]&quot;,
-        dataUrl: &quot;[Base64 encoded URL]&quot;
-    }]
-}).done(function(data, status) {
-    // Success! Do something.
-    console.log(&#39;email has been sent successfully&#39;);
-})
-.fail(function(deferred, status) {
-    // Error! Do something.
-    console.log(&#39;error sending email&#39;);
-});</code></pre></div>
-
-<p><em>Availability</em>: iOS (654), Android (2.29.07), Web Viewer, Win/Mac (1.0.92)</p>
-
-<hr>
-
-<h2 id="toc_102">Embedding images, other Extensions, or pages of documents</h2>
-
-<h3 id="toc_103">Overview</h3>
-
-<p>Extensions have the ability to embed items that exist in the app into it.  This is used for four primary purposes:</p>
-
-<ul>
-<li>Retrieve an item that contains structured data (JSON, XML, CSV)</li>
-<li>Embed an item that is an image and render it as an image in this Extension</li>
-<li>Embed another Extension into an iframe on this Extension</li>
-<li>Embed a page from a PowerPoint, PDF, or Word document</li>
-</ul>
-
-<p>Embedding other types (audio, video, URLs) will have unexpected results. The best user experience will be provided to the user only if embedding is limited to data, images, documents and Extensions.</p>
-
-<ul>
-<li>To retrieve a data item, use <code>mflyCommands.getData(id)</code>, where <em>id</em> is the ID of the data item you wish to obtain.</li>
-<li>To embed an image, create an <code>&lt;img&gt;</code> that refers to a loading image. In JavaScript, call <code>mflyCommands.embed($element, id)</code>, where <em>$element</em> is a jQuery reference to the img element, and <em>id</em> is the Airship id of the image item.
-
-<ul>
-<li>You can also use <code>mflyCommands.embedImage($element, id, options)</code> and supply dimensions for the image to be embedded (only supported on Web Viewer and requires mflyCommands.js version 1.4.10). This can be particularly helpful to scale down high resolution images to so browsers can load them quicker. <em>options</em> are defined as:
-
-<ul>
-<li><em>size</em> (string):   format is WxH (e.g. &quot;200x200&quot;)</li>
-<li><em>width</em> (number): Width of the image</li>
-<li><em>height</em> (number): Height of the image</li>
-<li><em>maxWidth</em> (number): Maximum width of the image</li>
-<li><em>maxHeight</em> (number): Maximum height of the image</li>
-<li><em>rotate</em> (number): Degree of rotation to apply to the image. Values of 0, 90, 180, 270, or 360 are acceptable.</li>
-</ul></li>
-</ul></li>
-<li>To embed another Extension, construct an <code>&lt;iframe&gt;</code>. In JavaScript, call <code>mflyCommands.embed($element, id)</code>, where <em>$element</em> is a jQuery reference to the iframe element, and <em>id</em> is the Airship id of the other Extension.</li>
-<li>To embed the page from a document as an image, create an <code>&lt;img&gt;</code> that refers to a loading image. In JavaScript, call <code>mflyCommands.embed($element, id, page)</code>, where <em>$element</em> is a jQuery reference to the img element, <em>id</em> is the Airship id of the image item, and <em>page</em> is the page number that you wish to embed.</li>
-<li>Please note: if you are embedding an image asset for the web Viewer, please consider directly accessing the <code>resourceUrl</code> attribute instead of using <code>mflyCommands.embed</code>. This will improve loading speed, caching, and reduce network requests. See the <a href="#optional_changes">optional changes</a> section below.</li>
-</ul>
-
-<h3 id="toc_104">Example</h3>
-
-<p>See our <a href="https://bitbucket.org/mediafly/mediafly-interactives-tools-and-examples/src/tip/examples/Embed%20and%20Data%20Items/Containing%20Interactive/?at=default">open-source &#39;Embed and Data Items&#39; Extension</a> for an excellent working example of all four types of Embed described above.</p>
-
-<h3 id="toc_105">Technical details</h3>
-
-<p>Here are the HTTP response codes by platform. Unfortunately, these are not all the same because of differing security limitations across platforms.</p>
-
-<table>
-<thead>
-<tr>
-<th>State</th>
-<th>iOS</th>
-<th>Android</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td>Item downloaded and ready</td>
-<td>HTTP response code 301 (Redirect). Browser should automatically redirect to correct URL. Body contains retrieved data.</td>
-<td>HTTP response code 200. Body contains retrieved data.</td>
-</tr>
-<tr>
-<td>Item not already downloaded</td>
-<td>HTTP response code 202 (Accepted), with Retry-After header set to number of seconds the Extension should wait before trying again. If not set, default to a reasonable value, like 5.</td>
-<td>HTTP response code 200, with an empty body. Extension should retry after a reasonable number of seconds, like 5.</td>
-</tr>
-<tr>
-<td>Item not found</td>
-<td>HTTP response code 404 (Not found)</td>
-<td>HTTP response code 404 (Not found)</td>
-</tr>
-</tbody>
-</table>
-
-<p>Please note that asking too many times may put the Downloader into a race condition, as each request will trigger the Downloader to poll and possibly start downloading again.  So, please be considerate and retry no more than once every few seconds.</p>
-
-<p>As you can see, embedding requires care. You cannot assume that the embedded item is available yet, because it may be behind some longer items in the Downloader. Instead, you have to try to fetch the content and monitor response codes. This is why we suggest using mflyCommands.js as shown in the example above.</p>
-
-<p><em>Availability:</em> iOS, Android, Web Viewer, Win/Mac</p>
-
-<h3 id="toc_106">Reporting when embedding pages</h3>
-
-<p>Our Reporting system automatically captures who viewed what, when, and where, when using the native app that sits underneath the Extension. However, when you embed pages, the app loses that information and is unable to tell our systems about view data.</p>
-
-<p>To inform our Reporting system of a page view, post a page view after the page has been shown to the user:</p>
-
-<p><em>mflyCommands.js:</em> mflyCommands.postPageView(<em>item ID</em>, <em>page number</em>) <br>
-<em>Description:</em> Posts the page view to the Mediafly Reporting system. Item ID is the id of the item, as seen in Airship. Page number is the page that was displayed (starting at page 1).
-<em>Availability:</em> iOS</p>
-
-<h3 id="toc_107">Reporting</h3>
-
-<p>When building an Extension that implements its own navigation instead of relying on the, the Extension is responsible for notifying Mediafly&#39;s Reporting system.</p>
-
-<p>To inform our Reporting system of various actions:</p>
-
-<p><em>mflyCommands.js:</em> mflyCommands.postAction(options) <br>
-<em>Description:</em> Posts the action to the Mediafly Reporting system. Options object supplied contains:
-  - type (required): Type can one of the following: &quot;collection&quot;, &quot;document&quot;, &quot;navigation&quot; or &quot;search&quot;
-  - id (required when type is not &quot;search&quot;): Item ID is the id of the item, as seen in Airship
-  - term (required when type is &quot;search&quot;): search term used to perform a search</p>
-
-<p><em>Availability:</em> iOS, Android, Web Viewer, Win/Mac</p>
-
-<hr>
-
-<h2 id="toc_108">Support widescreen on iOS</h2>
-
-<h3 id="toc_109">Control</h3>
-
-<p>When a user plugs into an HDMI dongle or connects via AirPlay, they can change the app to run in Second Screen mode.  When in this mode, the app can paint a canvas that uses the entire screen resolution (whereas, Mirroring mode restricts the TV/projector to a 4x3 output and adds black bars on the left and right).</p>
-
-<p>TODO: Add screenshots of what this looks like</p>
-
-<p>To support this mode in an Extension, the Extension must do a few things.</p>
-
-<ol>
-<li><p>On the app call to mflyDataInit, the object returned must have mflyWideScreenSupport set:</p>
-
-<div><pre><code class="language-none">{
-  “mflyWideScreenSupport”: true
-  ...
-}</code></pre></div>
-
-<p>Other parameters may exist in this JSON object, of course, but mflyWideScreenSupport is the key to initiate proper app support for widescreen.</p></li>
-<li><p>If the app has sent mflyWideScreenSupport=true in mflyDataInit, the Extension should expect to receive a call from the app to mflyWideScreen(useWideScreen), where useWidescreen is either true or false.</p></li>
-</ol>
-
-<p><em>Example:</em><br></p>
-
-<div><pre><code class="language-none">    &lt;script&gt;
-        function mflyWideScreen(useWideScreen) {
-            if (useWideScreen) {
-                // Refresh the UI to show in 16x9 mode,
-                // probably by adjusting CSS. On the iPad, black bars will
-                // appear above and below the content.
-            } else {
-                // Refresh the UI to show in 4x3 mode on iPad only
-            }
-        }
-    &lt;/script&gt;</code></pre></div>
-
-<ol>
-<li><p>(Optional) Create a button that the user taps to bring up the Second Screen Options dialog. This button in the Extension would mimic the button in the native app that allows the user to switch between iOS, Mirroring, and Second Screen. When tapped, the Extension should invoke:</p>
-
-<div><pre><code class="language-none">mflyCommands.showSecondScreenOptions();</code></pre></div></li>
-<li><p>(Optional) The app can be notified when the user flips second-screen mode on or off. When the user changes to/from second-screen mode, the app will call mflySecondScreenAvailable(bool), where bool is true or false. Apps can react to this call to render a button to invoke the Second Screen Options dialog.</p></li>
-</ol>
-
-<p><em>Example:</em><br></p>
-
-<div><pre><code class="language-none">    function mflySecondScreenAvailable(isAvailable) {
-        if (isAvailable) {
-            // Second screen is now on/available.
-            $(&quot;#secondScreenOptionsBtn&quot;).show();
-        } else {
-            // Second screen is no longer available.
-            $(&quot;#secondScreenOptionsBtn&quot;).hide();
-        }
-    }</code></pre></div>
-
-<h3 id="toc_110">UIWebKit Resolution</h3>
-
-<p>When the iPad is displaying an Extension only on its canvas, the WebKit container is 1024 x 568.  When the iPad is projecting to Second Screen, the WebKit container shrinks to 960 x 540. This allows for the browser to efficiently scale up when connected to 720p and 1080p TVs.</p>
-
-<p>To account for this, we suggest tagging the <body> element with a class that denotes either &quot;ipad&quot; or &quot;widescreen&quot;, and adjusting your layout and images based on this.  </p>
-
-<p><em>Example:</em><br></p>
-
-<ol>
-<li><p>You may tag specific images or image types based on whether they are in second screen or not:</p>
-
-<div><pre><code class="language-none">&lt;style&gt;
-.ipad .carousel_image       { width: 1024px; height: 378px;
-    background:url(&#39;image.png&#39;); background-size: 1024px 378px; }
-.widescreen .carousel_image { width: 960px; height: 354px;
-    background:url(&#39;&#39;image.png&#39;); background-size: 960px 354px; }
-&lt;/style&gt;</code></pre></div></li>
-<li><p>The body tag is initially decorated to be iPad-focused:</p>
-
-<div><pre><code class="language-none">&lt;body class=&quot;ipad&quot;&gt;
-...
-&lt;/body&gt;</code></pre></div></li>
-<li><p>When the user switches between Second Screen and Disabled, the <body> tag changes its class:</p>
-
-<div><pre><code class="language-none">&lt;script&gt;
-function mflyWideScreen(isWidescreen) {
-    if (isWidescreen) {
-        $(&quot;body&quot;).removeClass(&quot;ipad&quot;).addClass(&quot;widescreen&quot;);
-    } else {
-        $(&quot;body&quot;).removeClass(&quot;widescreen&quot;).addClass(&quot;ipad&quot;);
-    }
-}
-&lt;/script&gt;</code></pre></div></li>
-</ol>
-
-<p><em>Note</em>: You will likely have to fix the container to 960x540 when in Widescreen. We have seen cases where, if the container is left to auto width/height, and the user invokes the keyboard on the iPad (say, a search field), a giant black space where that keyboard was appears on the second screen. We have seen this on iOS 7.0.x; it may have been corrected in iOS 7.1+ and may no longer be relevant.</p>
-
-<p><em>Availability:</em> iOS</p>
-
-<hr>
-
-<h2 id="toc_111">Getting temporary credentials to communicate with Launchpad and Accounts APIs</h2>
-
-<p>Launchpad API allows abilities such as uploading files, and updating items in Airship. If an Extensions wishes to leverage these capabilities, it need to be authenticated. Extensions can call <code>mflyCommands.getCredentials()</code> function to retrive the necessary credentials to access these APIs. The response from <code>getCredentials</code> contains a short lived access token. It is the Extension&#39;s responsibility to get a new token when the existing token expires (If an API endpoint returns a <code>401</code> HTTP response code, a new token should be retrieved). In addition to the token, <code>environmentId</code> is also returned which is necessary to make calls to the Launchpad API.</p>
-
-<p><em>Example</em></p>
-
-<div><pre><code class="language-none">mflyCommands.getCredentials();
-
-Result:
-{
-    &quot;accessToken&quot;: &quot;token&quot;,
-    &quot;environmentId&quot;: &quot;environmentId&quot;,
-}</code></pre></div>
-
-<p><em>Availability</em>: iOS (678), Android (2.29.47), Web Viewer, Win/Mac (1.0.101)</p>
-
-<hr>
-
-<h2 id="toc_112">Other useful information</h2>
-
-<h3 id="toc_113">Stopping rubber band effects</h3>
-
-<p>Since Extensions are embedded web pages, on some (particularly iOS) devices they tend to have a “rubber band” effect.  E.g. if touch-and-hold a part of the Extension, then drag it, the entire screen will follow your finger, then &quot;snap back&quot; after you let go.  This does not feel appropriate for an Extension, as users want the look and feel to be more native.</p>
-
-<p>To address this, we recommend using <a href="http://eightmedia.github.io/hammer.js/">Hammer.js</a>, a mobile-focused touch gesture library.</p>
-
-<p>We have created a detailed example within Mediafly Extensions Tools and Examples that demonstrates this, <a href="https://bitbucket.org/mediafly/mediafly-interactives-tools-and-examples/src/tip/examples/Swipe/app/?at=default">here</a>.</p>
-
-<h3 id="toc_114">Smoother scrolling</h3>
-
-<p>By default, iOS scrolling in the UIWebView is exactly controlled by your finger. You can drag the web view down and up, but you cannot &quot;throw&quot; the page in a direction. Furthermore, if you have a lot of large images on the page, scrolling can become choppy.</p>
-
-<p>To alleviate this, consider implementing <code>-webkit-overflow-scrolling: touch</code> on your DOM nodes that handle scrolling. When set to touch, UIWebView uses native-style scrolling on your node.</p>
-
-<h3 id="toc_115">Invoking an Extension with parameters (iOS)</h3>
-
-<p>iOS support invocation URLS. An item can be linked to using these URLs.</p>
-
-<p>Example: <a href="onmediafly://9cf282320e6340ee8b830e5376d54531product265958?param1=1&amp;param2=">onmediafly://9cf282320e6340ee8b830e5376d54531product265958?param1=1&amp;param2=2</a></p>
-
-<p>This URL has the following format: [mcode]://[id]?[params...]</p>
-
-<p>The iOS app will pass all supplied params to the Extension and the Extension can
-retrieve them using JavaScript <code>window.location.search</code>.</p>
-
-<hr>
-
-<h1 id="toc_116">Appendix</h1>
-
-<p>Additional information that doesn&#39;t fit very well elsewhere.</p>
-
-<h2 id="toc_117">Supporting Extensions for the Web, Windows and Mac</h2>
-
-<p>With Web Extensions, developers can now also support all major browsers and all major mobile platforms easily and cleanly.</p>
-
-<h3 id="toc_118">How does it work?</h3>
-
-<p>Web Extensions will be able to make use of the same delivery mechanism and API as Extensions available on iOS and Android today. When the user opens an Extension in the Web Viewer, the web server will:</p>
-
-<ul>
-<li>Unzip the Extension zip file</li>
-<li>Point to index.html</li>
-<li>Proxy requests to the Extensions API to the correct URL</li>
-</ul>
-
-<p>Provided that you are using mflyCommands.js, the API will remain largely unchanged. Only a few minor issues need to be addressed for you to take full advantage of Extensions on the Web.</p>
-
-<h3 id="toc_119">Required changes</h3>
-
-<p>The following changes need to be made to your existing Extensions to support Extensions on the Web:</p>
-
-<ol>
-<li><p><strong>Use mflyCommands.js, and keep it up to date</strong>. This should be your primary way to access our API. Don&#39;t make mfly:// calls to the API directly, as those simply will not work in web browsers.</p></li>
-<li><p><strong>Don&#39;t assume a specific browser or size</strong>. The luxurious days of assuming latest Safari (iOS) or Google Chrome (Android 4.4+) are over. Build your Extension like you would a standard website, because, it can be opened on any browser like a standard website.</p></li>
-<li><p>**Don&#39;t rely on mflyDataInit, rely on mflyCommands.getInteractiveInfo() **. Web Extensions will not call &quot;into&quot; the Extension. This means that mflyDataInit, mflySync, mflyResume, mflyPause, and mflyInit are not supported. Instead, make a new call once the document has been initialized: <code>mflyCommands.getInteractiveInfo()</code>. This asynchronous function will obtain the same information that mflyDataInit used to be called with, like so:</p>
-
-<div><pre><code class="language-none">mflyCommands.getInteractiveInfo()
-    .done(function(data) {
-        // data contains a JSON object with information
-        // about this app, user and Extension
-    }).fail(function() {
-        // handle failure
-    });</code></pre></div></li>
-<li><p>*** Don&#39;t include a file at the root of your Extension called mflyManifest.json***. We doubt you would, but if you do, it is likely to be overwritten by one of your apps as a part of the initialization process.</p></li>
-<li><p><strong>Adjust mflyCommands.getFolder(id) call signature change</strong>. The call signature for mflyCommands.getFolder(id) has changed. Previously, if any of its items were also folders, it would return the items within the folders as an array of IDs. This has changed, and those subfolders no longer includes the items key at all. A separate mflyCommands.getFolder(id) call will have to be made on those children folders.</p></li>
-<li><p><strong>Each URL should be able to establish its own state</strong>. Don&#39;t pass around variables like you would in a traditional application. This breaks on websites, and it will break on web Extensions.</p></li>
-<li><p><strong>All resources must be accessed in a relative way</strong>. Don&#39;t try to construct absolute URLs to assets within your .zip file, as that path will undoutedly differ on other platforms.</p></li>
-</ol>
-
-<h3 id="toc_120">Optional changes</h3>
-
-<p>The following changes will help improve performance for your Extensions when opened in the Web Viewer.</p>
-
-<ol>
-<li><p><strong>To render images, consider using the <code>resourceUrl</code> attribute and not mflyCommands.embed</strong>. The resourceUrl attribute can be found on mflyCommands.[getFolder, getItem, filter], and other calls that return full item models. The benefits are many:</p>
-
-<ul>
-<li>resourceUrl requests are more easily cached by browsers</li>
-<li>resourceUrl requests return the original image in its original format (jpg, png, gif), with no transcoding</li>
-<li>resourceUrl requests require one less redirect, which means faster load times</li>
-</ul>
-
-<p>There are downsides to using resourceUrl as well, however.</p>
-
-<ul>
-<li>Because resourceUrl (currently) only exists on the web Viewer, you will need to separate your approach of laying in images between our web Viewer and our mobile platforms.</li>
-<li>If you need to ask Mediafly&#39;s servers to resize images, you will need to use mflyCommands.embed to do so, as resourceUrl returns the image as-is.</li>
-</ul></li>
-</ol>
-
-<h2 id="toc_121">Constants</h2>
-
-<p>The following constants can be used across customer environments or within an environment:</p>
-
-<ul>
-<li><code>__root__</code>: This is the ID of the top-level folder. It is consistent across all environments and all device platforms.</li>
-<li><code>[environment ID]productmyitems</code>: This is the ID of the &quot;My Items&quot; folder. &quot;My Items&quot; is a folder that, when enabled, gives users a personal space to upload and manage their own content within the customer environment. In this case, <code>[environment ID]</code> is a unique 32-character string that is specific to that environment. Please contact Mediafly to obtain the string for your customers; or, simply use Get Folder on the <code>__root__</code> and look for My Items as the last folder in the response. In order to access My Items, the user must be logged in.</li>
-</ul>
+<p><em>Availability:</em> iOS, Android</p>
 
 
 

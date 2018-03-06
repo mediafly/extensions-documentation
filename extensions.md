@@ -795,426 +795,23 @@ Example:
 
 ----------
 
-## Being controlled by the app
-Mediafly's apps send many kinds of events into the Extension. These events can be listened to by the Extension reactively, and the Extension can then take action. These capabilities are only availble to the native apps, not to web Viewer.
+## Saving and retrieving key/value data
 
-There are two methods in which this happens:
+Extensions can save data to and retrieve data from the app with AJAX. This is useful for persisting data within or between Extensions. After saving, you can be sure that your data will be saved if the user restarts the app or device. You can use any key you wish, which provides a lot of flexibility, but please consider providing a namespace within your keys. Otherwise, two Extensions may find ways to clobber each others’ keys.
 
-1. The old way. If an appropriately named JavaScript function is defined, they will be called by the app at the appropriate time, and the Extension can take action. If the function does not exist, the console log will show a "function not defined" error and the Extension will continue execution.
-2. The new way. Recently created features will make use of JavaScript events in the DOM's document object. This better matches how other JavaScript frameworks similar to Extensions are structured.
+On iOS, Android, Windows and Mac, key/value data is isolated by user and by app. So, two users cannot share keys, and two apps cannot share keys.
 
-Each feature listed below indicates which method it uses.
+For web Extensions, key/value data is stored in local storage. There is no isolation provided between key/value data between users or environments. We advise you to prefix your keys if there is a chance that the key will be accessed from multiple environments or users.
 
+There are two approaches to reading and writing data:
 
-### mflyDataInit (*deprecated*)
+* Synced: this method stores data locally and also synchronizes the data to Mediafly's servers. If a user saves key=value on Device A, then loads the Extension on Device B, Device B will pull down key=value onto Device B as the Extension loads.
+* Local: this method stores data locally and does not synchronize with our servers. If a user uninstalls the app (iOS, Android, Windows, Mac) clears their cookies (web), or uses a private/incognito window (web) the keys will be erased and cannot be retrieved.
 
-<b>PLEASE NOTE:</b> Use mflyCommands.getInteractiveInfo where possible.
+Each of these approaches has different mflyCommands calls, as detailed below. Generally, most developers will want to use the Synced approach.
 
-This function has two uses:
 
-1. Receive configuration information from the app, and
-2. Send configuration parameters to the app
-
-#### Use 1: Receive configuration information from the app
-Extensions can implement mflyDataInit, using method 1.
-
-		function mflyDataInit(obj) {
-			// obj = JSON object that contains initial configuration
-		}
-
-mflyDataInit will be called with a JSON object that contains initial configuration.  E.g. on iOS, params may be a JSON Object such as this:
-
-		{
-			"mflyInitVersionMaximum": "2",
-		  	"user": "jshah@mediafly.com",
-			"displayName": "Jason Shah",
-			"item": "Custom Dynamic Extension 1.2",
-			“id”: “29342938241238product234234”,
-			"osType": "iOS",
-			"osVersion": "6.1.2",
-			"appVersion": "6.1.4.405",
-			"deviceId": "4639ufu115f0630a13a8744e8b5cc6309b46",
-			"lastUpdated": "2014-02-03T07:04:07-06:00"
-		}
-
-*Supported parameters:*<br>
-
-* mflyInitVersionMaximum: indicates how many possible values mflyInitVersion can have in the return value (see below).
-* user: user_context (essentially, system-known username)
-* displayName: display name. Can be email, first+last, or something similar
-* item: title of this Extension
-* id: the slug (unique id) of this Extension within Airship
-* osType: which OS (iOS, Android, Windows, Mac)
-* osVersion: which version of the OS
-* appVersion: which version of the app
-* deviceId: the unique device ID for this device
-* lastUpdated: the lasted updated time. This is good for debugging purposes, to help you identify which version of the Extension you are looking at on the device
-
-
-#### Use 2: Send configuration parameters to the app
-Optionally, Extensions can then return a JSON Object with specifics on how the app should behave.  E.g. on iOS, return value may be a JSON Object such as this:
-
-		{
-		  “mflyInitVersion”: “4”,
-		  “mflyWideScreenSupport”: true
-		}
-
-*Supported parameters:*<br>
-
-* mflyInitVersion: indicates which version of mflyInit should be called by the app. Android supports versions 3, 4, and 5 of mflyInitVersion. Windows 8 supports only version 3 and 4 of mflyInit. If ignored, defaults to "4".
-	* "2": default version reflected in this documentation. Supported on iOS.
-	* "3": On iOS, sharing status is represented by canShare, canAccessAssetOffline, and canDownloadAsset. Supported on Android, iOS, and Windows8.
-	* "4": No longer sends down mflyInit. mflyInit is deprecated and causes undo burden when content libraries are large, and we plan to deprecate it in the future. Supported on Android, iOS and Windows 8.
-
-* mflyWideScreenSupport: if true, this makes the app aware that the Extension can handle widescreen second screens (HDMI, Apple TV).  This is specifically for the case where the Extension has been designed to be a presentation-worthy UI for second screens. Only available on iOS.
-
-*Example:*<br>
-
-	function mflyDataInit(obj) {
-		// Do initialization
-	    return '{ "mflyInitVersion" : "4" }';
-	}
-
-*Availability:* iOS, Android, Windows 8. Not all parameters will be available on Android or Windows 8.
-
-
-### mflyResume
-The app calls this function when the app opens and shows the Extension.  If you need to start animation or take other action when the Extension shows, this is the place to do it.
-
-*Example:*<br>
-
-	function mflyResume() {
-		// Handle mflyResume
-	}
-
-*Availability:* iOS, Android
-
-
-### mflyPause
-The app calls this function when the user hides the Extension. If you need to stop animation, submit a form, or take other action when the Extension hides, this is the place to do it.
-
-*Example:*<br>
-
-	function mflyPause() {
-		// Handle mflyPause
-	}
-
-*Availability:* iOS, Android
-
-
-### Sync Status
-Our apps are built to automatically sync all folders on launch and at regular intervals. Sometimes, the Extension needs to know about the status of sync to ensure that sufficient content is loaded before rendering the Extension. To receive information about the status of sync, apps can listen to events injected into the DOM's document object, and react to those events.
-
-*Example:*<br>
-
-    document.addEventListener("mflySyncStatus", function(d) {
-        if (d && d.detail) {
-        	// Handle Sync Status
-            $("#syncEventHandlerResult").html(JSON.stringify(d.detail, null, 2));
-        }
-    }, false);
-
-The detail attribute of the event object will be structure as JSON with 2-3 fields, like so:
-
-    {
-        complete: 26,
-        total: 28,
-        isrunning: true
-    }
-
-where the JSON object's attributes have the following meaning:
-
-* complete: the number of folders that have been synced
-* total: the total number of folders known to the app. Note that this may not be defined immediately on application start, and may change if there are dramatic changes of what is available to the user.
-* isrunning: true|false, indicating whether the sync is currently running.
-
-*Availability:* iOS (604), Android (2.23.59)
-
-
-
-
-### mflyInit (*deprecated*)
-
-<b>PLEASE NOTE</b>: mflyInit is deprecated. We have discovered that, as content libraries become incredibly large, mflyInit consumes an excessive amount of memory. As a result, we strongly suggest using mflyCommands.getFolder() and mflyCommands.getItem() to selectively construct the hierarchy that is needed at that time.
-
-The app calls this function when the app launches an Extension.  The parameter is a dictionary of JSON objects that represent a flattened version of the full hierarchy of folders and items available to the user. The key of each entry is the item/folder slug. Each entry for folders contains a JSON Array called “items”, which contains an array of slugs that are children of this folder.
-
-For example, if a user has the following hierarchy:
-
-	  folder [id=slug1]
-	    item [id=slug2]
-	    folder [id=slug3]
-	      item [id=slug4]
-
-then the object may look like this:
-
-	{
-	  “version”: 2,
-	  “slug1” : {
-	    "id": "slug1",
-	    “items”: [“slug2”, “slug3”],
-	    "url": "mfly://folder/slug1",
-	    "type": "folder",
-	    "name": "Name",
-	    "description": "Description",
-	    "date": "2010-11-12T06:15:15:00-06:00",
-	    "received": "2012-12-19T16:45:14:00-06:00",
-	    "thumbnailUrl": "mfly://image/123",
-	    "launched": "false",
-	    “keywords”: [“keyword1”, “keyword2”, “keyword3”],
-	    “new”: 1
-	  },
-	  “slug2” : {
-	    "id": "slug2",
-	    "url": "mfly://item/slug2",
-	    "type": "video",
-	    "name": "Name",
-	    "description": "Description",
-	    "date": "2010-11-12T06:15:15:00-06:00",
-	    "received": "2012-12-19T16:45:14:00-06:00",
-	    "thumbnailUrl": "mfly://image/123",
-        "launched": "true",
-        “keywords”: [“keyword4”],
-        “downloadModel”: “DownloadableShareable”
-      },
-      “slug3” : {
-        "id": "slug3",
-        “items”: [“slug4”],
-        "url": "mfly://folder/slug3",
-        "type": "folder",
-        "name": "Name",
-        "description": "Description",
-        "date": "2010-11-12T06:15:15:00-06:00",
-        "received": "2012-12-19T16:45:14:00-06:00",
-        "thumbnailUrl": "mfly://image/123",
-        "launched": "false"
-      },
-      “slug4” : {
-        "id": "slug4",
-        "url": "mfly://item/slug4",
-        "type": "interactive",
-        "name": "Name",
-        "description": "Description",
-        "date": "2010-11-12T06:15:15:00-06:00",
-        "received": "2012-12-19T16:45:14:00-06:00",
-        "thumbnailUrl": "mfly://image/123",
-        "launched": "true",
-        “new”: 1,
-        “downloadModel”: “DownloadableProtected”
-      }
-    }
-
-
-This function and mflyResume exist in harmony.  mflyInit is called on launch of the Extension. mflyResume is called on both launch and resume of the Extension.
-
-Expect mflyInit to be called many times for large hierarchies, as often as every 2-3 seconds. Consider processing the results of the mflyInit object in parallel. Imagine in the worst case an mflyInit object with 10,000 items, called every 2-3 seconds. If processing that object occurred synchronously, the Extension would grind to a halt or crash with out of memory errors.
-
-Parameter definitions:
-
-* version: mflyInit uses this version to indicate what the structure of mflyInit looks like. See mflyDataInit for possible versions and what they mean.
-* items: a list of slugs of the children of this item (if the item is a folder and has any children). This is used to construct the hierarchy
-* type: can be one of “Audio”, “Video”, “image”, “pdf”, “zip”, “ibooks”, “html”, “youtube”, “keynote”, “png”, “jpeg”, “jpg”, “gif”, “tif”, “tiff”
-* received: the UTC datetime for when the app received this version of the item.
-* launched: whether the user has launched this item in the past.
-* new: for folders, number of items within that folder that are defined as “new” based on client’s business rules. For items, if 1, that item is considered “new”. [iOS 425+]
-* keywords: any keywords the user set, as a JSON array.
-* downloadModel: indicates whether the app will allow you to email this item. If downloadModel=DownloadableShareable, this item can be emailed. All other values indicate that the item cannot be emailed. This is visible if mflyDataInit.mflyInitVersion is set to 2.
-* canShare: indicates whether the app will allow you to email this item. This is available if mflyDataInit.mflyInitVersion >= 3.
-* canAccessAssetOffline: indicates whether the item is allowed to be downloaded and stored encrypted, per business rules. Applies to video, documents, audio and images. This is available if mflyDataInit.mflyInitVersion >= 3.
-* canDownloadAsset: indicates whether the app is allowed to download the item and open it in an external application, unencrypted. Applies to e.g. iBooks, KeyNote, Excel. This is available if mflyDataInit.mflyInitVersion >= 3.
-
-All dates are specified in ISO 8601 format.
-
-*Example:*
-
-	function mflyInit(obj) {
-		// Handle mflyInit object
-	}
-
-*Availability:* iOS, Android, Windows 8
-
-
-----------
-
-
-## Saving and retrieving locally persisted key/value data
-Extensions can save data to and retrieve data from the app with AJAX. This is useful for persisting data within or between Extensions. After saving, you can be sure that your data will be saved if the user restarts the app or device (and, soon, uninstalls/reinstalls the app). You can use any key you wish, which provides a lot of flexibility, but please consider providing a namespace within your keys. Otherwise, two Extensions may find ways to clobber each others’ keys.
-
-For iOS, Android and Windows 8, key/value data is isolated by user, by app. So, two users cannot share keys, and two apps cannot share keys. Furthermore, currently all key/value data is stored on the device. So, uninstalling the app will remove all saved keys.
-
-For web Extensions, key/value data is stored in Local Storage. There is no isolation provided at the moment for the data. It is advised that you prefix your keys if there is a chance that the key will be accessed from multiple environments or users. Once syncronizing of this data to servers is available, prefixing will no longer be necessary.
-
-If your Extension needs to persist data on the server, please see the section `Saving and retrieving synchronized key/value data` below.
-
-### Save data
-To save data to the app container, call mflyCommands.putValue(_key, value_), where _key_ is the key you wish to save, and _value_ is the value for that key.
-
-*Example:*<br>
-This example saves key/value data, using mflyCommands.js.
-
-	var key = $('#key').val();
-	var value = { name: ‘abc’, value: ‘def’ };
-
-    mflyCommands.putValue(key, value)
-        .done(function(data, status) {
-            // Success! Do something.
-        })
-        .fail(function(deferred, status) {
-            // Error! Do something.
-        });
-
-HTTP response codes:
-
-* Response of 200 OK indicates a successful save to an existing key
-* Response of 201 Created indicates a successful save to a new key
-* Response of 400 Bad Request is returned if the value has not been previously saved
-
-(Note: attempts were made to use HTTP PUT verbs, but iOS seems to strip out the body of the PUT, so we migrated to use GET instead).
-
-*Example:*<br>
-This example saves key/value data, using jQuery.
-
-	var key = $('#key').val();
-	var value = { name: ‘abc’, value: ‘def’ };
-
-	$.ajax({
-		type: "GET",
-		url: "mfly://data/info/" + key,
-		contentType: "text/plain; charset=utf-8",
-		data: "value=" + encodeURIComponent(JSON.stringify(value)) + "&method=PUT",
-		dataType: "text",
-		success: function(result, status, xhr) {
-			// Success! Do something.
-		},
-		error: function(xhr) {
-			// Error! Do something.
-		}
-	});
-
-*Availability:* iOS, Android, Web Viewer, Win/Mac
-
-### Retrieve data
-
-You can retrieve value information from keys in multiple ways using mflyCommands.js.
-
-Alternatively, you can make the calls directly with AJAX, but we strongly recommend using mflyCommands instead. When making calls directly,
-
-* Response of 200 OK indicates a successful get of an existing key. The body of the response will contain the values indicated below.
-* Response of 404 Not Found indicates that the key does not exist
-
-
-#### Single key ####
-
-To get data for a specific key from the app container, use mflyCommands.getValue(_key_).
-
-*Example:*
-
-	// Assume key 'abc' has been set to value '123'.
-
-    mflyCommands.getValue('abc')
-        .done(function(data, status) {
-            // Success! Do something.
-            console.log(data);
-        })
-        .fail(function(deferred, status) {
-            // Error! Do something.
-        });
-
-    // Console output: 123
-
-On successful retrieval, data will contain the value of the key.
-
-
-#### All keys ####
-
-To get data for all keys from the app container, use mflyCommands.getValues().
-
-*Example:*
-
-	// Assume key 'abc' has been set to value '123', and key 'def' has been set to value '456'.
-
-    mflyCommands.getValues()
-        .done(function(data, status) {
-            // Success! Do something.
-            console.log(data);
-        })
-        .fail(function(deferred, status) {
-            // Error! Do something.
-        });
-
-    // Console output: { "abc": "123", "def": "456" }
-
-
-On successful retrieval, body will contain a JSON object enumerating all keys and values, as shown above.
-
-
-#### Key prefix ####
-
-To get data for all keys that begin with X, use mflyCommands.getValues(_prefix_). On successful retrieval, data will contain a JSON object enumerating all keys and values where the keys begin with X.
-
-*Example:*
-
-	// Assume:
-	//   key 'snow' has been set to value 'white',
-	//   key 'snowball' has been set to value 'round',
-	//   key 'fire' has been set to value 'red'
-
-    mflyCommands.getValues('snow')
-        .done(function(data, status) {
-            // Success! Do something.
-            console.log(data);
-        })
-        .fail(function(deferred, status) {
-            // Error! Do something.
-        });
-
-    // Console output: { "snow": "white", "snowball": "round" }
-
-    mflyCommands.getValues('abc')
-        .done(function(data, status) {
-            // Success! Do something.
-            console.log(data);
-        })
-        .fail(function(deferred, status) {
-            // Error! Do something.
-        });
-
-    // Console output: {}
-
-
-*Availability:* iOS, Android, Web Viewer, Win/Mac
-
-
-### Delete data
-
-To delete a key/value pair by key from the app container, use mflyCommands.deleteKey(_key_).
-
-*Example:*
-
-	// Assume key 'abc' has been set to value '123'.
-
-    mflyCommands.deleteKey('abc')
-        .done(function(data, status) {
-            // Success! Do something.
-            console.log('abc has been deleted');
-        })
-        .fail(function(deferred, status) {
-            // Error! Do something.
-        });
-
-    // Console output: 'abc has been deleted'
-
-*Availability:* iOS, Android, Web Viewer, Win/Mac
-
-
-----------
-
-## Saving and retrieving synchronized key/value data
-Synchronized key/value storage allows Extensions to persist key/value pairs that are saved on Mediafly servers in addition to being stored on devices. This is useful for persisting data within or between Extensions, and between devices. After saving, you can be sure that your data will be saved if the user restarts the app or device, and, uninstalls/reinstalls the app. You can use any key you wish, which provides a lot of flexibility, but please consider providing a namespace within your keys. Otherwise, two Extensions may find ways to clobber each others’ keys.
-
-Key/value data is isolated by user, by app. So, two users cannot share keys, and two apps cannot share keys. Furthermore, all key/value data is stored on the device as well as the server. So, uninstalling and reinstalling the app will still restore all data from the server to the device..
-
-### Save data
+### Save data (synced)
 To save data to the app container, call mflyCommands.putSyncedValue(_key, value_), where _key_ is the key you wish to save, and _value_ is the value for that key.
 
 *Example:*<br>
@@ -1239,7 +836,7 @@ HTTP response codes:
 
 *Availability:* iOS, Android, Web Viewer, Win/Mac
 
-### Retrieve synchronized data
+### Retrieve data (synced)
 
 You can retrieve value information from keys in multiple ways using mflyCommands.js.
 
@@ -1331,7 +928,7 @@ To get data for all keys that begin with X, use mflyCommands.getSyncedValues(_pr
 *Availability:* iOS, Android, Web Viewer, Win/Mac
 
 
-### Delete data
+### Delete data (synced)
 
 To delete a key/value pair by key from the app container, use mflyCommands.deleteSyncedKey(_key_).
 
@@ -1340,6 +937,167 @@ To delete a key/value pair by key from the app container, use mflyCommands.delet
 	// Assume key 'abc' has been set to value '123'.
 
     mflyCommands.deleteSyncedKey('abc')
+        .done(function(data, status) {
+            // Success! Do something.
+            console.log('abc has been deleted');
+        })
+        .fail(function(deferred, status) {
+            // Error! Do something.
+        });
+
+    // Console output: 'abc has been deleted'
+
+*Availability:* iOS, Android, Web Viewer, Win/Mac
+
+
+### Save data (local)
+To save data to the app container, call mflyCommands.putValue(_key, value_), where _key_ is the key you wish to save, and _value_ is the value for that key.
+
+*Example:*<br>
+This example saves key/value data, using mflyCommands.js.
+
+	var key = $('#key').val();
+	var value = { name: ‘abc’, value: ‘def’ };
+
+    mflyCommands.putValue(key, value)
+        .done(function(data, status) {
+            // Success! Do something.
+        })
+        .fail(function(deferred, status) {
+            // Error! Do something.
+        });
+
+HTTP response codes:
+
+* Response of 200 OK indicates a successful save to an existing key
+* Response of 201 Created indicates a successful save to a new key
+* Response of 400 Bad Request is returned if the value has not been previously saved
+
+(Note: attempts were made to use HTTP PUT verbs, but iOS seems to strip out the body of the PUT, so we migrated to use GET instead).
+
+*Example:*<br>
+This example saves key/value data, using jQuery.
+
+	var key = $('#key').val();
+	var value = { name: ‘abc’, value: ‘def’ };
+
+	$.ajax({
+		type: "GET",
+		url: "mfly://data/info/" + key,
+		contentType: "text/plain; charset=utf-8",
+		data: "value=" + encodeURIComponent(JSON.stringify(value)) + "&method=PUT",
+		dataType: "text",
+		success: function(result, status, xhr) {
+			// Success! Do something.
+		},
+		error: function(xhr) {
+			// Error! Do something.
+		}
+	});
+
+*Availability:* iOS, Android, Web Viewer, Win/Mac
+
+### Retrieve data (local)
+
+You can retrieve value information from keys in multiple ways using mflyCommands.js.
+
+Alternatively, you can make the calls directly with AJAX, but we strongly recommend using mflyCommands instead. When making calls directly,
+
+* Response of 200 OK indicates a successful get of an existing key. The body of the response will contain the values indicated below.
+* Response of 404 Not Found indicates that the key does not exist
+
+
+#### Single key ####
+
+To get data for a specific key from the app container, use mflyCommands.getValue(_key_).
+
+*Example:*
+
+	// Assume key 'abc' has been set to value '123'.
+
+    mflyCommands.getValue('abc')
+        .done(function(data, status) {
+            // Success! Do something.
+            console.log(data);
+        })
+        .fail(function(deferred, status) {
+            // Error! Do something.
+        });
+
+    // Console output: 123
+
+On successful retrieval, data will contain the value of the key.
+
+
+#### All keys ####
+
+To get data for all keys from the app container, use mflyCommands.getValues().
+
+*Example:*
+
+	// Assume key 'abc' has been set to value '123', and key 'def' has been set to value '456'.
+
+    mflyCommands.getValues()
+        .done(function(data, status) {
+            // Success! Do something.
+            console.log(data);
+        })
+        .fail(function(deferred, status) {
+            // Error! Do something.
+        });
+
+    // Console output: { "abc": "123", "def": "456" }
+
+
+On successful retrieval, body will contain a JSON object enumerating all keys and values, as shown above.
+
+
+#### Key prefix ####
+
+To get data for all keys that begin with X, use mflyCommands.getValues(_prefix_). On successful retrieval, data will contain a JSON object enumerating all keys and values where the keys begin with X.
+
+*Example:*
+
+	// Assume:
+	//   key 'snow' has been set to value 'white',
+	//   key 'snowball' has been set to value 'round',
+	//   key 'fire' has been set to value 'red'
+
+    mflyCommands.getValues('snow')
+        .done(function(data, status) {
+            // Success! Do something.
+            console.log(data);
+        })
+        .fail(function(deferred, status) {
+            // Error! Do something.
+        });
+
+    // Console output: { "snow": "white", "snowball": "round" }
+
+    mflyCommands.getValues('abc')
+        .done(function(data, status) {
+            // Success! Do something.
+            console.log(data);
+        })
+        .fail(function(deferred, status) {
+            // Error! Do something.
+        });
+
+    // Console output: {}
+
+
+*Availability:* iOS, Android, Web Viewer, Win/Mac
+
+
+### Delete data (local)
+
+To delete a key/value pair by key from the app container, use mflyCommands.deleteKey(_key_).
+
+*Example:*
+
+	// Assume key 'abc' has been set to value '123'.
+
+    mflyCommands.deleteKey('abc')
         .done(function(data, status) {
             // Success! Do something.
             console.log('abc has been deleted');
@@ -1666,3 +1424,234 @@ The following constants can be used across customer environments or within an en
 
 * ```__root__```: This is the ID of the top-level folder. It is consistent across all environments and all device platforms.
 * ```[environment ID]productmyitems```: This is the ID of the "My Items" folder. "My Items" is a folder that, when enabled, gives users a personal space to upload and manage their own content within the customer environment. In this case, ```[environment ID]``` is a unique 32-character string that is specific to that environment. Please contact Mediafly to obtain the string for your customers; or, simply use Get Folder on the ```__root__``` and look for My Items as the last folder in the response. In order to access My Items, the user must be logged in.
+
+
+## Deprecated
+These are calls that you may encounter, but have been deprecated. They remain here historical purposes. They will be deleted from our apps and this documentation in the near future.
+
+### mflyDataInit (*deprecated*)
+
+<b>PLEASE NOTE:</b> Use mflyCommands.getInteractiveInfo where possible.
+
+This function has two uses:
+
+1. Receive configuration information from the app, and
+2. Send configuration parameters to the app
+
+#### Use 1: Receive configuration information from the app
+Extensions can implement mflyDataInit, using method 1.
+
+		function mflyDataInit(obj) {
+			// obj = JSON object that contains initial configuration
+		}
+
+mflyDataInit will be called with a JSON object that contains initial configuration.  E.g. on iOS, params may be a JSON Object such as this:
+
+		{
+			"mflyInitVersionMaximum": "2",
+		  	"user": "jshah@mediafly.com",
+			"displayName": "Jason Shah",
+			"item": "Custom Dynamic Extension 1.2",
+			“id”: “29342938241238product234234”,
+			"osType": "iOS",
+			"osVersion": "6.1.2",
+			"appVersion": "6.1.4.405",
+			"deviceId": "4639ufu115f0630a13a8744e8b5cc6309b46",
+			"lastUpdated": "2014-02-03T07:04:07-06:00"
+		}
+
+*Supported parameters:*<br>
+
+* mflyInitVersionMaximum: indicates how many possible values mflyInitVersion can have in the return value (see below).
+* user: user_context (essentially, system-known username)
+* displayName: display name. Can be email, first+last, or something similar
+* item: title of this Extension
+* id: the slug (unique id) of this Extension within Airship
+* osType: which OS (iOS, Android, Windows, Mac)
+* osVersion: which version of the OS
+* appVersion: which version of the app
+* deviceId: the unique device ID for this device
+* lastUpdated: the lasted updated time. This is good for debugging purposes, to help you identify which version of the Extension you are looking at on the device
+
+
+#### Use 2: Send configuration parameters to the app
+Optionally, Extensions can then return a JSON Object with specifics on how the app should behave.  E.g. on iOS, return value may be a JSON Object such as this:
+
+		{
+		  “mflyInitVersion”: “4”,
+		  “mflyWideScreenSupport”: true
+		}
+
+*Supported parameters:*<br>
+
+* mflyInitVersion: indicates which version of mflyInit should be called by the app. Android supports versions 3, 4, and 5 of mflyInitVersion. If ignored, defaults to "4".
+	* "2": default version reflected in this documentation. Supported on iOS.
+	* "3": On iOS, sharing status is represented by canShare, canAccessAssetOffline, and canDownloadAsset. Supported on Android, iOS, and Windows8.
+	* "4": No longer sends down mflyInit. mflyInit is deprecated and causes undo burden when content libraries are large, and we plan to deprecate it in the future. Supported on Android and iOS.
+
+* mflyWideScreenSupport: if true, this makes the app aware that the Extension can handle widescreen second screens (HDMI, Apple TV).  This is specifically for the case where the Extension has been designed to be a presentation-worthy UI for second screens. Only available on iOS.
+
+*Example:*<br>
+
+	function mflyDataInit(obj) {
+		// Do initialization
+	    return '{ "mflyInitVersion" : "4" }';
+	}
+
+*Availability:* iOS and Android. Not all parameters will be available on Android.
+
+
+### mflyResume (*deprecated*)
+The app calls this function when the app opens and shows the Extension.  If you need to start animation or take other action when the Extension shows, this is the place to do it.
+
+*Example:*<br>
+
+	function mflyResume() {
+		// Handle mflyResume
+	}
+
+*Availability:* iOS, Android
+
+
+### mflyPause (*deprecated*)
+The app calls this function when the user hides the Extension. If you need to stop animation, submit a form, or take other action when the Extension hides, this is the place to do it.
+
+*Example:*<br>
+
+	function mflyPause() {
+		// Handle mflyPause
+	}
+
+*Availability:* iOS, Android
+
+
+### Sync Status (*deprecated*)
+Our apps are built to automatically sync all folders on launch and at regular intervals. Sometimes, the Extension needs to know about the status of sync to ensure that sufficient content is loaded before rendering the Extension. To receive information about the status of sync, apps can listen to events injected into the DOM's document object, and react to those events.
+
+*Example:*<br>
+
+    document.addEventListener("mflySyncStatus", function(d) {
+        if (d && d.detail) {
+        	// Handle Sync Status
+            $("#syncEventHandlerResult").html(JSON.stringify(d.detail, null, 2));
+        }
+    }, false);
+
+The detail attribute of the event object will be structure as JSON with 2-3 fields, like so:
+
+    {
+        complete: 26,
+        total: 28,
+        isrunning: true
+    }
+
+where the JSON object's attributes have the following meaning:
+
+* complete: the number of folders that have been synced
+* total: the total number of folders known to the app. Note that this may not be defined immediately on application start, and may change if there are dramatic changes of what is available to the user.
+* isrunning: true|false, indicating whether the sync is currently running.
+
+*Availability:* iOS (604), Android (2.23.59)
+
+
+
+
+### mflyInit (*deprecated*)
+
+<b>PLEASE NOTE</b>: mflyInit is deprecated. We have discovered that, as content libraries become incredibly large, mflyInit consumes an excessive amount of memory. As a result, we strongly suggest using mflyCommands.getFolder() and mflyCommands.getItem() to selectively construct the hierarchy that is needed at that time.
+
+The app calls this function when the app launches an Extension.  The parameter is a dictionary of JSON objects that represent a flattened version of the full hierarchy of folders and items available to the user. The key of each entry is the item/folder slug. Each entry for folders contains a JSON Array called “items”, which contains an array of slugs that are children of this folder.
+
+For example, if a user has the following hierarchy:
+
+	  folder [id=slug1]
+	    item [id=slug2]
+	    folder [id=slug3]
+	      item [id=slug4]
+
+then the object may look like this:
+
+	{
+	  “version”: 2,
+	  “slug1” : {
+	    "id": "slug1",
+	    “items”: [“slug2”, “slug3”],
+	    "url": "mfly://folder/slug1",
+	    "type": "folder",
+	    "name": "Name",
+	    "description": "Description",
+	    "date": "2010-11-12T06:15:15:00-06:00",
+	    "received": "2012-12-19T16:45:14:00-06:00",
+	    "thumbnailUrl": "mfly://image/123",
+	    "launched": "false",
+	    “keywords”: [“keyword1”, “keyword2”, “keyword3”],
+	    “new”: 1
+	  },
+	  “slug2” : {
+	    "id": "slug2",
+	    "url": "mfly://item/slug2",
+	    "type": "video",
+	    "name": "Name",
+	    "description": "Description",
+	    "date": "2010-11-12T06:15:15:00-06:00",
+	    "received": "2012-12-19T16:45:14:00-06:00",
+	    "thumbnailUrl": "mfly://image/123",
+        "launched": "true",
+        “keywords”: [“keyword4”],
+        “downloadModel”: “DownloadableShareable”
+      },
+      “slug3” : {
+        "id": "slug3",
+        “items”: [“slug4”],
+        "url": "mfly://folder/slug3",
+        "type": "folder",
+        "name": "Name",
+        "description": "Description",
+        "date": "2010-11-12T06:15:15:00-06:00",
+        "received": "2012-12-19T16:45:14:00-06:00",
+        "thumbnailUrl": "mfly://image/123",
+        "launched": "false"
+      },
+      “slug4” : {
+        "id": "slug4",
+        "url": "mfly://item/slug4",
+        "type": "interactive",
+        "name": "Name",
+        "description": "Description",
+        "date": "2010-11-12T06:15:15:00-06:00",
+        "received": "2012-12-19T16:45:14:00-06:00",
+        "thumbnailUrl": "mfly://image/123",
+        "launched": "true",
+        “new”: 1,
+        “downloadModel”: “DownloadableProtected”
+      }
+    }
+
+
+This function and mflyResume exist in harmony.  mflyInit is called on launch of the Extension. mflyResume is called on both launch and resume of the Extension.
+
+Expect mflyInit to be called many times for large hierarchies, as often as every 2-3 seconds. Consider processing the results of the mflyInit object in parallel. Imagine in the worst case an mflyInit object with 10,000 items, called every 2-3 seconds. If processing that object occurred synchronously, the Extension would grind to a halt or crash with out of memory errors.
+
+Parameter definitions:
+
+* version: mflyInit uses this version to indicate what the structure of mflyInit looks like. See mflyDataInit for possible versions and what they mean.
+* items: a list of slugs of the children of this item (if the item is a folder and has any children). This is used to construct the hierarchy
+* type: can be one of “Audio”, “Video”, “image”, “pdf”, “zip”, “ibooks”, “html”, “youtube”, “keynote”, “png”, “jpeg”, “jpg”, “gif”, “tif”, “tiff”
+* received: the UTC datetime for when the app received this version of the item.
+* launched: whether the user has launched this item in the past.
+* new: for folders, number of items within that folder that are defined as “new” based on client’s business rules. For items, if 1, that item is considered “new”. [iOS 425+]
+* keywords: any keywords the user set, as a JSON array.
+* downloadModel: indicates whether the app will allow you to email this item. If downloadModel=DownloadableShareable, this item can be emailed. All other values indicate that the item cannot be emailed. This is visible if mflyDataInit.mflyInitVersion is set to 2.
+* canShare: indicates whether the app will allow you to email this item. This is available if mflyDataInit.mflyInitVersion >= 3.
+* canAccessAssetOffline: indicates whether the item is allowed to be downloaded and stored encrypted, per business rules. Applies to video, documents, audio and images. This is available if mflyDataInit.mflyInitVersion >= 3.
+* canDownloadAsset: indicates whether the app is allowed to download the item and open it in an external application, unencrypted. Applies to e.g. iBooks, KeyNote, Excel. This is available if mflyDataInit.mflyInitVersion >= 3.
+
+All dates are specified in ISO 8601 format.
+
+*Example:*
+
+	function mflyInit(obj) {
+		// Handle mflyInit object
+	}
+
+*Availability:* iOS, Android
