@@ -93,7 +93,7 @@ You now have access to a relatively full featured web development tool for your 
 
 Mediafly creates and maintains a detailed list of examples. These examples illustrate many of the features of Extensions and can serve as QA for client app developers.
 
-Please see the [Mediafly Extensions Tools and Examples](https://bitbucket.org/mediafly/mediafly-interactives-tools-and-examples) BitBucket repository for more information.
+Please see the [Mediafly Extensions Examples](https://github.com/mediafly/extensions-examples) repository for more information.
 
 To see the examples in action on your device on a browser:
 
@@ -1170,7 +1170,7 @@ Embedding other types (audio, video, URLs) will have unexpected results. The bes
 
 ### Example
 
-See our [open-source 'Embed and Data Items' Extension](https://bitbucket.org/mediafly/mediafly-interactives-tools-and-examples/src/tip/examples/Embed%20and%20Data%20Items/Containing%20Interactive/?at=default) for an excellent working example of all four types of Embed described above.
+See our [open-source 'Embed and Data Items' Extension](https://github.com/mediafly/extensions-examples/tree/master/examples/Embed%20and%20Data%20Items) for an excellent working example of all four types of Embed described above.
 
 ### Technical details
 
@@ -1339,7 +1339,7 @@ Since Extensions are embedded web pages, on some (particularly iOS) devices they
 
 To address this, we recommend using [Hammer.js](http://eightmedia.github.io/hammer.js/), a mobile-focused touch gesture library.
 
-We have created a detailed example within Mediafly Extensions Tools and Examples that demonstrates this, [here](https://bitbucket.org/mediafly/mediafly-interactives-tools-and-examples/src/tip/examples/Swipe/app/?at=default).
+We have created a detailed example within Mediafly Extensions Examples that demonstrates this, [here](https://github.com/mediafly/extensions-examples/tree/master/examples/Swipe).
 
 ### Smoother scrolling
 By default, iOS scrolling in the UIWebView is exactly controlled by your finger. You can drag the web view down and up, but you cannot "throw" the page in a direction. Furthermore, if you have a lot of large images on the page, scrolling can become choppy.
