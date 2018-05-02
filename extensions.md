@@ -3,7 +3,7 @@
 Overview
 ========
 
-Customers often wish to create rich, engaging content that include advanced UI effects, form entry, dynamic content, and more features that extend well beyond the limitations of PowerPoint or PDFs. With Mediafly Extensions and the Mediafly Platform, customers can create, release and control these packages.  This document serves as documentation for how a customer can create an Extension and what best practices exist in their creation and maintenance.
+Customers often wish to create rich, interactive content that include advanced UI effects, form entry, dynamic content, and more features that extend well beyond the limitations of PowerPoint or PDFs. With Mediafly Extensions and the Mediafly Platform, customers can create, release and control these packages.  This document serves as documentation for how a customer can create an Extension and what best practices exist in their creation and maintenance.
 
 
 ----------
@@ -364,6 +364,25 @@ To create either link, simply create a typical `<a href>` link with the source p
 #### Open an item
 *mflyCommands.js:* mflyCommands.openItem(_id_) <br>
 *Description:* Opens the specified item, where [id] is the ID of the item.  As described above, the historical navigational stack is maintained, and the user can return to it. The ID for an item can be found in Airship. Expand the item, and the ID is displayed at the bottom. <br>
+*Availability:* iOS, Android, Web Viewer, Win/Mac
+
+#### Open an item from Search results, a Collection, or a Search Folder
+
+An Extension can render a Collection, Search Results, or a Search Folder in its UI and leverage the app to open items from them. If the context is supplied, the app will allow the user to present all items from the given context from the playlist that is shown when the item is opened.
+
+Examples:
+Open an item from a collection:
+
+*mflyCommands.js:* mflyCommands.openItem(_id_, { context: 'collection', collection: _collectionId_ }) <br>
+
+Open an item from search results:
+
+*mflyCommands.js:* mflyCommands.openItem(_id_, { context: 'search', search: _searchTerm_ }) <br>
+
+Open an item from a search folder:
+
+*mflyCommands.js:* mflyCommands.openItem(_id_, { context: 'searchFolder', parentSlug: _searchFolderId_ }) <br>
+
 *Availability:* iOS, Android, Web Viewer, Win/Mac
 
 #### Open a folder
