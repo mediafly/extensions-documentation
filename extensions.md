@@ -432,8 +432,8 @@ Mediafly's apps provide real-time, native search as a core part of the functiona
 *Availability:* iOS
 
 #### Search by keyword
-*mflyCommands.js:* mflyCommands.search(_term_) <br>
-*Description:* Conduct a search for the given keyword. Return value is a JSON-array of folders and items.<br>
+*mflyCommands.js:* mflyCommands.search(_term_, _offset_, _limit_) <br>
+*Description:* Conduct a search for the given keyword. Return value is a JSON-array of folders and items. Parameters offset and limit are optional.<br>
 *Availability:* iOS, Android, Web Viewer, Win/Mac
 
 

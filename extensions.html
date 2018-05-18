@@ -13,8 +13,7 @@
 </ul>
 <p>All of these files are packaged up in a specific way and uploaded to Mediafly Airship. These packages have the extension of <code>.mext</code>. Note: Packaging Extensions with the <code>.zip</code> is now obsolete and Viewer no longer supports this file extension for Extensions.</p>
 <p>When the user opens the Extension, the app loads and renders the Extension much like it would a traditional web page.
-<img src="https://devdocs.mediafly.com/extensions/images/Extensions%20Overview.png" alt="image"></p>
-
+<img alt="image" src="https://devdocs.mediafly.com/extensions/images/Extensions%20Overview.png" /></p>
 <p>To ensure that the apps work consistently and correctly, the Extension developer needs to follow a few rules:</p>
 <ul>
 <li>The starting page must be named index.html .  This is the common starting point from which any package can launch.  Sub-pages are acceptable, as long as they are navigable from index.html.</li>
@@ -50,17 +49,11 @@
 </ol>
 <p>For more detailed instructions, refer to https://www.npmjs.com/package/@mediafly/extension-cli.</p>
 <p>Note: You will need the <a href="https://nodejs.org/en/download/">Node.js</a> runtime (v5 or higher) to use <code>extension-cli</code>. <code>extension-cli</code> is currently only supported on Viewer and iOS.</p>
-
-<h2 id="toc_5">Testing on device</h2>
-
-<h3 id="toc_6">weinre</h3>
-
-<p>We strongly recommend the use of <a href="https://people.apache.org/%7Epmuellr/weinre/docs/latest/Home.html">weinre</a>, the WEb INspector REmote. It is a debugger for remote web pages, and in particular, it <i>allows you to debug web pages on mobile devices with your laptop</i>.</p>
-
-<h4 id="toc_7">How to use it</h4>
-
-<p>Please read the <a href="https://people.apache.org/%7Epmuellr/weinre/docs/latest/Installing.html">installation</a> and <a href="http://people.apache.org/%7Epmuellr/weinre-docs/latest/Running.html">run</a> instructions on the website for details. But here is a simple overview:</p>
-
+<h2>Testing on device</h2>
+<h3>weinre</h3>
+<p>We strongly recommend the use of <a href="https://people.apache.org/~pmuellr/weinre/docs/latest/Home.html">weinre</a>, the WEb INspector REmote. It is a debugger for remote web pages, and in particular, it <i>allows you to debug web pages on mobile devices with your laptop</i>.</p>
+<h4>How to use it</h4>
+<p>Please read the <a href="https://people.apache.org/~pmuellr/weinre/docs/latest/Installing.html">installation</a> and <a href="http://people.apache.org/~pmuellr/weinre-docs/latest/Running.html">run</a> instructions on the website for details. But here is a simple overview:</p>
 <ol>
 <li>Install the tool via npm, (e.g. npm -g install weinre)</li>
 <li>Run the debug server locally (e.g. weinre —boundHost 10.0.0.111)</li>
@@ -300,6 +293,16 @@ Example 2:
 <p><em>mflyCommands.js:</em> mflyCommands.openItem(<em>id</em>) <br>
 <em>Description:</em> Opens the specified item, where [id] is the ID of the item.  As described above, the historical navigational stack is maintained, and the user can return to it. The ID for an item can be found in Airship. Expand the item, and the ID is displayed at the bottom. <br>
 <em>Availability:</em> iOS, Android, Web Viewer, Win/Mac</p>
+<h4>Open an item from Search results, a Collection, or a Search Folder</h4>
+<p>An Extension can render a Collection, Search Results, or a Search Folder in its UI and leverage the app to open items from them. If the context is supplied, the app will allow the user to present all items from the given context from the playlist that is shown when the item is opened.</p>
+<p>Examples:
+Open an item from a collection:</p>
+<p><em>mflyCommands.js:</em> mflyCommands.openItem(<em>id</em>, { context: 'collection', collection: <em>collectionId</em> }) <br></p>
+<p>Open an item from search results:</p>
+<p><em>mflyCommands.js:</em> mflyCommands.openItem(<em>id</em>, { context: 'search', search: <em>searchTerm</em> }) <br></p>
+<p>Open an item from a search folder:</p>
+<p><em>mflyCommands.js:</em> mflyCommands.openItem(<em>id</em>, { context: 'searchFolder', parentSlug: <em>searchFolderId</em> }) <br></p>
+<p><em>Availability:</em> iOS, Android, Web Viewer, Win/Mac</p>
 <h4>Open a folder</h4>
 <p><em>mflyCommands.js:</em> mflyCommands.openFolder(<em>id</em>) <br>
 <em>Description:</em> Opens the specified folder, where [id] is the ID of the folder.  As described above, the historical navigational stack is maintained, and the user can return to it. The ID for a folder can be found in Airship. Expand the item, and the ID is displayed at the bottom. <br>
