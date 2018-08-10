@@ -426,6 +426,8 @@ Mediafly's apps provide real-time, native search as a core part of the functiona
 1. Use the native app's core Search UI. In this case, you simply need to open the Search dialog and let the user use that dialog. See "Show Search dialog" below.
 2. Implement your own UI. In this case, you use the mflyCommands.search() call to get search results given terms, and then render the UI as you wish. See "Search by keyword" below.
 
+#### Advanced Search
+Advanced search syntax can help Extensions find folders and content more efficiently using mflyCommands.search(). You can find the advanced search syntax documentation at: [https://docs.google.com/document/d/1bQYRjKo_ctmv1OQQKo5qQKzRLaXnWgGBebdCdbs3-Mw/edit#heading=h.h6m5kboybjil](https://docs.google.com/document/d/1bQYRjKo_ctmv1OQQKo5qQKzRLaXnWgGBebdCdbs3-Mw/edit#heading=h.h6m5kboybjil) 
 #### Show Search dialog (*deprecated*)
 *mflyCommands.js:* mflyCommands.showSearch(_x-coord, y-coord, width, height_) <br>
 *Description:* Shows the search dialog at x-coord, y-coord coordinates with the specified width and height. Parameters x-coord, y-coord, width, and height are all optional, and only work with iOS. <br>
