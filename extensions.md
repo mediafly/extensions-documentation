@@ -814,6 +814,25 @@ Example:
 
 *Availability:* iOS, Android, Viewer, Win/Mac
 
+### Opening external web links
+
+In some cases Extensions need to open web links. mflyCommands provides the `openLink` command to handle this in a cross platform way. Following is the behavior of this command per platform:
+
+- iOS: Opens the link in a modal with a WebView. The user can dismiss the modal and return back to the Extension.
+- Android: Not yet implemented
+- Viewer: Opens the link in a new browser tab
+- Desktop: Opens the link in a new browser tab
+
+*mflyCommands.js:* mflyCommands.openLinke(link) <br>
+
+*Description:* Open an external web link<br>
+Example:
+	
+	mflyCommands.openLink('https://www.mediafly.com')
+	Response: null
+
+*Availability:* iOS (v722), Viewer, Win/Mac
+
 ----------
 
 ## Saving and retrieving key/value data

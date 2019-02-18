@@ -648,6 +648,21 @@ Example:</p>
 Response: null
 </code></pre>
 <p><em>Availability:</em> iOS, Android, Viewer, Win/Mac</p>
+<h3>Opening external web links</h3>
+<p>In some cases Extensions need to open web links. mflyCommands provides the <code>openLink</code> command to handle this in a cross platform way. Following is the behavior of this command per platform:</p>
+<ul>
+<li>iOS: Opens the link in a modal with a WebView. The user can dismiss the modal and return back to the Extension.</li>
+<li>Android: Not yet implemented</li>
+<li>Viewer: Opens the link in a new browser tab</li>
+<li>Desktop: Opens the link in a new browser tab</li>
+</ul>
+<p><em>mflyCommands.js:</em> mflyCommands.openLinke(link) <br></p>
+<p><em>Description:</em> Open an external web link<br>
+Example:</p>
+<pre><code>mflyCommands.openLink('https://www.mediafly.com')
+Response: null
+</code></pre>
+<p><em>Availability:</em> iOS (v722), Viewer, Win/Mac</p>
 <hr />
 <h2>Saving and retrieving key/value data</h2>
 <p>Extensions can save data to and retrieve data from the app with AJAX. This is useful for persisting data within or between Extensions. After saving, you can be sure that your data will be saved if the user restarts the app or device. You can use any key you wish, which provides a lot of flexibility, but please consider providing a namespace within your keys. Otherwise, two Extensions may find ways to clobber each others’ keys.</p>
