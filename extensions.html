@@ -923,6 +923,28 @@ mflyCommands.deleteKey('abc')
 <hr />
 <h2>Emailing content from Extensions</h2>
 <h3>Overview</h3>
+<p>Extensions can either send emails using Mediafly's backend, or use a native email client if one available on the device running the extension.</p>
+<h4>Sending emails using an email client</h4>
+<p>Extensions can invoke the native email client on the device.</p>
+<p><em>Example</em></p>
+<pre><code>mflyCommands.composeEmail({
+    subject: '[email subject]',
+    body: '[email body]',
+    attachments: [{
+        filename: "[name of the attachment. for example: Presentation.pdf]",
+        dataUrl: "[Base64 encoded URL]"
+    }]
+}).done(function(data, status) {
+    // Success! Do something.
+    console.log('email has been sent successfully');
+})
+.fail(function(deferred, status) {
+    // Error! Do something.
+    console.log('error sending email');
+});
+</code></pre>
+<p><em>Availability</em>: iOS, Android</p>
+<h4>Sending emails using Mediafly's backend</h4>
 <p>Extensions can have Mediafly's backend send emails with attachments. Attachments are Base64 encoded URLs.
 Even though emails are sent from Mediafly's servers, they have "Reply-To" field populated with the curent logged in user's email address.</p>
 <p><em>Example</em></p>
