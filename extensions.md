@@ -1163,6 +1163,32 @@ To delete a key/value pair by key from the app container, use mflyCommands.delet
 ## Emailing content from Extensions
 
 ### Overview
+Extensions can either send emails using Mediafly's backend, or use a native email client if one available on the device running the extension.
+
+#### Sending emails using an email client
+Extensions can invoke the native email client on the device.
+
+*Example*
+
+    mflyCommands.composeEmail({
+    	subject: '[email subject]',
+    	body: '[email body]',
+    	attachments: [{
+    		filename: "[name of the attachment. for example: Presentation.pdf]",
+    		dataUrl: "[Base64 encoded URL]"
+    	}]
+    }).done(function(data, status) {
+        // Success! Do something.
+        console.log('email has been sent successfully');
+    })
+    .fail(function(deferred, status) {
+        // Error! Do something.
+        console.log('error sending email');
+    });
+
+*Availability*: iOS, Android
+
+#### Sending emails using Mediafly's backend
 Extensions can have Mediafly's backend send emails with attachments. Attachments are Base64 encoded URLs.
 Even though emails are sent from Mediafly's servers, they have "Reply-To" field populated with the curent logged in user's email address.
 
