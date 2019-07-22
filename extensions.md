@@ -463,6 +463,28 @@ You can use this call to get a list of content that was recently viewed by the u
 *Availability:* iOS, Android, Web Viewer, Win/Mac <br>
 *Note:* This call is only available when the device is online
 
+### Favorties
+
+You can use the following calls to build favorites functionality in an extension.
+
+Get favorites
+
+*mflyCommands.js:* mflyCommands.getFavorites() <br>
+*Description:* Returns a JSON respresentation of the items favorited by the user. <br>
+*Availability:* Web Viewer <br>
+
+favorite
+
+*mflyCommands.js:* mflyCommands.favorite(id) <br>
+*Description:* Sets an item matching the id as a favorite for the user. <br>
+*Availability:* Web Viewer <br>
+
+unfavorite
+
+*mflyCommands.js:* mflyCommands.getFavorites() <br>
+*Description:* Removes an item as a favorite for the user. <br>
+*Availability:* Web Viewer <br>
+
 
 ### Copy Item
 You can use this call to copy an item to the desired folder in the hierarchy and optionally provide a new name for the copied item.
