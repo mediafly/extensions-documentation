@@ -59,6 +59,16 @@ Extensions can invoke capabilities provided by the app such as Search and Collec
 Building Extensions
 =====================
 
+## Creating an extension
+A Mediafly extension is a `.mext` file. This file can be put together by zipping up the contents of a web application. Below are the steps to create a valid `.mext` file.
+
+1. Create a folder and add an `index.html` file to it. This will be the entry point of the application.
+2. Add `interactive-manifest.json` file with contents `{}` in the folder.
+3. Add CSS and JavaScript files and add references to them in `index.html`.
+4. Zip up the contents of the folder. Make sure that `index.html` is at the root of the zip file.
+5. Rename the zipped archive to have the `.mext` extension (e.g. `my-extension.mext`).
+6. Upload the `.mext` file to Mediafly using Airship.
+
 ## Developing and testing an Extension
 Mediafly provides a CLI (command line interface) utility called `extension-cli` to make it easier to test and develop an Extension. `extension-cli` allows an Extension developer to:
 
@@ -446,6 +456,10 @@ Advanced search syntax can help Extensions find folders and content more efficie
 *Availability:* iOS, Android, Web Viewer, Win/Mac
 
 
+
+
+
+
 ### Get Recently Created Content
 You can use this call to get a list of content that was recently created for the user.
 
@@ -461,6 +475,14 @@ You can use this call to get a list of content that was recently viewed by the u
 *mflyCommands.js:* mflyCommands.getLastViewedContent() <br>
 *Description:* Returns a JSON respresentation of the last 50 items viewed by the user. <br>
 *Availability:* iOS, Android, Web Viewer, Win/Mac <br>
+*Note:* This call is only available when the device is online
+
+### Get Content Related to Given Content
+You can use this call to get a list of content that is related to the a given content.
+
+*mflyCommands.js:* mflyCommands.getRelatedItems(id, offset, limit) <br>
+*Description:* Returns a JSON respresentation of content related to content with the given id. <br>
+*Availability:* Web Viewer <br>
 *Note:* This call is only available when the device is online
 
 ### Favorties

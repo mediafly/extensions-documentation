@@ -40,6 +40,16 @@
 <p>Extensions can invoke capabilities provided by the app such as Search and Collections as well.</p>
 <hr />
 <h1>Building Extensions</h1>
+<h2>Creating an extension</h2>
+<p>A Mediafly extension is a <code>.mext</code> file. This file can be put together by zipping up the contents of a web application. Below are the steps to create a valid <code>.mext</code> file.</p>
+<ol>
+<li>Create a folder and add an <code>index.html</code> file to it. This will be the entry point of the application.</li>
+<li>Add <code>interactive-manifest.json</code> file with contents <code>{}</code> in the folder.</li>
+<li>Add CSS and JavaScript files and add references to them in <code>index.html</code>.</li>
+<li>Zip up the contents of the folder. Make sure that <code>index.html</code> is at the root of the zip file.</li>
+<li>Rename the zipped archive to have the <code>.mext</code> extension (e.g. <code>my-extension.mext</code>).</li>
+<li>Upload the <code>.mext</code> file to Mediafly using Airship.</li>
+</ol>
 <h2>Developing and testing an Extension</h2>
 <p>Mediafly provides a CLI (command line interface) utility called <code>extension-cli</code> to make it easier to test and develop an Extension. <code>extension-cli</code> allows an Extension developer to:</p>
 <ol>
@@ -364,6 +374,26 @@ Example 2:
 <em>Description:</em> Returns a JSON respresentation of the last 50 items viewed by the user. <br>
 <em>Availability:</em> iOS, Android, Web Viewer, Win/Mac <br>
 <em>Note:</em> This call is only available when the device is online</p>
+<h3>Get Content Related to Given Content</h3>
+<p>You can use this call to get a list of content that is related to the a given content.</p>
+<p><em>mflyCommands.js:</em> mflyCommands.getRelatedItems(id, offset, limit) <br>
+<em>Description:</em> Returns a JSON respresentation of content related to content with the given id. <br>
+<em>Availability:</em> Web Viewer <br>
+<em>Note:</em> This call is only available when the device is online</p>
+<h3>Favorties</h3>
+<p>You can use the following calls to build favorites functionality in an extension.</p>
+<p>Get favorites</p>
+<p><em>mflyCommands.js:</em> mflyCommands.getFavorites() <br>
+<em>Description:</em> Returns a JSON respresentation of the items favorited by the user. <br>
+<em>Availability:</em> Web Viewer <br></p>
+<p>favorite</p>
+<p><em>mflyCommands.js:</em> mflyCommands.favorite(id) <br>
+<em>Description:</em> Sets an item matching the id as a favorite for the user. <br>
+<em>Availability:</em> Web Viewer <br></p>
+<p>unfavorite</p>
+<p><em>mflyCommands.js:</em> mflyCommands.getFavorites() <br>
+<em>Description:</em> Removes an item as a favorite for the user. <br>
+<em>Availability:</em> Web Viewer <br></p>
 <h3>Copy Item</h3>
 <p>You can use this call to copy an item to the desired folder in the hierarchy and optionally provide a new name for the copied item.</p>
 <p><em>mflyCommands.js:</em> mflyCommands.copy(folderId, id, newName) <br>
