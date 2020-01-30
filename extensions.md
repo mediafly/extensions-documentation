@@ -143,6 +143,8 @@ Communicating the app is done by calling functions on mflyCommands. The list of 
 ***PLEASE NOTE***: Every Extension must allow the user to close the item. Else, the user will be stuck within the Extension, with no way to exit.
 
 ### Getting baseline information
+
+#### getInteractiveInfo
 *mflyCommands.js:* mflyCommands.getInteractiveInfo() <br>
 *Description:* Obtains baseline information about this Extension. Extensions can call this function and receive an object of initial configuration. Response example:
 
@@ -172,6 +174,51 @@ Communicating the app is done by calling functions on mflyCommands. The list of 
 * lastUpdated: the lasted updated time. This is good for debugging purposes, to help you identify which version of the Extension you are looking at on the device
 
 Note that not every parameter is available on every platform.
+
+*Availability:* iOS, Android, Web Viewer, Windows/Mac
+
+#### getSystemInfo
+*mflyCommands.js:* mflyCommands.getSystemInfo() <br>
+*Description:* Obtains information about the particular platform that the extension is running on. This command is useful for an extension to determine what capabilities the platform does or deos not support and provide an appropriate experience to the user. Response example:
+
+		{
+			"osType": "web",
+			"supportsComposeEmail": false,
+			"supportsDownloadUrl": true,
+			"supportsEmail": false,
+			"supportsGetGpsCoordinates": false,
+			"supportsGetOnlineStatus": false,
+			"supportsGetSyncStatus": false,
+			"supportsOpenWindow": true,
+			"supportsRefresh": false,
+			"supportsRelatedContent": true,
+			"supportsSendEmail": true,
+			"supportsShowAddToCollection": false,
+			"supportsShowAnnotations": false,
+			"supportsShowCollections": false,
+			"supportsShowControlBars": false,
+			"supportsDownloads": false,
+			"supportsDownloader": false,
+			"supportsShowNotificationManager": false,
+			"supportsShowSearch": false,
+			"supportsShowSecondScreenOptions": false,
+			"supportsShowSettings": false,
+			"supportsShowUserManagement": false,
+			"supportsTakeAndEmailScreenshot": false
+		}
+
+*Availability:* iOS, Android, Web Viewer, Windows/Mac
+
+#### getUserInfo
+*mflyCommands.js:* mflyCommands.getUserInfo() <br>
+*Description:* Obtains information about the logged in user. Response example:
+
+		{
+			"id": "1234",
+			"username": "user@mediafly.com",
+			"emailAddress": "user@mediafly.com",
+			"displayName": "John Doe"
+		}
 
 *Availability:* iOS, Android, Web Viewer, Windows/Mac
 
@@ -365,16 +412,20 @@ Note that not every parameter is available on every platform.
 *Description:* Web Viewer will use open the URL in a new browser tab. Win/Mac app will open the URL in a new native window. <br>
 *Availability:* Web Viewer, Win/Mac. Requires mflyCommands.js 1.13.0+.
 
-### Links (Open and Goto)
+### Open an item
 
-Two types of links exist within Extensions: Open and Goto. When an Extension "opens" an item, the item appears on top of the navigational stack, and the user is only given a single option to escape the item, by tapping Done/Close.  When an Extension "gotos" an item, the app opens that item and throws away the navigational stack behind it. The user is given the same navigational capabilities as if they opened the destination item directly.
-
-To create either link, simply create a typical `<a href>` link with the source pointing to an mfly URL as specified below.
+When an Extension opens an item, the item appears on top of the navigational stack, and the user is only given a single option to escape the item, by tapping Done/Close.
 
 #### Open an item
 *mflyCommands.js:* mflyCommands.openItem(_id_) <br>
 *Description:* Opens the specified item, where [id] is the ID of the item.  As described above, the historical navigational stack is maintained, and the user can return to it. The ID for an item can be found in Airship. Expand the item, and the ID is displayed at the bottom. <br>
 *Availability:* iOS, Android, Web Viewer, Win/Mac
+
+#### Open another extension and pass some arbitrary parameters
+*mflyCommands.js:* mflyCommands.openItem(_id_, { params: { test: 'test' } }) <br>
+*Description:* Opens an extension with the specific id, where [id] is the ID of an extension. The extension will receive the params specified as query string parameters. The historical navigational stack is maintained. <br>
+*Availability:* iOS, Android, Web Viewer, Win/Mac
+
 
 #### Open an item from Search results, a Collection, or a Search Folder
 
@@ -397,13 +448,9 @@ Open an item from a search folder:
 
 #### Open a folder
 *mflyCommands.js:* mflyCommands.openFolder(_id_) <br>
-*Description:* Opens the specified folder, where [id] is the ID of the folder.  As described above, the historical navigational stack is maintained, and the user can return to it. The ID for a folder can be found in Airship. Expand the item, and the ID is displayed at the bottom. <br>
+*Description:* Opens the specified folder, where [id] is the ID of the folder. The historical navigational stack is maintained only on iOS and Android. Viewer and Win/Mac app does not provide a way to navigate back to the extension. When possible, the extension should render the folder contents itself inside the extension and provide a consistent navigation experience inside the extension. <br>
 *Availability:* iOS, Android, Web Viewer, Win/Mac
 
-#### Goto an item or a folder (*deprecated*)
-*mflyCommands.js:* mflyCommands.goto(_id_) <br>
-*Description:* Gotos the specified item or folder, where [id] is the ID of the item or folder.  As described above, when the app goes to another item or folder, the navigational stack behind the destination is thrown away, and the user is given the same navigational capabilities as if they opened the destination item directly. The ID for a folder can be found in Airship. Expand the item, and the ID is displayed at the bottom. <br>
-*Availability:* iOS, Android
 
 ### Filter (*deprecated*)
 
@@ -1239,7 +1286,9 @@ Even though emails are sent from Mediafly's servers, they have "Reply-To" field 
 *Example*
 
     mflyCommands.sendEmail({
-    	to: '[to email address]',
+    	to: '[comma separated email addresses]',
+    	cc: '[comma separated email addresses]',
+    	bcc: '[comma separated email addresses]',
     	subject: '[email subject]',
     	body: '[email body]',
     	attachments: [{
