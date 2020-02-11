@@ -1020,7 +1020,9 @@ mflyCommands.deleteKey('abc')
 Even though emails are sent from Mediafly's servers, they have "Reply-To" field populated with the curent logged in user's email address.</p>
 <p><em>Example</em></p>
 <pre><code>mflyCommands.sendEmail({
-    to: '[to email address]',
+    to: '[comma separated email addresses]',
+    cc: '[comma separated email addresses]',
+    bcc: '[comma separated email addresses]',
     subject: '[email subject]',
     body: '[email body]',
     attachments: [{
