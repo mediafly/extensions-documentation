@@ -1511,6 +1511,13 @@ This URL has the following format: [mcode]://[id]?[params...]
 The iOS app will pass all supplied params to the Extension and the Extension can
 retrieve them using JavaScript `window.location.search`.
 
+Example: [onmediafly://9cf282320e6340ee8b830e5376d54531product265958?param1=1&param2=2](onmediafly://9cf282320e6340ee8b830e5376d54531product265958?param1=1&param2=)
+
+This URL has the following format: [mcode]://[id]?[params...]
+
+The iOS app will pass all supplied params to the Extension and the Extension can
+retrieve them using JavaScript `window.location.search`.
+
 ### Running the extension on iOS Next
 iOS Next bundles a copy of mflyCommands itself. Below are the steps necessary to support running an extension on iOS Next.
 
@@ -1518,13 +1525,6 @@ iOS Next bundles a copy of mflyCommands itself. Below are the steps necessary to
 2. Add the following `script` tag to your `index.html`. `<script type="text/javascript" src="bootstrap_mflyCommands.js"></script>`. This script is provided by the app and does not need to be bundled with the extension. Be sure to add this script tag in an order such that mflyCommands script is loaded after it.
 3. If it is an Angular based extension it must whitelist the protocol `mextbinary://` since it is used to serve resources such as images to the extension.
 
-
-Example: [onmediafly://9cf282320e6340ee8b830e5376d54531product265958?param1=1&param2=2](onmediafly://9cf282320e6340ee8b830e5376d54531product265958?param1=1&param2=)
-
-This URL has the following format: [mcode]://[id]?[params...]
-
-The iOS app will pass all supplied params to the Extension and the Extension can
-retrieve them using JavaScript `window.location.search`.
 
 ----------
 
