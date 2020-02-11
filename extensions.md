@@ -82,18 +82,7 @@ Note: You will need the [Node.js](https://nodejs.org/en/download/) runtime (v5 o
 
 ## Testing on device
 
-### weinre
-We strongly recommend the use of [weinre](https://people.apache.org/~pmuellr/weinre/docs/latest/Home.html), the WEb INspector REmote. It is a debugger for remote web pages, and in particular, it <i>allows you to debug web pages on mobile devices with your laptop</i>.
-
-#### How to use it
-Please read the [installation](https://people.apache.org/~pmuellr/weinre/docs/latest/Installing.html) and [run](http://people.apache.org/~pmuellr/weinre-docs/latest/Running.html) instructions on the website for details. But here is a simple overview:
-
-1. Install the tool via npm, (e.g. npm -g install weinre)
-2. Run the debug server locally (e.g. weinre —boundHost 10.0.0.111)
-3. Update the Extension with a ```<script>``` tag to point to the debug server, and publish the new Extension in Airship (e.g. ```<script src="http://10.0.0.111:8080/target/target-script-min.js"></script>```). Open the Extension on your app
-4. Point your PC/Mac browser to the debug client (e.g. http://10.0.0.111:8080)
-
-You now have access to a relatively full featured web development tool for your Extensions!
+Contact the Mediafly team to get assistance with debugging extensions on devices.
 
 ----------
 
