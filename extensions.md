@@ -65,9 +65,10 @@ A Mediafly extension is a `.mext` file. This file can be put together by zipping
 1. Create a folder and add an `index.html` file to it. This will be the entry point of the application.
 2. Add `interactive-manifest.json` file with contents `{}` in the folder.
 3. Add CSS and JavaScript files and add references to them in `index.html`.
-4. Zip up the contents of the folder. Make sure that `index.html` is at the root of the zip file.
-5. Rename the zipped archive to have the `.mext` extension (e.g. `my-extension.mext`).
-6. Upload the `.mext` file to Mediafly using Airship.
+4. Add the following script tag to your `index.html`. `<script type="text/javascript" src="bootstrap_mflyCommands.js"></script>`. Be sure to add this script tag in an order such that mflyCommands script is loaded after it.
+5. Zip up the contents of the folder. Make sure that `index.html` is at the root of the zip file.
+6. Rename the zipped archive to have the `.mext` extension (e.g. `my-extension.mext`).
+7. Upload the `.mext` file to Mediafly using Airship.
 
 ## Developing and testing an Extension
 Mediafly provides a CLI (command line interface) utility called `extension-cli` to make it easier to test and develop an Extension. `extension-cli` allows an Extension developer to:
@@ -82,18 +83,7 @@ Note: You will need the [Node.js](https://nodejs.org/en/download/) runtime (v5 o
 
 ## Testing on device
 
-### weinre
-We strongly recommend the use of [weinre](https://people.apache.org/~pmuellr/weinre/docs/latest/Home.html), the WEb INspector REmote. It is a debugger for remote web pages, and in particular, it <i>allows you to debug web pages on mobile devices with your laptop</i>.
-
-#### How to use it
-Please read the [installation](https://people.apache.org/~pmuellr/weinre/docs/latest/Installing.html) and [run](http://people.apache.org/~pmuellr/weinre-docs/latest/Running.html) instructions on the website for details. But here is a simple overview:
-
-1. Install the tool via npm, (e.g. npm -g install weinre)
-2. Run the debug server locally (e.g. weinre —boundHost 10.0.0.111)
-3. Update the Extension with a ```<script>``` tag to point to the debug server, and publish the new Extension in Airship (e.g. ```<script src="http://10.0.0.111:8080/target/target-script-min.js"></script>```). Open the Extension on your app
-4. Point your PC/Mac browser to the debug client (e.g. http://10.0.0.111:8080)
-
-You now have access to a relatively full featured web development tool for your Extensions!
+Contact the Mediafly team to get assistance with debugging extensions on devices.
 
 ----------
 
@@ -1521,6 +1511,21 @@ This URL has the following format: [mcode]://[id]?[params...]
 
 The iOS app will pass all supplied params to the Extension and the Extension can
 retrieve them using JavaScript `window.location.search`.
+
+Example: [onmediafly://9cf282320e6340ee8b830e5376d54531product265958?param1=1&param2=2](onmediafly://9cf282320e6340ee8b830e5376d54531product265958?param1=1&param2=)
+
+This URL has the following format: [mcode]://[id]?[params...]
+
+The iOS app will pass all supplied params to the Extension and the Extension can
+retrieve them using JavaScript `window.location.search`.
+
+### Running the extension on iOS Next
+iOS Next bundles a copy of mflyCommands itself. Below are the steps necessary to support running an extension on iOS Next.
+
+1. Update your extension with the latest version of mflyCommands.
+2. Add the following `script` tag to your `index.html`. `<script type="text/javascript" src="bootstrap_mflyCommands.js"></script>`. This script is provided by the app and does not need to be bundled with the extension. Be sure to add this script tag in an order such that mflyCommands script is loaded after it.
+3. If it is an Angular based extension it must whitelist the protocol `mextbinary://` since it is used to serve resources such as images to the extension.
+
 
 ----------
 
