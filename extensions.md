@@ -51,9 +51,6 @@ Extensions are single page applications. They allow for deep customization of th
 
 Extensions can link to other items within the hierarchy.  For example, if a user has access to one Extension and three other items (video, audio, documents, presentations, even other Extensions), the Extension can link directly to those items. 
 
-Extensions can invoke capabilities provided by the app such as Search and Collections as well.
-
-
 ----------
 
 Building Extensions
@@ -65,7 +62,7 @@ A Mediafly extension is a `.mext` file. This file can be put together by zipping
 1. Create a folder and add an `index.html` file to it. This will be the entry point of the application.
 2. Add `interactive-manifest.json` file with contents `{}` in the folder.
 3. Add CSS and JavaScript files and add references to them in `index.html`.
-4. Add the following script tag to your `index.html`. `<script type="text/javascript" src="bootstrap_mflyCommands.js"></script>`. Be sure to add this script tag in an order such that mflyCommands script is loaded after it.
+4. Only needed for iOS. Add the following script tag to your `index.html`. `<script type="text/javascript" src="bootstrap_mflyCommands.js"></script>`. Be sure to add this script tag in an order such that mflyCommands script is loaded after it.
 5. Zip up the contents of the folder. Make sure that `index.html` is at the root of the zip file.
 6. Rename the zipped archive to have the `.mext` extension (e.g. `my-extension.mext`).
 7. Upload the `.mext` file to Mediafly using Airship.
@@ -109,25 +106,21 @@ To see the examples on a device app:
 ### Google Group
 Please [join our Google Group](https://groups.google.com/forum/?hl=en#!forum/mediafly-extensions) to keep up with the latest information, updates and news. As well, learn from and get help from other Extensions builders and customers.
 
-### Changelog
-Please see the [repository](https://bitbucket.org/mediafly/mediafly-interactives-documentation/commits/all) of this document for a changelog.
-
 ### Feedback
 See an area of confusion? Please [contact us](mailto:support@mediafly.com?Subject=Extensions%20Documentation%20Feedback).
 
 ----------
 
 
-API and Howtos
+API and Examples
 ===============
 
-This section describes all of the APIs available to Extensions developers. For each call, we list the mflyCommands.js call as well as the base URL. Please use the mflyCommands.js call where possible.
+This section describes all of the APIs available to Extensions developers.
 
 *A note on 'Availability':* You will see many API calls have no version numbers within the Availability column. In these cases, the calls have been in existence for a sufficiently long period of time that Extensions developers no longer need to worry about whether their clients' apps support those calls anymore.
 
-*Keeping mflyCommands up-to-date:* mflyCommands.js is available on the [bower package manager](http://bower.io/). This is the recommended way of consuming it as a dependency in your Extension. The bower package can be found here: [http://bower.io/search/?q=mfly-commands](http://bower.io/search/?q=mfly-commands)
+*Keeping mflyCommands up-to-date:* mflyCommands.js is available on the [npm](https://www.npmjs.com/package/mfly-commands). This is the recommended way of consuming it as a dependency in your Extension. The npm package can be found here: [https://www.npmjs.com/package/mfly-commands](https://www.npmjs.com/package/mfly-commands)
 
-## Communicating with the app
 Communicating the app is done by calling functions on mflyCommands. The list of available functions, and their appropriate actions, are listed below.
 
 ***PLEASE NOTE***: Every Extension must allow the user to close the item. Else, the user will be stuck within the Extension, with no way to exit.
@@ -212,27 +205,14 @@ Note that not every parameter is available on every platform.
 
 *Availability:* iOS, Android, Web Viewer, Windows/Mac
 
-### Basic controls
+
+
+### Navigation
 
 #### Close the item
 *mflyCommands.js:* mflyCommands.close() <br>
 *Description:* Closes the item and returns the user to where they were before. <br>
 *Availability:* iOS, Android, Web Viewer, Windows/Mac
-
-#### Show control bars
-*mflyCommands.js:* mflyCommands.showControlBars() <br>
-*Description:* Shows the control bars. <br>
-*Availability:* iOS, Android
-
-#### Hide control bars
-*mflyCommands.js:* mflyCommands.hideControlBars() <br>
-*Description:* Hides the control bars. <br>
-*Availability:* iOS, Android
-
-#### Browse (*deprecated*)
-*mflyCommands.js:* mflyCommands.browse() <br>
-*Description:* Multiple Extensions can layer on top of each other, to represent different layers of hierarchy. The developer may wish to allow the user to navigate the hierarchy using the core Mediafly app with the default grid/list view, e.g. if a “More” or “Browse” button is presented.  This URL closes all Extensions in the stack and takes the user to that hierarchy in the core app if called. <br>
-*Availability:* iOS
 
 #### Next
 *mflyCommands.js:* mflyCommands.next() <br>
@@ -357,18 +337,6 @@ Note that not every parameter is available on every platform.
 
 ### App features
 
-#### Show Settings
-*mflyCommands.js:* mflyCommands.showSettings(_x-coord, y-coord, width, height_) <br>
-*Description:* Shows the settings dialog at x-coord, y-coord coordinates with the specified width and height. <br>
-*Availability:* iOS, Android
-
-
-#### Show User Management Dialog
-*mflyCommands.js:* mflyCommands.showUserManagement(_x-coord, y-coord, width, height_) <br>
-*Description:* Shows the User Management dialog, which allows the user to login or manage users. Parameters x-coord, y-coord, width, and height are all optional, and only work with iOS.<br>
-*Availability:* iOS, Android
-
-
 #### Show Second Screen Options dialog
 *mflyCommands.js:* mflyCommands.showSecondScreenOptions() <br>
 *Description:* Shows the Second Screen Options dialog. <br>
@@ -380,11 +348,6 @@ Note that not every parameter is available on every platform.
 *Description:* If the item can be emailed, invoke email from within the app. <br>
 *Availability:* iOS, Android
 
-
-#### Refresh the contents of the app
-*mflyCommands.js:* mflyCommands.refresh() <br>
-*Description:* Trigger the app to refresh its content. If items have changed, this should trigger mflySync calls appropriately. <br>
-*Availability:* iOS, Android
 
 #### Show Annotations
 *mflyCommands.js:* mflyCommands.showAnnotations() <br>
@@ -403,7 +366,6 @@ Note that not every parameter is available on every platform.
 *Availability:* Web Viewer, Win/Mac. Requires mflyCommands.js 1.13.0+.
 
 ### Open an item
-
 When an Extension opens an item, the item appears on top of the navigational stack, and the user is only given a single option to escape the item, by tapping Done/Close.
 
 #### Open an item
@@ -442,59 +404,18 @@ Open an item from a search folder:
 *Availability:* iOS, Android, Web Viewer, Win/Mac
 
 
-### Filter (*deprecated*)
-
-Filter is deprecated in favor of mflyCommands.search() using the advanced query syntax.
-
-Using mflyCommands.search() with metadata fields:
-
-	mflyCommands.search('fieldName EQUALS "Field Value"')
-
-We often find that developers need to identify folders and items that match a specific set of metadata. Often they want to use custom metadata fields as a way to drive hierarchy and categorization, and not rely on the actual hierarchy for that purpose. It makes sense in some use cases, because the people who will be managing content are often different from how the Extension should be rendered.
-
-To support this, use Filter. Filter accepts up to three key=value pairs as JSON parameters, and returns a constrained list of folders and items that match ALL of the key=value pairs provided. The return value is a JSON Array of JSON Objects that match the various folders and items with the specified filter conditions, or an empty JSON Array if none match.
-
-*mflyCommands.js:* mflyCommands.filter(_obj_) <br>
-Examples:
-
-	Example 1:
-
-		mflyCommands.filter({ "shouldShow": false }).done(function(results) {
-			// results contains, e.g.
-			// [ { "id": "123", "shouldShow": true, ... },
-			//   { "id": "234", "shouldShow": false, ... } ]
-		});
-
-	Example 2:
-
-		mflyCommands.filter({ "shouldShow": false, "key": "doesNotExist" }).done(function(results) {
-			// results contains, e.g.
-			// []
-		});
-
-*Availability:* iOS, Android, Web Viewer, Win/Mac
-
 ### Search
 Mediafly's apps provide real-time, native search as a core part of the functionality. There are two ways to work with Search:
 
-1. Use the native app's core Search UI. In this case, you simply need to open the Search dialog and let the user use that dialog. See "Show Search dialog" below.
-2. Implement your own UI. In this case, you use the mflyCommands.search() call to get search results given terms, and then render the UI as you wish. See "Search by keyword" below.
-
-#### Advanced Search
-Advanced search syntax can help Extensions find folders and content more efficiently using mflyCommands.search(). You can find the advanced search syntax documentation at: [https://docs.google.com/document/d/1bQYRjKo_ctmv1OQQKo5qQKzRLaXnWgGBebdCdbs3-Mw/edit#heading=h.h6m5kboybjil](https://docs.google.com/document/d/1bQYRjKo_ctmv1OQQKo5qQKzRLaXnWgGBebdCdbs3-Mw/edit#heading=h.h6m5kboybjil) 
-#### Show Search dialog (*deprecated*)
-*mflyCommands.js:* mflyCommands.showSearch(_x-coord, y-coord, width, height_) <br>
-*Description:* Shows the search dialog at x-coord, y-coord coordinates with the specified width and height. Parameters x-coord, y-coord, width, and height are all optional, and only work with iOS. <br>
-*Availability:* iOS
+An extension should implement its own UI to provide an optimal search experience for its use case. Use the mflyCommands.search() call to get search results for a given term.
 
 #### Search by keyword
 *mflyCommands.js:* mflyCommands.search(_term_, _offset_, _limit_) <br>
 *Description:* Conduct a search for the given keyword. Return value is a JSON-array of folders and items. Parameters offset and limit are optional.<br>
 *Availability:* iOS, Android, Web Viewer, Win/Mac
 
-
-
-
+#### Advanced Search
+Advanced search syntax can help Extensions find folders and content more efficiently using mflyCommands.search(). You can find the advanced search syntax documentation at: [https://docs.google.com/document/d/1bQYRjKo_ctmv1OQQKo5qQKzRLaXnWgGBebdCdbs3-Mw/edit#heading=h.h6m5kboybjil]( https://docs.google.com/document/d/1K_vYVCLsruV164kQ0_O2_AiNhmD2oF6lYEK5Ykg8QT8)
 
 
 ### Get Recently Created Content
@@ -568,19 +489,7 @@ You can use this call to update metadata fields of an item.
 
 
 ### Collections
-	Collections allow users to create a "personal playlist" of items. Oftentimes this is used as a way to organize items for, say, an upcoming meeting with a customer. Collections are pointers to items, not copies of items; updating the original item in Airship will update the item in the Collection as well.
-
-
-#### Show "Collections" (*deprecated*)
-*mflyCommands.js:* mflyCommands.showCollections(_x-coord, y-coord, width, height_) <br>
-*Description:* Shows the Collections dialog at x-coord, y-coord coordinates with specified width and height. Parameters x-coord, y-coord, width, and height are all optional, and only work with iOS.<br>
-*Availability:* iOS, Android
-
-
-#### Show "Add to Collection" (*deprecated*)
-*mflyCommands.js:* mflyCommands.showAddToCollection(itemId, _x-coord, y-coord, width, height_) <br>
-*Description:* Shows the Add To Collections dialog at x-coord, y-coord coordinates with specified width and height for the specified item. Parameters x-coord, y-coord, width, and height are all optional, and only work with iOS. <br>
-*Availability:* iOS
+Collections allow users to create a "personal playlist" of items. Oftentimes this is used as a way to organize items for, say, an upcoming meeting with a customer. Collections are pointers to items, not copies of items; updating the original item in Airship will update the item in the Collection as well.
 
 
 #### Get the list of Collections
@@ -735,20 +644,10 @@ An Extension can get a share link for an item.
 		}
 *Availability:*  iOS, Android, Web Viewer, Win/Mac
 
-#### Show "Collections" (*deprecated*)
-*mflyCommands.js:* mflyCommands.showCollections(_x-coord, y-coord, width, height_) <br>
-*Description:* Shows the Collections dialog at x-coord, y-coord coordinates with specified width and height. Parameters x-coord, y-coord, width, and height are all optional, and only work with iOS.<br>
-*Availability:* iOS, Android
-
 ### Downloader
 Mediafly's apps have been optimized for very advanced synchronization and download use cases. We offer a set of Extensions calls to obtain information about downloads and control the app. 
 
 *Note*: Downloading capability does not exist on Web Viewer.
-
-#### Show Downloader (*deprecated*)
-*mflyCommands.js:* mflyCommands.showDownloader(_x-coord, y-coord, width, height_) <br>
-*Description:* Shows the Downloader dialog at x-coord, y-coord coordinates with specified width and height. Parameters x-coord, y-coord, width, and height are all optional, and only work with iOS. <br>
-*Availability:* iOS, Android, Win/Mac
 
 #### Get total download progress
 *mflyCommands.js:* mflyCommands.getDownloadStatus() <br>
@@ -822,11 +721,6 @@ When notifications are enabled for an app, users can subscribe or unsubscribe to
 #### Remove a folder from notifications
 *mflyCommands.js:* mflyCommands.removeNotification(_id_) <br>
 *Description:* Instruct the app to unsubscribe the folder from notifications. Response code 200 if successful, 304 if folder was not already subscribed, and 500 if an error occurred.<br>
-*Availability:* iOS, Android, Win/Mac
-
-#### Show the notifications manager
-*mflyCommands.js:* mflyCommands.showNotificationsManager(_x-coord, y-coord, width, height_) <br>
-*Description:* Display the notifications manager. Parameters x-coord, y-coord, width, and height are all optional, and only work with iOS. <br>
 *Availability:* iOS, Android, Win/Mac
 
 ### GPS
@@ -907,7 +801,6 @@ Example:
 In some cases Extensions need to open web links. mflyCommands provides the `openLink` command to handle this in a cross platform way. Following is the behavior of this command per platform:
 
 - iOS: Opens the link in a modal with a WebView. The user can dismiss the modal and return back to the Extension.
-- Android: Not yet implemented
 - Viewer: Opens the link in a new browser tab
 - Desktop: Opens the link in a new browser tab
 
@@ -925,21 +818,11 @@ Example:
 
 ## Saving and retrieving key/value data
 
-Extensions can save data to and retrieve data from the app with AJAX. This is useful for persisting data within or between Extensions. After saving, you can be sure that your data will be saved if the user restarts the app or device. You can use any key you wish, which provides a lot of flexibility, but please consider providing a namespace within your keys. Otherwise, two Extensions may find ways to clobber each others’ keys.
+Extensions can save data to and retrieve data from the app. This is useful for persisting data within or between Extensions. Data is synchronized with Mediafly servers and it is available across all platforms for an extension to use. Key/value data is isolated by user and by app. Two users cannot share keys, and two apps cannot share keys. After saving, you can be sure that your data will be saved if the user restarts the app or device. You can use any key you wish, which provides a lot of flexibility, but please consider providing a namespace within your keys. Otherwise, two Extensions may find ways to clobber each others’ keys.
 
-On iOS, Android, Windows and Mac, key/value data is isolated by user and by app. So, two users cannot share keys, and two apps cannot share keys.
+Example: If a user saves key=value on Device A, then loads the Extension on Device B, Device B will pull down key=value onto Device B as the Extension loads.
 
-For web Extensions, key/value data is stored in local storage. There is no isolation provided between key/value data between users or environments. We advise you to prefix your keys if there is a chance that the key will be accessed from multiple environments or users.
-
-There are two approaches to reading and writing data:
-
-* Synced: this method stores data locally and also synchronizes the data to Mediafly's servers. If a user saves key=value on Device A, then loads the Extension on Device B, Device B will pull down key=value onto Device B as the Extension loads.
-* Local: this method stores data locally and does not synchronize with our servers. If a user uninstalls the app (iOS, Android, Windows, Mac) clears their cookies (web), or uses a private/incognito window (web) the keys will be erased and cannot be retrieved.
-
-Each of these approaches has different mflyCommands calls, as detailed below. Generally, most developers will want to use the Synced approach.
-
-
-### Save data (synced)
+### Save data
 To save data to the app container, call mflyCommands.putSyncedValue(_key, value_), where _key_ is the key you wish to save, and _value_ is the value for that key.
 
 *Example:*<br>
@@ -964,7 +847,7 @@ HTTP response codes:
 
 *Availability:* iOS, Android, Web Viewer, Win/Mac
 
-### Retrieve data (synced)
+### Retrieve data
 
 You can retrieve value information from keys in multiple ways using mflyCommands.js.
 
@@ -974,7 +857,7 @@ Alternatively, you can make the calls directly with AJAX, but we strongly recomm
 * Response of 404 Not Found indicates that the key does not exist
 
 
-#### Single key ####
+#### Single key
 
 To get data for a specific key from the app container, use mflyCommands.getSyncedValue(_key_).
 
@@ -996,7 +879,7 @@ To get data for a specific key from the app container, use mflyCommands.getSynce
 On successful retrieval, data will contain the value of the key.
 
 
-#### All keys ####
+#### All keys
 
 To get data for all keys from the app container, use mflyCommands.getSyncedValues().
 
@@ -1019,7 +902,7 @@ To get data for all keys from the app container, use mflyCommands.getSyncedValue
 On successful retrieval, body will contain a JSON object enumerating all keys and values, as shown above.
 
 
-#### Key prefix ####
+#### Key prefix
 
 To get data for all keys that begin with X, use mflyCommands.getSyncedValues(_prefix_). On successful retrieval, data will contain a JSON object enumerating all keys and values where the keys begin with X.
 
@@ -1056,7 +939,7 @@ To get data for all keys that begin with X, use mflyCommands.getSyncedValues(_pr
 *Availability:* iOS, Android, Web Viewer, Win/Mac
 
 
-### Delete data (synced)
+### Delete data
 
 To delete a key/value pair by key from the app container, use mflyCommands.deleteSyncedKey(_key_).
 
@@ -1077,166 +960,6 @@ To delete a key/value pair by key from the app container, use mflyCommands.delet
 
 *Availability:* iOS, Android, Web Viewer, Win/Mac
 
-
-### Save data (local)
-To save data to the app container, call mflyCommands.putValue(_key, value_), where _key_ is the key you wish to save, and _value_ is the value for that key.
-
-*Example:*<br>
-This example saves key/value data, using mflyCommands.js.
-
-	var key = $('#key').val();
-	var value = { name: ‘abc’, value: ‘def’ };
-
-    mflyCommands.putValue(key, value)
-        .done(function(data, status) {
-            // Success! Do something.
-        })
-        .fail(function(deferred, status) {
-            // Error! Do something.
-        });
-
-HTTP response codes:
-
-* Response of 200 OK indicates a successful save to an existing key
-* Response of 201 Created indicates a successful save to a new key
-* Response of 400 Bad Request is returned if the value has not been previously saved
-
-(Note: attempts were made to use HTTP PUT verbs, but iOS seems to strip out the body of the PUT, so we migrated to use GET instead).
-
-*Example:*<br>
-This example saves key/value data, using jQuery.
-
-	var key = $('#key').val();
-	var value = { name: ‘abc’, value: ‘def’ };
-
-	$.ajax({
-		type: "GET",
-		url: "mfly://data/info/" + key,
-		contentType: "text/plain; charset=utf-8",
-		data: "value=" + encodeURIComponent(JSON.stringify(value)) + "&method=PUT",
-		dataType: "text",
-		success: function(result, status, xhr) {
-			// Success! Do something.
-		},
-		error: function(xhr) {
-			// Error! Do something.
-		}
-	});
-
-*Availability:* iOS, Android, Web Viewer, Win/Mac
-
-### Retrieve data (local)
-
-You can retrieve value information from keys in multiple ways using mflyCommands.js.
-
-Alternatively, you can make the calls directly with AJAX, but we strongly recommend using mflyCommands instead. When making calls directly,
-
-* Response of 200 OK indicates a successful get of an existing key. The body of the response will contain the values indicated below.
-* Response of 404 Not Found indicates that the key does not exist
-
-
-#### Single key ####
-
-To get data for a specific key from the app container, use mflyCommands.getValue(_key_).
-
-*Example:*
-
-	// Assume key 'abc' has been set to value '123'.
-
-    mflyCommands.getValue('abc')
-        .done(function(data, status) {
-            // Success! Do something.
-            console.log(data);
-        })
-        .fail(function(deferred, status) {
-            // Error! Do something.
-        });
-
-    // Console output: 123
-
-On successful retrieval, data will contain the value of the key.
-
-
-#### All keys ####
-
-To get data for all keys from the app container, use mflyCommands.getValues().
-
-*Example:*
-
-	// Assume key 'abc' has been set to value '123', and key 'def' has been set to value '456'.
-
-    mflyCommands.getValues()
-        .done(function(data, status) {
-            // Success! Do something.
-            console.log(data);
-        })
-        .fail(function(deferred, status) {
-            // Error! Do something.
-        });
-
-    // Console output: { "abc": "123", "def": "456" }
-
-
-On successful retrieval, body will contain a JSON object enumerating all keys and values, as shown above.
-
-
-#### Key prefix ####
-
-To get data for all keys that begin with X, use mflyCommands.getValues(_prefix_). On successful retrieval, data will contain a JSON object enumerating all keys and values where the keys begin with X.
-
-*Example:*
-
-	// Assume:
-	//   key 'snow' has been set to value 'white',
-	//   key 'snowball' has been set to value 'round',
-	//   key 'fire' has been set to value 'red'
-
-    mflyCommands.getValues('snow')
-        .done(function(data, status) {
-            // Success! Do something.
-            console.log(data);
-        })
-        .fail(function(deferred, status) {
-            // Error! Do something.
-        });
-
-    // Console output: { "snow": "white", "snowball": "round" }
-
-    mflyCommands.getValues('abc')
-        .done(function(data, status) {
-            // Success! Do something.
-            console.log(data);
-        })
-        .fail(function(deferred, status) {
-            // Error! Do something.
-        });
-
-    // Console output: {}
-
-
-*Availability:* iOS, Android, Web Viewer, Win/Mac
-
-
-### Delete data (local)
-
-To delete a key/value pair by key from the app container, use mflyCommands.deleteKey(_key_).
-
-*Example:*
-
-	// Assume key 'abc' has been set to value '123'.
-
-    mflyCommands.deleteKey('abc')
-        .done(function(data, status) {
-            // Success! Do something.
-            console.log('abc has been deleted');
-        })
-        .fail(function(deferred, status) {
-            // Error! Do something.
-        });
-
-    // Console output: 'abc has been deleted'
-
-*Availability:* iOS, Android, Web Viewer, Win/Mac
 
 
 ----------
@@ -1312,7 +1035,7 @@ Embedding other types (audio, video, URLs) will have unexpected results. The bes
 
 * To retrieve a data item, use ```mflyCommands.getData(id)```, where _id_ is the ID of the data item you wish to obtain.
 * To embed an image, create an ```<img>``` that refers to a loading image. In JavaScript, call ```mflyCommands.embed($element, id)```, where _$element_ is a jQuery reference to the img element, and _id_ is the Airship id of the image item.
-	* You can also use `mflyCommands.embedImage($element, id, options)` and supply dimensions for the image to be embedded (only supported on Web Viewer and requires mflyCommands.js version 1.4.10). This can be particularly helpful to scale down high resolution images to so browsers can load them quicker. _options_ are defined as:
+	* You can also use `mflyCommands.embedImage($element, id, options)` and supply dimensions for the image to be embedded (only supported on Web Viewer). This can be particularly helpful to scale down high resolution images to so browsers can load them quicker. _options_ are defined as:
 		* _size_ (string):   format is WxH (e.g. "200x200")
 		* _width_ (number): Width of the image
 		* _height_ (number): Height of the image
@@ -1323,10 +1046,6 @@ Embedding other types (audio, video, URLs) will have unexpected results. The bes
 * To embed the page from a document as an image, create an ```<img>``` that refers to a loading image. In JavaScript, call ```mflyCommands.embed($element, id, page)```, where _$element_ is a jQuery reference to the img element, _id_ is the Airship id of the image item, and _page_ is the page number that you wish to embed.
 * Please note: if you are embedding an image asset for the web Viewer, please consider directly accessing the ```resourceUrl``` attribute instead of using ```mflyCommands.embed```. This will improve loading speed, caching, and reduce network requests. See the [optional changes](#optional_changes) section below.
 
-
-### Example
-
-See our [open-source 'Embed and Data Items' Extension](https://github.com/mediafly/extensions-examples/tree/master/examples/Embed%20and%20Data%20Items) for an excellent working example of all four types of Embed described above.
 
 ### Technical details
 
@@ -1377,8 +1096,6 @@ To inform our Reporting system of various actions:
 ### Control
 
 When a user plugs into an HDMI dongle or connects via AirPlay, they can change the app to run in Second Screen mode.  When in this mode, the app can paint a canvas that uses the entire screen resolution (whereas, Mirroring mode restricts the TV/projector to a 4x3 output and adds black bars on the left and right).
-
-TODO: Add screenshots of what this looks like
 
 To support this mode in an Extension, the Extension must do a few things.
 
@@ -1488,6 +1205,267 @@ Launchpad API allows abilities such as uploading files, and updating items in Ai
 
 -----
 
+### Obsolete commands
+The following commands are now obsolete and should not be used in new implementations. They are still supported in existing extensions.
+
+#### Show control bars
+*mflyCommands.js:* mflyCommands.showControlBars() <br>
+*Description:* Shows the control bars. <br>
+*Availability:* iOS, Android
+
+#### Hide control bars
+*mflyCommands.js:* mflyCommands.hideControlBars() <br>
+*Description:* Hides the control bars. <br>
+*Availability:* iOS, Android
+
+#### Browse
+*mflyCommands.js:* mflyCommands.browse() <br>
+*Description:* Multiple Extensions can layer on top of each other, to represent different layers of hierarchy. The developer may wish to allow the user to navigate the hierarchy using the core Mediafly app with the default grid/list view, e.g. if a “More” or “Browse” button is presented.  This URL closes all Extensions in the stack and takes the user to that hierarchy in the core app if called. <br>
+*Availability:* iOS
+
+#### Show Settings
+*mflyCommands.js:* mflyCommands.showSettings(_x-coord, y-coord, width, height_) <br>
+*Description:* Shows the settings dialog at x-coord, y-coord coordinates with the specified width and height. <br>
+*Availability:* iOS, Android
+
+#### Show User Management Dialog
+*mflyCommands.js:* mflyCommands.showUserManagement(_x-coord, y-coord, width, height_) <br>
+*Description:* Shows the User Management dialog, which allows the user to login or manage users. Parameters x-coord, y-coord, width, and height are all optional, and only work with iOS.<br>
+*Availability:* iOS, Android
+
+#### Refresh the contents of the app
+*mflyCommands.js:* mflyCommands.refresh() <br>
+*Description:* Trigger the app to refresh its content. If items have changed, this should trigger mflySync calls appropriately. <br>
+*Availability:* iOS, Android
+
+#### Show "Collections"
+*mflyCommands.js:* mflyCommands.showCollections(_x-coord, y-coord, width, height_) <br>
+*Description:* Shows the Collections dialog at x-coord, y-coord coordinates with specified width and height. Parameters x-coord, y-coord, width, and height are all optional, and only work with iOS.<br>
+*Availability:* iOS, Android
+
+#### Show Downloader
+*mflyCommands.js:* mflyCommands.showDownloader(_x-coord, y-coord, width, height_) <br>
+*Description:* Shows the Downloader dialog at x-coord, y-coord coordinates with specified width and height. Parameters x-coord, y-coord, width, and height are all optional, and only work with iOS. <br>
+*Availability:* iOS, Android, Win/Mac
+
+### Filter
+
+Filter is deprecated in favor of mflyCommands.search() using the advanced query syntax.
+
+Using mflyCommands.search() with metadata fields:
+
+	mflyCommands.search('fieldName EQUALS "Field Value"')
+
+We often find that developers need to identify folders and items that match a specific set of metadata. Often they want to use custom metadata fields as a way to drive hierarchy and categorization, and not rely on the actual hierarchy for that purpose. It makes sense in some use cases, because the people who will be managing content are often different from how the Extension should be rendered.
+
+To support this, use Filter. Filter accepts up to three key=value pairs as JSON parameters, and returns a constrained list of folders and items that match ALL of the key=value pairs provided. The return value is a JSON Array of JSON Objects that match the various folders and items with the specified filter conditions, or an empty JSON Array if none match.
+
+*mflyCommands.js:* mflyCommands.filter(_obj_) <br>
+Examples:
+
+	Example 1:
+
+		mflyCommands.filter({ "shouldShow": false }).done(function(results) {
+			// results contains, e.g.
+			// [ { "id": "123", "shouldShow": true, ... },
+			//   { "id": "234", "shouldShow": false, ... } ]
+		});
+
+	Example 2:
+
+		mflyCommands.filter({ "shouldShow": false, "key": "doesNotExist" }).done(function(results) {
+			// results contains, e.g.
+			// []
+		});
+
+*Availability:* iOS, Android, Web Viewer, Win/Mac
+
+#### Show Search dialog
+*mflyCommands.js:* mflyCommands.showSearch(_x-coord, y-coord, width, height_) <br>
+*Description:* Shows the search dialog at x-coord, y-coord coordinates with the specified width and height. Parameters x-coord, y-coord, width, and height are all optional, and only work with iOS. <br>
+*Availability:* iOS
+
+#### Show "Collections"
+*mflyCommands.js:* mflyCommands.showCollections(_x-coord, y-coord, width, height_) <br>
+*Description:* Shows the Collections dialog at x-coord, y-coord coordinates with specified width and height. Parameters x-coord, y-coord, width, and height are all optional, and only work with iOS.<br>
+*Availability:* iOS, Android
+
+
+#### Show "Add to Collection"
+*mflyCommands.js:* mflyCommands.showAddToCollection(itemId, _x-coord, y-coord, width, height_) <br>
+*Description:* Shows the Add To Collections dialog at x-coord, y-coord coordinates with specified width and height for the specified item. Parameters x-coord, y-coord, width, and height are all optional, and only work with iOS. <br>
+*Availability:* iOS
+
+#### Show the notifications manager
+*mflyCommands.js:* mflyCommands.showNotificationsManager(_x-coord, y-coord, width, height_) <br>
+*Description:* Display the notifications manager. Parameters x-coord, y-coord, width, and height are all optional. <br>
+*Availability:* iOS
+
+#### Local key/value storage
+
+This method stores data locally and does not synchronize with our servers. If a user uninstalls the app (iOS, Android, Windows, Mac) clears their local storage (web), or uses a private/incognito window (web) the keys cannot be retrieved.
+
+##### Save data (local)
+To save data to the app container, call mflyCommands.putValue(_key, value_), where _key_ is the key you wish to save, and _value_ is the value for that key.
+
+*Example:*<br>
+This example saves key/value data, using mflyCommands.js.
+
+	var key = $('#key').val();
+	var value = { name: ‘abc’, value: ‘def’ };
+
+    mflyCommands.putValue(key, value)
+        .done(function(data, status) {
+            // Success! Do something.
+        })
+        .fail(function(deferred, status) {
+            // Error! Do something.
+        });
+
+HTTP response codes:
+
+* Response of 200 OK indicates a successful save to an existing key
+* Response of 201 Created indicates a successful save to a new key
+* Response of 400 Bad Request is returned if the value has not been previously saved
+
+(Note: attempts were made to use HTTP PUT verbs, but iOS seems to strip out the body of the PUT, so we migrated to use GET instead).
+
+*Example:*<br>
+This example saves key/value data, using jQuery.
+
+	var key = $('#key').val();
+	var value = { name: ‘abc’, value: ‘def’ };
+
+	$.ajax({
+		type: "GET",
+		url: "mfly://data/info/" + key,
+		contentType: "text/plain; charset=utf-8",
+		data: "value=" + encodeURIComponent(JSON.stringify(value)) + "&method=PUT",
+		dataType: "text",
+		success: function(result, status, xhr) {
+			// Success! Do something.
+		},
+		error: function(xhr) {
+			// Error! Do something.
+		}
+	});
+
+*Availability:* iOS, Android, Web Viewer, Win/Mac
+
+##### Retrieve data (local)
+
+You can retrieve value information from keys in multiple ways using mflyCommands.js.
+
+Alternatively, you can make the calls directly with AJAX, but we strongly recommend using mflyCommands instead. When making calls directly,
+
+* Response of 200 OK indicates a successful get of an existing key. The body of the response will contain the values indicated below.
+* Response of 404 Not Found indicates that the key does not exist
+
+
+##### Single key
+
+To get data for a specific key from the app container, use mflyCommands.getValue(_key_).
+
+*Example:*
+
+	// Assume key 'abc' has been set to value '123'.
+
+    mflyCommands.getValue('abc')
+        .done(function(data, status) {
+            // Success! Do something.
+            console.log(data);
+        })
+        .fail(function(deferred, status) {
+            // Error! Do something.
+        });
+
+    // Console output: 123
+
+On successful retrieval, data will contain the value of the key.
+
+
+##### All keys
+
+To get data for all keys from the app container, use mflyCommands.getValues().
+
+*Example:*
+
+	// Assume key 'abc' has been set to value '123', and key 'def' has been set to value '456'.
+
+    mflyCommands.getValues()
+        .done(function(data, status) {
+            // Success! Do something.
+            console.log(data);
+        })
+        .fail(function(deferred, status) {
+            // Error! Do something.
+        });
+
+    // Console output: { "abc": "123", "def": "456" }
+
+
+On successful retrieval, body will contain a JSON object enumerating all keys and values, as shown above.
+
+
+##### Key prefix
+
+To get data for all keys that begin with X, use mflyCommands.getValues(_prefix_). On successful retrieval, data will contain a JSON object enumerating all keys and values where the keys begin with X.
+
+*Example:*
+
+	// Assume:
+	//   key 'snow' has been set to value 'white',
+	//   key 'snowball' has been set to value 'round',
+	//   key 'fire' has been set to value 'red'
+
+    mflyCommands.getValues('snow')
+        .done(function(data, status) {
+            // Success! Do something.
+            console.log(data);
+        })
+        .fail(function(deferred, status) {
+            // Error! Do something.
+        });
+
+    // Console output: { "snow": "white", "snowball": "round" }
+
+    mflyCommands.getValues('abc')
+        .done(function(data, status) {
+            // Success! Do something.
+            console.log(data);
+        })
+        .fail(function(deferred, status) {
+            // Error! Do something.
+        });
+
+    // Console output: {}
+
+
+*Availability:* iOS, Android, Web Viewer, Win/Mac
+
+
+##### Delete
+
+To delete a key/value pair by key from the app container, use mflyCommands.deleteKey(_key_).
+
+*Example:*
+
+	// Assume key 'abc' has been set to value '123'.
+
+    mflyCommands.deleteKey('abc')
+        .done(function(data, status) {
+            // Success! Do something.
+            console.log('abc has been deleted');
+        })
+        .fail(function(deferred, status) {
+            // Error! Do something.
+        });
+
+    // Console output: 'abc has been deleted'
+
+*Availability:* iOS, Android, Web Viewer, Win/Mac
+
+
 ## Other useful information
 
 ### Stopping rubber band effects
@@ -1505,19 +1483,40 @@ To alleviate this, consider implementing ```-webkit-overflow-scrolling: touch```
 ### Invoking an Extension with parameters (iOS)
 iOS support invocation URLS. An item can be linked to using these URLs.
 
-Example: [onmediafly://9cf282320e6340ee8b830e5376d54531product265958?param1=1&param2=2](onmediafly://9cf282320e6340ee8b830e5376d54531product265958?param1=1&param2=)
+Example: [mediafly://9cf282320e6340ee8b830e5376d54531product265958?param1=1&param2=2](onmediafly://9cf282320e6340ee8b830e5376d54531product265958?param1=1&param2=)
 
 This URL has the following format: [mcode]://[id]?[params...]
 
 The iOS app will pass all supplied params to the Extension and the Extension can
 retrieve them using JavaScript `window.location.search`.
 
-Example: [onmediafly://9cf282320e6340ee8b830e5376d54531product265958?param1=1&param2=2](onmediafly://9cf282320e6340ee8b830e5376d54531product265958?param1=1&param2=)
+Example: [mediafly://9cf282320e6340ee8b830e5376d54531product265958?param1=1&param2=2](onmediafly://9cf282320e6340ee8b830e5376d54531product265958?param1=1&param2=)
 
 This URL has the following format: [mcode]://[id]?[params...]
 
 The iOS app will pass all supplied params to the Extension and the Extension can
 retrieve them using JavaScript `window.location.search`.
+
+### Share link invokation (iOS)
+The Mediafly iOS apps support deep linking to content via Universal Link support. When a user taps a share link on their iOS Device, the app will launch and navigate to the selected item. 
+
+By deafult, share links are created with the format of https://assets.mediafly.com/l/ABC123, where `ABC123` is a short code generated at the time the share link is created. 
+
+Custom domain support can be enabled on a per-environment basis to ensure that when a share link is tapped that it opens to a specific app. This can be helpful when a user has multiple derivative apps installed. In this case the share links for the environment will look like https://{companycode}.mediaf.ly/l/ABC123 .
+
+Supported Formats Reference:
+
+Mediafly (Next):
+
+* https://assets.mediafly.com/l/ABC123
+* https://assets.mediafly.com/wl/ABC123  (/wl is used for Workspace items)
+* https://{*}.mediafly.com/l/ABC123      (A server-side update is required to support new domains)
+
+Mediafly Classic:
+
+* https://assets.mediafly.com/l/ABC123
+* A limited number of custom domains are supported on build 748 or higher. These follow the format of:
+    https://{companyCode}.mediaf.ly/l/ABC123
 
 ### Running the extension on iOS Next
 iOS Next bundles a copy of mflyCommands itself. Below are the steps necessary to support running an extension on iOS Next.
@@ -1534,59 +1533,6 @@ Appendix
 ===============
 
 Additional information that doesn't fit very well elsewhere.
-
-
-## Supporting Extensions for the Web, Windows and Mac
-With Web Extensions, developers can now also support all major browsers and all major mobile platforms easily and cleanly.
-
-### How does it work?
-Web Extensions will be able to make use of the same delivery mechanism and API as Extensions available on iOS and Android today. When the user opens an Extension in the Web Viewer, the web server will:
-
-* Unzip the Extension zip file
-* Point to index.html
-* Proxy requests to the Extensions API to the correct URL
-
-Provided that you are using mflyCommands.js, the API will remain largely unchanged. Only a few minor issues need to be addressed for you to take full advantage of Extensions on the Web.
-
-
-### Required changes
-The following changes need to be made to your existing Extensions to support Extensions on the Web:
-
-1. **Use mflyCommands.js, and keep it up to date**. This should be your primary way to access our API. Don't make mfly:// calls to the API directly, as those simply will not work in web browsers.
-
-2. **Don't assume a specific browser or size**. The luxurious days of assuming latest Safari (iOS) or Google Chrome (Android 4.4+) are over. Build your Extension like you would a standard website, because, it can be opened on any browser like a standard website.
-
-3. **Don't rely on mflyDataInit, rely on mflyCommands.getInteractiveInfo() **. Web Extensions will not call "into" the Extension. This means that mflyDataInit, mflySync, mflyResume, mflyPause, and mflyInit are not supported. Instead, make a new call once the document has been initialized: ```mflyCommands.getInteractiveInfo()```. This asynchronous function will obtain the same information that mflyDataInit used to be called with, like so:
-
-		mflyCommands.getInteractiveInfo()
-			.done(function(data) {
-				// data contains a JSON object with information
-				// about this app, user and Extension
-			}).fail(function() {
-				// handle failure
-			});
-
-4. *** Don't include a file at the root of your Extension called mflyManifest.json***. We doubt you would, but if you do, it is likely to be overwritten by one of your apps as a part of the initialization process.
-
-5. **Adjust mflyCommands.getFolder(id) call signature change**. The call signature for mflyCommands.getFolder(id) has changed. Previously, if any of its items were also folders, it would return the items within the folders as an array of IDs. This has changed, and those subfolders no longer includes the items key at all. A separate mflyCommands.getFolder(id) call will have to be made on those children folders.
-
-6. **Each URL should be able to establish its own state**. Don't pass around variables like you would in a traditional application. This breaks on websites, and it will break on web Extensions.
-
-7. **All resources must be accessed in a relative way**. Don't try to construct absolute URLs to assets within your .zip file, as that path will undoutedly differ on other platforms.
-
-
-### Optional changes
-The following changes will help improve performance for your Extensions when opened in the Web Viewer.
-
-1. **To render images, consider using the ```resourceUrl``` attribute and not mflyCommands.embed**. The resourceUrl attribute can be found on mflyCommands.[getFolder, getItem, filter], and other calls that return full item models. The benefits are many:
-
-	* resourceUrl requests are more easily cached by browsers
-	* resourceUrl requests return the original image in its original format (jpg, png, gif), with no transcoding
-	* resourceUrl requests require one less redirect, which means faster load times
-
-	One caveat with using resourceUrls is:
-
-	* If you need to ask Mediafly's servers to resize images, you will need to use mflyCommands.embed to do so, as resourceUrl returns the image as-is.
 
 ## Constants
 
