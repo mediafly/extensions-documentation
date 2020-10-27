@@ -966,10 +966,9 @@ To delete a key/value pair by key from the app container, use mflyCommands.delet
 
 ## Emailing content from Extensions
 
-### Overview
 Extensions can either send emails using Mediafly's backend, or use a native email client if one available on the device running the extension.
 
-#### Sending emails using an email client
+### Sending emails using an email client
 Extensions can invoke the native email client on the device.
 
 *Example*
@@ -992,7 +991,7 @@ Extensions can invoke the native email client on the device.
 
 *Availability*: iOS, Android
 
-#### Sending emails using Mediafly's backend
+### Sending emails using Mediafly's backend
 Extensions can have Mediafly's backend send emails with attachments. Attachments are Base64 encoded URLs.
 Even though emails are sent from Mediafly's servers, they have "Reply-To" field populated with the curent logged in user's email address.
 
@@ -1205,7 +1204,7 @@ Launchpad API allows abilities such as uploading files, and updating items in Ai
 
 -----
 
-### Obsolete commands
+## Obsolete commands
 The following commands are now obsolete and should not be used in new implementations. They are still supported in existing extensions.
 
 #### Show control bars
@@ -1248,7 +1247,7 @@ The following commands are now obsolete and should not be used in new implementa
 *Description:* Shows the Downloader dialog at x-coord, y-coord coordinates with specified width and height. Parameters x-coord, y-coord, width, and height are all optional, and only work with iOS. <br>
 *Availability:* iOS, Android, Win/Mac
 
-### Filter
+#### Filter
 
 Filter is deprecated in favor of mflyCommands.search() using the advanced query syntax.
 
@@ -1303,7 +1302,7 @@ Examples:
 
 #### Local key/value storage
 
-This method stores data locally and does not synchronize with our servers. If a user uninstalls the app (iOS, Android, Windows, Mac) clears their local storage (web), or uses a private/incognito window (web) the keys cannot be retrieved.
+This method stores data locally and does not synchronize with our servers. If a user uninstalls the app (iOS, Android, Windows, Mac) clears their local storage (web), or uses a private/incognito window (web) the keys cannot be retrieved. It is recommended to use the synced key/value storage mechanism over local storage.
 
 ##### Save data (local)
 To save data to the app container, call mflyCommands.putValue(_key, value_), where _key_ is the key you wish to save, and _value_ is the value for that key.

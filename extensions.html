@@ -764,9 +764,8 @@ mflyCommands.deleteSyncedKey('abc')
 <p><em>Availability:</em> iOS, Android, Web Viewer, Win/Mac</p>
 <hr />
 <h2>Emailing content from Extensions</h2>
-<h3>Overview</h3>
 <p>Extensions can either send emails using Mediafly's backend, or use a native email client if one available on the device running the extension.</p>
-<h4>Sending emails using an email client</h4>
+<h3>Sending emails using an email client</h3>
 <p>Extensions can invoke the native email client on the device.</p>
 <p><em>Example</em></p>
 <pre><code>mflyCommands.composeEmail({
@@ -786,7 +785,7 @@ mflyCommands.deleteSyncedKey('abc')
 });
 </code></pre>
 <p><em>Availability</em>: iOS, Android</p>
-<h4>Sending emails using Mediafly's backend</h4>
+<h3>Sending emails using Mediafly's backend</h3>
 <p>Extensions can have Mediafly's backend send emails with attachments. Attachments are Base64 encoded URLs.
 Even though emails are sent from Mediafly's servers, they have "Reply-To" field populated with the curent logged in user's email address.</p>
 <p><em>Example</em></p>
@@ -969,7 +968,7 @@ Result:
 </code></pre>
 <p><em>Availability</em>: iOS (678), Android (2.29.47), Web Viewer, Win/Mac (1.0.101)</p>
 <hr />
-<h3>Obsolete commands</h3>
+<h2>Obsolete commands</h2>
 <p>The following commands are now obsolete and should not be used in new implementations. They are still supported in existing extensions.</p>
 <h4>Show control bars</h4>
 <p><em>mflyCommands.js:</em> mflyCommands.showControlBars() <br>
@@ -979,7 +978,7 @@ Result:
 <p><em>mflyCommands.js:</em> mflyCommands.hideControlBars() <br>
 <em>Description:</em> Hides the control bars. <br>
 <em>Availability:</em> iOS, Android</p>
-<h4>Browse (<em>deprecated</em>)</h4>
+<h4>Browse</h4>
 <p><em>mflyCommands.js:</em> mflyCommands.browse() <br>
 <em>Description:</em> Multiple Extensions can layer on top of each other, to represent different layers of hierarchy. The developer may wish to allow the user to navigate the hierarchy using the core Mediafly app with the default grid/list view, e.g. if a “More” or “Browse” button is presented.  This URL closes all Extensions in the stack and takes the user to that hierarchy in the core app if called. <br>
 <em>Availability:</em> iOS</p>
@@ -995,15 +994,15 @@ Result:
 <p><em>mflyCommands.js:</em> mflyCommands.refresh() <br>
 <em>Description:</em> Trigger the app to refresh its content. If items have changed, this should trigger mflySync calls appropriately. <br>
 <em>Availability:</em> iOS, Android</p>
-<h4>Show "Collections" (<em>deprecated</em>)</h4>
+<h4>Show "Collections"</h4>
 <p><em>mflyCommands.js:</em> mflyCommands.showCollections(<em>x-coord, y-coord, width, height</em>) <br>
 <em>Description:</em> Shows the Collections dialog at x-coord, y-coord coordinates with specified width and height. Parameters x-coord, y-coord, width, and height are all optional, and only work with iOS.<br>
 <em>Availability:</em> iOS, Android</p>
-<h4>Show Downloader (<em>deprecated</em>)</h4>
+<h4>Show Downloader</h4>
 <p><em>mflyCommands.js:</em> mflyCommands.showDownloader(<em>x-coord, y-coord, width, height</em>) <br>
 <em>Description:</em> Shows the Downloader dialog at x-coord, y-coord coordinates with specified width and height. Parameters x-coord, y-coord, width, and height are all optional, and only work with iOS. <br>
 <em>Availability:</em> iOS, Android, Win/Mac</p>
-<h3>Filter (<em>deprecated</em>)</h3>
+<h4>Filter</h4>
 <p>Filter is deprecated in favor of mflyCommands.search() using the advanced query syntax.</p>
 <p>Using mflyCommands.search() with metadata fields:</p>
 <pre><code>mflyCommands.search('fieldName EQUALS "Field Value"')
@@ -1028,15 +1027,15 @@ Example 2:
     });
 </code></pre>
 <p><em>Availability:</em> iOS, Android, Web Viewer, Win/Mac</p>
-<h4>Show Search dialog (<em>deprecated</em>)</h4>
+<h4>Show Search dialog</h4>
 <p><em>mflyCommands.js:</em> mflyCommands.showSearch(<em>x-coord, y-coord, width, height</em>) <br>
 <em>Description:</em> Shows the search dialog at x-coord, y-coord coordinates with the specified width and height. Parameters x-coord, y-coord, width, and height are all optional, and only work with iOS. <br>
 <em>Availability:</em> iOS</p>
-<h4>Show "Collections" (<em>deprecated</em>)</h4>
+<h4>Show "Collections"</h4>
 <p><em>mflyCommands.js:</em> mflyCommands.showCollections(<em>x-coord, y-coord, width, height</em>) <br>
 <em>Description:</em> Shows the Collections dialog at x-coord, y-coord coordinates with specified width and height. Parameters x-coord, y-coord, width, and height are all optional, and only work with iOS.<br>
 <em>Availability:</em> iOS, Android</p>
-<h4>Show "Add to Collection" (<em>deprecated</em>)</h4>
+<h4>Show "Add to Collection"</h4>
 <p><em>mflyCommands.js:</em> mflyCommands.showAddToCollection(itemId, <em>x-coord, y-coord, width, height</em>) <br>
 <em>Description:</em> Shows the Add To Collections dialog at x-coord, y-coord coordinates with specified width and height for the specified item. Parameters x-coord, y-coord, width, and height are all optional, and only work with iOS. <br>
 <em>Availability:</em> iOS</p>
@@ -1045,7 +1044,7 @@ Example 2:
 <em>Description:</em> Display the notifications manager. Parameters x-coord, y-coord, width, and height are all optional. <br>
 <em>Availability:</em> iOS</p>
 <h4>Local key/value storage</h4>
-<p>This method stores data locally and does not synchronize with our servers. If a user uninstalls the app (iOS, Android, Windows, Mac) clears their local storage (web), or uses a private/incognito window (web) the keys cannot be retrieved.</p>
+<p>This method stores data locally and does not synchronize with our servers. If a user uninstalls the app (iOS, Android, Windows, Mac) clears their local storage (web), or uses a private/incognito window (web) the keys cannot be retrieved. It is recommended to use the synced key/value storage mechanism over local storage.</p>
 <h5>Save data (local)</h5>
 <p>To save data to the app container, call mflyCommands.putValue(<em>key, value</em>), where <em>key</em> is the key you wish to save, and <em>value</em> is the value for that key.</p>
 <p><em>Example:</em><br>
