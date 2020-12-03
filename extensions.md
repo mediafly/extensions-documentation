@@ -1479,43 +1479,38 @@ By default, iOS scrolling in the UIWebView is exactly controlled by your finger.
 
 To alleviate this, consider implementing ```-webkit-overflow-scrolling: touch``` on your DOM nodes that handle scrolling. When set to touch, UIWebView uses native-style scrolling on your node.
 
-### Invoking an Extension with parameters (iOS)
-iOS support invocation URLS. An item can be linked to using these URLs.
+### Deep Linking to an extension (iOS)
 
-Example: [mediafly://9cf282320e6340ee8b830e5376d54531product265958?param1=1&param2=2](onmediafly://9cf282320e6340ee8b830e5376d54531product265958?param1=1&param2=)
+iOS supports invocation URLS. The iOS app will pass all supplied params to the Extension and the Extension can retrieve them using JavaScript window.location.search.
 
-This URL has the following format: [mcode]://[id]?[params...]
+Mediafly (Next):
+Example: [https://open.mediafly.com/testenv123/item/cbdbd823c1024f0f9d71d20f99788a11product456145?id=0010191012](https://open.mediafly.com/testenv123/item/cbdbd823c1024f0f9d71d20f99788a11product456145?id=0010191012)
 
-The iOS app will pass all supplied params to the Extension and the Extension can
-retrieve them using JavaScript `window.location.search`.
+This URL has the following format: https://open.mediafly.com/[companyCode]/item/[slug]?[params...]
 
-Example: [mediafly://9cf282320e6340ee8b830e5376d54531product265958?param1=1&param2=2](onmediafly://9cf282320e6340ee8b830e5376d54531product265958?param1=1&param2=)
+Mediafly Classic:
+Example: [mediafly://9cf282320e6340ee8b830e5376d54531product265958?param1=1&param2=2](mediafly://9cf282320e6340ee8b830e5376d54531product265958?param1=1&param2=2)
+This URL has the following format: [companyCode]://[slug]?[params...]
 
-This URL has the following format: [mcode]://[id]?[params...]
-
-The iOS app will pass all supplied params to the Extension and the Extension can
-retrieve them using JavaScript `window.location.search`.
 
 ### Share link invokation (iOS)
-The Mediafly iOS apps support deep linking to content via Universal Link support. When a user taps a share link on their iOS Device, the app will launch and navigate to the selected item. 
+By default, share links are created with the format of [https://assets.mediafly.com/l/ABC123](https://assets.mediafly.com/l/ABC123), where ABC123 is a short code generated at the time the share link is created.
 
-By deafult, share links are created with the format of https://assets.mediafly.com/l/ABC123, where `ABC123` is a short code generated at the time the share link is created. 
-
-Custom domain support can be enabled on a per-environment basis to ensure that when a share link is tapped that it opens to a specific app. This can be helpful when a user has multiple derivative apps installed. In this case the share links for the environment will look like https://{companycode}.mediaf.ly/l/ABC123 .
+Custom domain support can be enabled on a per-environment basis to ensure that when a share link is tapped that it opens to a specific app. This can be helpful when a user has multiple derivative apps installed. In this case the share links for the environment will look like [https://{companyCode}.mediaf.ly/l/ABC123](https://{companyCode}.mediaf.ly/l/ABC123).
 
 Supported Formats Reference:
 
 Mediafly (Next):
 
-* https://assets.mediafly.com/l/ABC123
-* https://assets.mediafly.com/wl/ABC123  (/wl is used for Workspace items)
-* https://{*}.mediafly.com/l/ABC123      (A server-side update is required to support new domains)
+- https://assets.mediafly.com/l/ABC123
+- https://assets.mediafly.com/wl/ABC123 (/wl is used for Workspace items)
+- (https://{*}.mediafly.com/l/ABC123 (A server-side update is required to support new domains)
 
 Mediafly Classic:
 
-* https://assets.mediafly.com/l/ABC123
-* A limited number of custom domains are supported on build 748 or higher. These follow the format of:
-    https://{companyCode}.mediaf.ly/l/ABC123
+- [https://assets.mediafly.com/l/ABC123](https://assets.mediafly.com/l/ABC123)
+- A limited number of custom domains are supported on build 748 or higher. These follow the format of: https://{companyCode}.mediaf.ly/l/ABC123
+
 
 ### Running the extension on iOS Next
 iOS Next bundles a copy of mflyCommands itself. Below are the steps necessary to support running an extension on iOS Next.
