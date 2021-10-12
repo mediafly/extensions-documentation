@@ -117,7 +117,7 @@ Configuring an extension with `interactive-manifest.json`
 This section describes properties available in the `interactive-manifest.json` that can be used to control how the Extension is launched.
 ----------
 - `ios-use-fullscreen: true/false`. Controls if the extension is launched in fullscreen mode or with an exit button.
-- `embedded: true/false`. Controls if the extension is launched in the native player of each platform.
+- `embed: true/false`. Controls if the extension is launched in the native player of each platform.
 
 API and Examples
 ===============
