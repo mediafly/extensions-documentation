@@ -94,12 +94,12 @@ Please see the [Mediafly Extensions Examples](https://github.com/mediafly/extens
 
 To see the examples in action on your device on a browser:
 
-* Navigate to [https://viewer.mediafly.com/interactives](https://viewer.mediafly.com/interactives). Note: you will need a username and password; please contact [Mediafly Support](https://support.mediafly.com/support-center/contact/) to request one.
+* Navigate to [https://viewer.mediafly.com/extensions](https://viewer.mediafly.com/extensions). Note: you will need a username and password; please contact [Mediafly Support](https://support.mediafly.com/support-center/contact/) to request one.
 
 To see the examples on a device app:
 
 * Download Whitebox for [iOS](https://itunes.apple.com/us/app/whitebox/id399107683?mt=8), [Android](https://play.google.com/store/apps/details?id=com.mediafly.android.video.onmediafly&hl=en), [Windows](http://downloads.mediafly.com.s3.amazonaws.com/desktopviewer/mediafly-desktop-viewer-prod-latest.exe) or [Mac](http://downloads.mediafly.com.s3.amazonaws.com/desktopviewer/mediafly-desktop-viewer-prod-latest.dmg)
-* When asked for Company Code or Company Login Name, enter "interactives"
+* When asked for Company Code or Company Login Name, enter "extensions"
 * Log in. You will need a username and password; please contact [Mediafly Support](https://support.mediafly.com/support-center/contact/) to request one.
 * Each example will be contained within a folder that describes the example
 
@@ -111,6 +111,13 @@ See an area of confusion? Please [contact us](mailto:support@mediafly.com?Subjec
 
 ----------
 
+Configuring an extension with `interactive-manifest.json`
+===============
+
+This section describes properties available in the `interactive-manifest.json` that can be used to control how the Extension is launched.
+----------
+- `ios-use-fullscreen: true/false`. Controls if the extension is launched in fullscreen mode or with an exit button.
+- `embedded: true/false`. Controls if the extension is launched in the native player of each platform.
 
 API and Examples
 ===============
@@ -415,7 +422,7 @@ An extension should implement its own UI to provide an optimal search experience
 *Availability:* iOS, Android, Web Viewer, Win/Mac
 
 #### Advanced Search
-Advanced search syntax can help Extensions find folders and content more efficiently using mflyCommands.search(). You can find the advanced search syntax documentation at: [https://docs.google.com/document/d/1bQYRjKo_ctmv1OQQKo5qQKzRLaXnWgGBebdCdbs3-Mw/edit#heading=h.h6m5kboybjil]( https://docs.google.com/document/d/1K_vYVCLsruV164kQ0_O2_AiNhmD2oF6lYEK5Ykg8QT8)
+Advanced search syntax can help Extensions find folders and content more efficiently using mflyCommands.search(). You can find the advanced search syntax documentation at: [https://docs.google.com/document/d/1bQYRjKo_ctmv1OQQKo5qQKzRLaXnWgGBebdCdbs3-Mw](https://docs.google.com/document/d/1bQYRjKo_ctmv1OQQKo5qQKzRLaXnWgGBebdCdbs3-Mw)
 
 
 ### Get Recently Created Content
@@ -584,9 +591,17 @@ Collections allow users to create a "personal playlist" of items. Oftentimes thi
 *Availability:* iOS, Android, Web Viewer, Win/Mac
 
 
-#### Add item to a Collection
+#### Add items to a Collection
+*mflyCommands.js:* mflyCommands.addItemsToCollection(_collection ID_, [_item ID_]) <br>
+*Description:* Adds items to the Collection. If Collection exists and it can be created, response code is 200. If Collection does not exist, response code is 404 with body { "message": "Collection not found." }. If item does not exist, response code is 404 with body "Item not found."
+
+	Example:
+		mflyCommands.addItemsToCollection("collection2id", ["item4id"]);
+
+*Availability:* iOS, Android, Web Viewer, Win/Mac
+
 *mflyCommands.js:* mflyCommands.addItemToCollection(_collection ID_, _item ID_) <br>
-*Description:* Adds the item to the Collection. If Collection exists and it can be created, response code is 200. If Collection does not exist, response code is 404 with body { "message": "Collection not found." }. If item does not exist, response code is 404 with body "Item not found."
+*Description:* Adds a single item to the Collection. If Collection exists and it can be created, response code is 200. If Collection does not exist, response code is 404 with body { "message": "Collection not found." }. If item does not exist, response code is 404 with body "Item not found."
 
 	Example:
 		mflyCommands.addItemToCollection("collection2id", "item4id");
@@ -1087,6 +1102,15 @@ To inform our Reporting system of various actions:
 
 *Availability:* iOS, Android, Web Viewer, Win/Mac
 
+
+-----
+
+## Take a picture on iOS
+
+Extensions have the ability to take open iOS's native camera app and take a picture using the following command.
+
+* To initiate taking a picture, use ```mflyCommands.takePicture().then(dataUrl => ...)```
+* Upon successful completion returns a dataURL representation of the picture taken.
 
 -----
 
